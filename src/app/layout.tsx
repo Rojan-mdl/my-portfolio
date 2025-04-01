@@ -18,20 +18,32 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={montserrat.className}>
-      <body className="bg-[#0A0A0A] text-white">
-        {/* Fixed header with navigation */}
-        <header className="fixed top-0 left-0 right-0 z-50 bg-[#000000] h-16 flex items-center">
+      {/* Plain background; gradient will be applied in page.tsx */}
+      <body className="bg-black text-white">
+        <header className="fixed top-0 left-0 right-0 z-50 bg-black h-16 flex items-center">
           <div className="max-w-7xl w-full mx-auto px-4 flex items-center justify-between">
             <nav className="flex space-x-6">
-              <Link href="#about" className="hover:text-gray-300">
+              <Link
+                href="#hero"
+                className="inline-block border-b-2 border-transparent hover:text-gray-300 focus:outline-none focus:border-b-2 focus:border-white transition"
+              >
+                Home
+              </Link>
+              <Link
+                href="#about"
+                className="inline-block border-b-2 border-transparent hover:text-gray-300 focus:outline-none focus:border-b-2 focus:border-white transition"
+              >
                 About
               </Link>
-              <Link href="#work" className="hover:text-gray-300">
-                Work
+              <Link
+                href="#experience-education"
+                className="inline-block border-b-2 border-transparent hover:text-gray-300 focus:outline-none focus:border-b-2 focus:border-white transition"
+              >
+                Experience
               </Link>
             </nav>
             <div className="flex-shrink-0">
-              <Link href="/">
+              <Link href="#hero">
                 <Image
                   src="/image/MØ-white.png"
                   alt="Marius Øvrebø Logo"
@@ -43,17 +55,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </Link>
             </div>
             <nav className="flex space-x-6">
-              <Link href="#shop" className="hover:text-gray-300">
-                Shop
+              <Link
+                href="#portfolio"
+                className="inline-block border-b-2 border-transparent hover:text-gray-300 focus:outline-none focus:border-b-2 focus:border-white transition"
+              >
+                Portfolio
               </Link>
-              <Link href="#contacts" className="hover:text-gray-300">
-                Contacts
+              <Link
+                href="#services"
+                className="inline-block border-b-2 border-transparent hover:text-gray-300 focus:outline-none focus:border-b-2 focus:border-white transition"
+              >
+                Services
+              </Link>
+              <Link
+                href="#contact"
+                className="inline-block border-b-2 border-transparent hover:text-gray-300 focus:outline-none focus:border-b-2 focus:border-white transition"
+              >
+                Contact
               </Link>
             </nav>
           </div>
         </header>
 
-        {/* Main content is rendered here */}
         <main className="pt-20">{children}</main>
 
         <footer className="mt-16 border-t border-gray-800 py-6 text-center text-sm">
