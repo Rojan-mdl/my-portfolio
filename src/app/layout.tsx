@@ -1,4 +1,3 @@
-// src/app/layout.tsx
 import "./globals.css";
 import { Montserrat } from "next/font/google";
 import Link from "next/link";
@@ -18,7 +17,6 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={montserrat.className}>
-      {/* Plain background; gradient will be applied in page.tsx */}
       <body className="bg-black text-white">
         <header className="fixed top-0 left-0 right-0 z-50 bg-black h-16 flex items-center">
           <div className="max-w-7xl w-full mx-auto px-4 flex items-center justify-between">

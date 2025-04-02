@@ -2,11 +2,12 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function ExperienceEducationSection() {
   const [activeTab, setActiveTab] = useState<"experience" | "education">("experience");
 
-  // Fixed minimum height
+  // Fixed minimum height for the tab content container
   const tabContentMinHeight = "min-h-[450px]";
 
   return (
@@ -15,7 +16,8 @@ export default function ExperienceEducationSection() {
         <h2 className="text-3xl font-bold mb-8 text-center">
           Experience & Education
         </h2>
-        {/* Tab switcher */}
+
+        {/* Tab Switcher */}
         <div role="tablist" className="flex space-x-4 mb-8">
           <button
             role="tab"
@@ -43,15 +45,15 @@ export default function ExperienceEducationSection() {
           </button>
         </div>
 
-        {/* Tab content container with fixed Min-Height */}
+        {/* Tab Content Container with Fixed Min-Height */}
         <div className={tabContentMinHeight}>
           {activeTab === "experience" ? (
             <div role="tabpanel" className="space-y-8">
-              {/* SATS */}
+              {/* SATS Experience */}
               <div className="flex space-x-4">
                 <div className="flex-shrink-0">
                   <Image
-                    src="/icons/sats.svg" 
+                    src="/icons/sats.svg"
                     alt="SATS Logo"
                     width={48}
                     height={48}
@@ -60,30 +62,35 @@ export default function ExperienceEducationSection() {
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold">
-                    SATS — Project Manager &amp; Designer (Intern)
+                    SATS — Project Manager & Designer (Intern)
                   </h3>
                   <p className="text-gray-400">Jan 2025 - Present | Oslo, Norway</p>
-                  <ul className="list-disc list-inside mt-2 text-gray-300 space-y-1">
+                  <ul className="list-disc list-outside pl-5 mt-2 text-gray-300 space-y-1">
                     <li>Led a team on a company project</li>
-                    <li>Transitioned from designer to project manager under senior guidance, gaining valuable experience in project management and the entire project process.</li>
+                    <li>
+                      Transitioned from designer to project manager under senior guidance,
+                      gaining valuable project management experience.
+                    </li>
                   </ul>
                   {/* Tools Used */}
                   <div className="mt-2">
                     <p className="text-sm font-semibold">Tools:</p>
                     <div className="mt-1 flex space-x-2">
-                      <Image src="/icons/figma.svg" alt="Figma" width={24} height={24} />
-                      <Image src="/icons/next-js.svg" alt="Next.js" width={24} height={24} />
-                      <Image src="/icons/typescript.svg" alt="Typescript" width={24} height={24} />
-                      <Image src="/icons/javascript.svg" alt="Javascript" width={24} height={24} />
-                      <Image src="/icons/c-sharp.svg" alt="C#" width={24} height={24} />
-                      <Image src="/icons/jira.svg" alt="Jira" width={24} height={24} />
-                      <Image src="/icons/azure.svg" alt="Azure" width={24} height={24} />
+                      <ToolIcon src="/icons/figma.svg" alt="Figma" label="Figma" size={32} />
+                      <ToolIcon src="/icons/next-js.svg" alt="Next.js" label="Next.js" size={24} />
+                      <ToolIcon src="/icons/react.png" alt="React" label="React" size={24} />
+                      <ToolIcon src="/icons/typescript.svg" alt="TypeScript" label="TypeScript" size={24} />
+                      <ToolIcon src="/icons/javascript.svg" alt="JavaScript" label="JavaScript" size={24} />
+                      <ToolIcon src="/icons/c-sharp.svg" alt="C#" label="C#" size={24} />
+                      <ToolIcon src="/icons/jira.svg" alt="Jira" label="Jira" size={24} />
+                      <ToolIcon src="/icons/azure.svg" alt="Azure" label="Azure" size={24} />
+                      <ToolIcon src="/icons/sql.png" alt="SQL" label="SQL" size={24} />
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Unity Arena */}
+              {/* Unity Arena Experience */}
               <div className="flex space-x-4">
                 <div className="flex-shrink-0">
                   <Image
@@ -101,14 +108,21 @@ export default function ExperienceEducationSection() {
                   <p className="text-gray-400">
                     Nov 2022 - Present | Greater Oslo Region
                   </p>
-                  <ul className="list-disc list-inside mt-2 text-gray-300 space-y-1">
+                  <ul className="list-disc list-outside pl-5 mt-2 text-gray-300 space-y-1">
                     <li>Created high-end videos for concept visualization</li>
                     <li>Provided 3D assets for websites & promotions</li>
                   </ul>
+                  <div className="mt-2">
+                    <p className="text-sm font-semibold">Tools:</p>
+                    <div className="mt-1 flex space-x-2">
+                      <ToolIcon src="/icons/adobe-after-effects.svg" alt="After Effects" label="After Effects" size={24} />
+                      <ToolIcon src="/icons/blender.svg" alt="Blender" label="Blender" size={24} />
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* PlayStation */}
+              {/* PlayStation Experience */}
               <div className="flex space-x-4">
                 <div className="flex-shrink-0">
                   <Image
@@ -126,79 +140,153 @@ export default function ExperienceEducationSection() {
                   <p className="text-gray-400">
                     Sep 2021 - Mar 2022 | Oslo, Norway
                   </p>
-                  <ul className="list-disc list-inside mt-2 text-gray-300 space-y-1">
+                  <ul className="list-disc list-outside pl-5 mt-2 text-gray-300 space-y-1">
                     <li>Created 3D entertainment assets & videos</li>
                     <li>Undisclosed project details</li>
                   </ul>
+                  <div className="mt-2">
+                    <p className="text-sm font-semibold">Tools:</p>
+                    <div className="mt-1 flex space-x-2">
+                      <ToolIcon src="/icons/blender.svg" alt="Blender" label="Blender" size={24} />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           ) : (
             <div role="tabpanel" className="space-y-8">
-              {/* Kristiania */}
+              {/* Kristiania Education */}
               <div className="flex space-x-4">
                 <div className="flex-shrink-0">
-                  <Image
-                    src="/icons/kristiania.png"
-                    alt="Kristiania Logo"
-                    width={48}
-                    height={48}
-                    className="rounded"
-                  />
+                  <Link
+                    href="https://www.kristiania.no/studier/bachelor/informasjonsteknologi-interaksjonsdesign/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block rounded focus:outline-none focus:shadow-[0_0_3px_1px_#ffffff]"
+                  >
+                    <Image
+                      src="/icons/kristiania.jpg"
+                      alt="Kristiania Logo"
+                      width={48}
+                      height={48}
+                      className="rounded"
+                    />
+                  </Link>
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold">
                     Kristiania — Bachelor&apos;s in Interactive Design
                   </h3>
                   <p className="text-gray-400">Sep 2022 - Jul 2025</p>
-                  <ul className="list-disc list-inside mt-2 text-gray-300 space-y-1">
-                    <li>Focus on interactive design principles</li>
-                    <li>3D and animation coursework</li>
+                  <ul className="list-disc list-outside pl-5 mt-2 text-gray-300 space-y-1">
+                    <li>
+                      Covers key areas such as programming, web development, interaction design, user testing, and analytics.
+                    </li>
+                    <li>
+                      Engaged in project-based learning, including a design project and a bachelor project in collaboration with industry partners.
+                    </li>
                   </ul>
+                  <div className="mt-2">
+                    <p className="text-sm font-semibold">Tools:</p>
+                    <div className="mt-1 flex space-x-2">
+                      <ToolIcon src="/icons/figma.svg" alt="Figma" label="Figma" size={24} />
+                      <ToolIcon src="/icons/react.png" alt="React" label="React" size={24} />
+                      <ToolIcon src="/icons/typescript.svg" alt="Typescript" label="Typescript" size={24} />
+                      <ToolIcon src="/icons/javascript.svg" alt="Javascript" label="Javascript" size={24} />
+                      <ToolIcon src="/icons/c-sharp.svg" alt="C#" label="C#" size={24} />
+                      <ToolIcon src="/icons/java.svg" alt="Java" label="Java" size={24} />
+                      <ToolIcon src="/icons/sql.png" alt="SQL" label="SQL" size={24} />
+                      <ToolIcon src="/icons/html5.svg" alt="HTML5" label="HTML5" size={24} />
+                      <ToolIcon src="/icons/css.png" alt="CSS" label="CSS" size={24} />
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Noroff: Spill og interaktiv mediedesign */}
+              {/* Noroff: Gamedesign */}
               <div className="flex space-x-4">
                 <div className="flex-shrink-0">
-                  <Image
-                    src="/icons/noroff.png"
-                    alt="Noroff Logo"
-                    width={48}
-                    height={48}
-                    className="rounded"
-                  />
+                  <Link
+                    href="https://www.noroff.no/studier/fagskole/3d-design-spillteknologi-interaktiv"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block rounded focus:outline-none focus:shadow-[0_0_3px_1px_#ffffff]"
+                  >
+                    <Image
+                      src="/icons/noroff.png"
+                      alt="Noroff Logo"
+                      width={48}
+                      height={48}
+                      className="rounded"
+                    />
+                  </Link>
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold">
-                    Noroff — BA in Spill og interaktiv mediedesign
+                    Noroff — Gamedesign
                   </h3>
                   <p className="text-gray-400">Aug 2019 - Jul 2020</p>
-                  <ul className="list-disc list-inside mt-2 text-gray-300 space-y-1">
-                    <li>Game & interactive media design fundamentals</li>
+                  <ul className="list-disc list-outside pl-5 mt-2 text-gray-300 space-y-1">
+                    <li>
+                      Developed creative and interactive game content and gamification for multiple industries.
+                    </li>
+                    <li>
+                      Acquired skills in concept development, level design, and scripting with Unreal Engine.
+                    </li>
+                    <li>
+                      Combined game concepts with technical skills, architecture, and art.
+                    </li>
                   </ul>
+                  <div className="mt-2">
+                    <p className="text-sm font-semibold">Tools:</p>
+                    <div className="mt-1 flex space-x-2">
+                      <ToolIcon src="/icons/blender.svg" alt="Blender" label="Blender" size={24} />
+                      <ToolIcon src="/icons/unreal-engine.svg" alt="Unreal Engine" label="Unreal Engine" size={24} />
+                    </div>
+                  </div>
                 </div>
               </div>
 
               {/* Noroff: 3D Design and Animation */}
               <div className="flex space-x-4">
                 <div className="flex-shrink-0">
-                  <Image
-                    src="/icons/noroff.png"
-                    alt="Noroff Logo"
-                    width={48}
-                    height={48}
-                    className="rounded"
-                  />
+                  <Link
+                    href="https://www.noroff.no/studier/fagskole/3d-design-spillteknologi-interaktiv"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block rounded focus:outline-none focus:shadow-[0_0_3px_1px_#ffffff]"
+                  >
+                    <Image
+                      src="/icons/noroff.png"
+                      alt="Noroff Logo"
+                      width={48}
+                      height={48}
+                      className="rounded"
+                    />
+                  </Link>
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold">
-                    Noroff — BA in 3D Design & Animation
+                    Noroff — 3D Design & Animation
                   </h3>
                   <p className="text-gray-400">Jan 2018 - Jun 2019</p>
-                  <ul className="list-disc list-inside mt-2 text-gray-300 space-y-1">
-                    <li>3D modeling, texturing, and animation coursework</li>
+                  <ul className="list-disc list-outside pl-5 mt-2 text-gray-300 space-y-1">
+                    <li>
+                      Prepared for a career in games, animation, visual effects, advertising, and visualization.
+                    </li>
+                    <li>
+                      Engaged in project-based learning, developing skills in modeling, texturing, lighting, rendering, compositing, sculpting, animation, rigging, and asset creation.
+                    </li>
                   </ul>
+                  <div className="mt-2">
+                    <p className="text-sm font-semibold">Tools:</p>
+                    <div className="mt-1 flex space-x-2">
+                      <ToolIcon src="/icons/3ds-max.svg" alt="3ds Max" label="3ds Max" size={24} />
+                      <ToolIcon src="/icons/nuke.svg" alt="Nuke" label="Nuke" size={24} />
+                      <ToolIcon src="/icons/zbrush.svg" alt="Zbrush" label="Zbrush" size={24} />
+                      <ToolIcon src="/icons/substance-painter.png" alt="Substance Painter" label="Substance Painter" size={24} />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -206,5 +294,24 @@ export default function ExperienceEducationSection() {
         </div>
       </div>
     </section>
+  );
+}
+
+// A helper component for displaying a tool icon with a tooltip
+type ToolIconProps = {
+  src: string;
+  alt: string;
+  label: string;
+  size: number;
+};
+
+function ToolIcon({ src, alt, label, size }: ToolIconProps) {
+  return (
+    <div className="relative group inline-block">
+      <Image src={src} alt={alt} width={size} height={size} className="rounded" />
+      <span className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-full opacity-0 group-hover:opacity-100 bg-black text-white text-xs px-2 py-1 rounded mt-1 pointer-events-none transition">
+        {label}
+      </span>
+    </div>
   );
 }
