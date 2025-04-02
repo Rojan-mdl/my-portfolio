@@ -6,8 +6,8 @@ import Image from "next/image";
 export default function ExperienceEducationSection() {
   const [activeTab, setActiveTab] = useState<"experience" | "education">("experience");
 
-  // Set a fixed minimum height for the tab content container
-  const tabContentMinHeight = "min-h-[450px]"; // Adjust this value to fit the tallest content
+  // Fixed minimum height
+  const tabContentMinHeight = "min-h-[450px]";
 
   return (
     <section id="experience-education" className="py-16 text-gray-100">
@@ -15,7 +15,7 @@ export default function ExperienceEducationSection() {
         <h2 className="text-3xl font-bold mb-8 text-center">
           Experience & Education
         </h2>
-        {/* Tab Switcher */}
+        {/* Tab switcher */}
         <div role="tablist" className="flex space-x-4 mb-8">
           <button
             role="tab"
@@ -43,7 +43,7 @@ export default function ExperienceEducationSection() {
           </button>
         </div>
 
-        {/* Tab Content Container with Fixed Min-Height */}
+        {/* Tab content container with fixed Min-Height */}
         <div className={tabContentMinHeight}>
           {activeTab === "experience" ? (
             <div role="tabpanel" className="space-y-8">
@@ -51,7 +51,7 @@ export default function ExperienceEducationSection() {
               <div className="flex space-x-4">
                 <div className="flex-shrink-0">
                   <Image
-                    src="/icons/sats.svg"
+                    src="/icons/sats.svg" 
                     alt="SATS Logo"
                     width={48}
                     height={48}
@@ -60,18 +60,26 @@ export default function ExperienceEducationSection() {
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold">
-                    SATS — Project Manager & Designer (Intern)
+                    SATS — Project Manager &amp; Designer (Intern)
                   </h3>
-                  <p className="text-gray-400">
-                    Jan 2025 - Present | Oslo, Norway
-                  </p>
+                  <p className="text-gray-400">Jan 2025 - Present | Oslo, Norway</p>
                   <ul className="list-disc list-inside mt-2 text-gray-300 space-y-1">
                     <li>Led a team on a company project</li>
-                    <li>
-                      Transitioned from designer to project manager under senior
-                      guidance
-                    </li>
+                    <li>Transitioned from designer to project manager under senior guidance, gaining valuable experience in project management and the entire project process.</li>
                   </ul>
+                  {/* Tools Used */}
+                  <div className="mt-2">
+                    <p className="text-sm font-semibold">Tools:</p>
+                    <div className="mt-1 flex space-x-2">
+                      <Image src="/icons/figma.svg" alt="Figma" width={24} height={24} />
+                      <Image src="/icons/next-js.svg" alt="Next.js" width={24} height={24} />
+                      <Image src="/icons/typescript.svg" alt="Typescript" width={24} height={24} />
+                      <Image src="/icons/javascript.svg" alt="Javascript" width={24} height={24} />
+                      <Image src="/icons/c-sharp.svg" alt="C#" width={24} height={24} />
+                      <Image src="/icons/jira.svg" alt="Jira" width={24} height={24} />
+                      <Image src="/icons/azure.svg" alt="Azure" width={24} height={24} />
+                    </div>
+                  </div>
                 </div>
               </div>
 
