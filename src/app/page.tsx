@@ -11,7 +11,7 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
-      {/* Gradient container for sections below the hero */}
+      {/* Gradient background color */}
       <div className="bg-gradient-to-b from-black to-[#21002a] text-white">
         <AboutSection />
         <ExperienceEducationSection />

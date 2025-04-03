@@ -54,6 +54,10 @@ export default function AboutSection() {
                   <span>Next.js</span>
                 </div>
                 <div className="flex items-center space-x-2">
+                  <Image src="/icons/react.png" alt="React" width={32} height={32} />
+                  <span>React</span>
+                </div>
+                <div className="flex items-center space-x-2">
                   <Image src="/icons/blender.svg" alt="Blender" width={32} height={32} />
                   <span>Blender</span>
                 </div>

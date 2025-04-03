@@ -76,7 +76,7 @@ export default function ExperienceEducationSection() {
                   <div className="mt-2">
                     <p className="text-sm font-semibold">Tools:</p>
                     <div className="mt-1 flex space-x-2">
-                      <ToolIcon src="/icons/figma.svg" alt="Figma" label="Figma" size={32} />
+                      <ToolIcon src="/icons/figma.svg" alt="Figma" label="Figma" size={24} />
                       <ToolIcon src="/icons/next-js.svg" alt="Next.js" label="Next.js" size={24} />
                       <ToolIcon src="/icons/react.png" alt="React" label="React" size={24} />
                       <ToolIcon src="/icons/typescript.svg" alt="TypeScript" label="TypeScript" size={24} />
