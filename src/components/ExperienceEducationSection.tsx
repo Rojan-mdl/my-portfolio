@@ -8,7 +8,7 @@ export default function ExperienceEducationSection() {
   const [activeTab, setActiveTab] = useState<"experience" | "education">("experience");
 
   // Fixed minimum height for the tab content container
-  const tabContentMinHeight = "min-h-[450px]";
+  const tabContentMinHeight = "min-h-[650px]";
 
   return (
     <section id="experience-education" className="py-16 text-gray-100">
