@@ -9,7 +9,15 @@ import { notFound } from 'next/navigation';
 import type { Project } from '@/types';
 import ToolIcon from '@/components/ToolIcon';
 
-
+// --- ADDED: Explicit Props interface ---
+interface Props {
+  params: {
+    projectId: string; // The dynamic route parameter
+  };
+  // You can also add searchParams if needed:
+  // searchParams?: { [key: string]: string | string[] | undefined };
+}
+// --- END ADDED INTERFACE ---
 
 // Helper Function to Get Project Data
 // Runs on the server (in generateMetadata, generateStaticParams, and Page component)
@@ -29,7 +37,7 @@ async function getProjectData(projectId: string): Promise<Project | null> {
 // Generate Dynamic Metadata
 // Uses title template from layout.tsx by returning only the specific part
 export async function generateMetadata(
-  { params }: { params: { projectId: string } }
+  { params }: Props
 ): Promise<Metadata> {
   const project = await getProjectData(params.projectId);
 
@@ -74,7 +82,7 @@ export async function generateStaticParams() {
 
 // The Page Component
 // Renders the individual project page content
-export default async function ProjectPage({ params }: { params: { projectId: string } }) {
+export default async function ProjectPage({ params }: Props) {
   const project = await getProjectData(params.projectId);
 
   // If project data isn't found for the given ID, show the 404 page
