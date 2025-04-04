@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link"; // Keep Link if I convert mailto to a Link component later, otherwise <a> is fine
 
 export default function ContactSection() {
   const email = "marius.frilans@gmail.com";
