@@ -1,7 +1,5 @@
 import { promises as fs } from 'fs';
 import path from 'path';
-
-
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -9,15 +7,15 @@ import { notFound } from 'next/navigation';
 import type { Project } from '@/types';
 import ToolIcon from '@/components/ToolIcon';
 
-// --- ADDED: Explicit Props interface ---
+// --- MODIFIED: Explicit Props interface expecting a Promise for params ---
 interface Props {
-  params: {
-    projectId: string; // The dynamic route parameter
-  };
-  // You can also add searchParams if needed:
-  // searchParams?: { [key: string]: string | string[] | undefined };
+  // Type params as a Promise resolving to the object containing projectId
+  params: Promise<{
+    projectId: string;
+  }>;
+  // searchParams?: Promise<{ [key: string]: string | string[] | undefined }>; // If you needed searchParams
 }
-// --- END ADDED INTERFACE ---
+// --- END MODIFICATION ---
 
 // Helper Function to Get Project Data
 // Runs on the server (in generateMetadata, generateStaticParams, and Page component)
@@ -37,9 +35,12 @@ async function getProjectData(projectId: string): Promise<Project | null> {
 // Generate Dynamic Metadata
 // Uses title template from layout.tsx by returning only the specific part
 export async function generateMetadata(
-  { params }: Props
+  { params: paramsPromise }: Props // Receive the promise, rename for clarity
 ): Promise<Metadata> {
-  const project = await getProjectData(params.projectId);
+  // Await the promise to get the actual params object
+  const { projectId } = await paramsPromise;
+
+  const project = await getProjectData(projectId); // Use the awaited value
 
   if (!project) {
     return {
@@ -82,8 +83,11 @@ export async function generateStaticParams() {
 
 // The Page Component
 // Renders the individual project page content
-export default async function ProjectPage({ params }: Props) {
-  const project = await getProjectData(params.projectId);
+export default async function ProjectPage({ params: paramsPromise }: Props) { // Receive the promise
+  // Await the promise to get the actual params object
+  const { projectId } = await paramsPromise;
+
+  const project = await getProjectData(projectId); // Use the awaited value
 
   // If project data isn't found for the given ID, show the 404 page
   if (!project) {
