@@ -1,4 +1,7 @@
-"use client";
+import { promises as fs } from 'fs';
+import path from 'path';
+import type { Project } from '@/types';
+
 
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
@@ -7,18 +10,32 @@ import PortfolioSection from "@/components/PortfolioSection";
 import ServicesSection from "@/components/ServicesSection";
 import ContactSection from "@/components/ContactSection";
 
-export default function HomePage() {
+
+// Server-side function to fetch projects
+async function getProjects(): Promise<Project[]> {
+   try {
+     const filePath = path.join(process.cwd(), 'data', 'projects.json');
+     const jsonData = await fs.readFile(filePath, 'utf8');
+     const projectsData = JSON.parse(jsonData);
+     return projectsData.items || projectsData || [];
+   } catch (error) {
+     console.error("Error reading projects file directly:", error);
+     return [];
+   }
+}
+
+// The main page component
+export default async function HomePage() {
+  const projects = await getProjects();
+
   return (
     <>
       <HeroSection />
-      {/* Gradient background color */}
-      <div className="bg-gradient-to-b from-black to-[#21002a] text-white">
-        <AboutSection />
-        <ExperienceEducationSection />
-        <PortfolioSection />
-        <ServicesSection />
-        <ContactSection />
-      </div>
+      <AboutSection />
+      <ExperienceEducationSection />
+      <PortfolioSection projects={projects} />
+      <ServicesSection />
+      <ContactSection />
     </>
   );
 }

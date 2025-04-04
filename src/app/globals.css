@@ -1,34 +1,29 @@
 @import "tailwindcss";
 
-
 :root {
   --background: #000000;
   --foreground: #000000;
 }
 
-:focus {
+/* Global styles */
+:focus-visible {
+  /* Apply the visible shadow only when focus originates from keyboard */
   outline: none;
   box-shadow: 0 0 10px 2px #ffffff !important;
 }
 
+/* Basic :focus rule for non-visible changes or resets */
+:focus {
+   outline: none;
+}
 
-nav a:focus {
+/* Remove focus styles completely for specific elements */
+.no-focus:focus,
+.no-focus:focus-visible {
+  outline: none;
   box-shadow: none !important;
 }
 
-.no-focus:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
 @media (prefers-color-scheme: dark) {
   :root {

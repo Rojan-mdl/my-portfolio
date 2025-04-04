@@ -1,56 +1,96 @@
-// src/components/ContactSection.tsx
-"use client";
+// Simple Server Component
+
+import React from "react";
+import Image from "next/image";
+import Link from "next/link"; // Keep Link if I convert mailto to a Link component later, otherwise <a> is fine
 
 export default function ContactSection() {
+  const email = "marius.frilans@gmail.com";
+  const linkedInUrl = "https://www.linkedin.com/in/marius-Øvrebø-604235187";
+  const gitHubUrl = "https://github.com/Rojan-mdl";
+  const instagramUrl = "https://www.instagram.com/rojan3d/";
+
+  // Consistent link styling - applied to the <a> tag
+  const linkClasses = "inline-flex items-center gap-2 text-blue-400 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded px-1 py-0.5 transition";
+
+  // Icon size
+  const iconSize = 20;
+
+  // Styling for the icon frame
+  const iconFrameClasses = "bg-white p-1 rounded-md inline-block leading-none";
+
   return (
-    // Remove the old background class, keep text white
-    <section id="contact" className="py-16 text-gray-100">
-      <div className="max-w-4xl mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-8 text-center">Contact Me</h2>
-        <form className="space-y-4" action="/api/contact" method="POST">
-          <div>
-            <label htmlFor="name" className="block text-gray-300">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              required
-              className="mt-1 block w-full p-2 border rounded bg-gray-800 text-gray-100 focus:outline-none focus:shadow-[0_0_10px_2px_#ffffff]"
-            />
-          </div>
-          <div>
-            <label htmlFor="email" className="block text-gray-300">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              className="mt-1 block w-full p-2 border rounded bg-gray-800 text-gray-100 focus:outline-none focus:shadow-[0_0_10px_2px_#ffffff]"
-            />
-          </div>
-          <div>
-            <label htmlFor="message" className="block text-gray-300">
-              Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              rows={5}
-              required
-              className="mt-1 block w-full p-2 border rounded bg-gray-800 text-gray-100 focus:outline-none focus:shadow-[0_0_10px_2px_#ffffff]"
-            ></textarea>
-          </div>
-          <button
-            type="submit"
-            className="bg-[#450086] px-6 py-3 text-white font-semibold rounded hover:bg-[#360066] transition focus:outline-none focus:shadow-[0_0_10px_2px_#ffffff]"
-          >
-            Send Message
-          </button>
-        </form>
+    <section id="contact" className="py-16 text-gray-100" aria-labelledby="contact-heading">
+      <div className="max-w-4xl mx-auto px-4 text-center">
+        <h2 id="contact-heading" className="text-3xl font-bold mb-6">Get In Touch</h2>
+        <p className="mb-8 text-lg text-gray-300">
+          Feel free to reach out! You can contact me via email or connect with me online.
+        </p>
+
+        {/* Contact Info and Links */}
+        <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-4 sm:gap-x-8">
+
+          {/* Email */}
+          <a href={`mailto:${email}`} className={linkClasses}>
+            <div className={iconFrameClasses}>
+              <Image
+                src="/icons/email.png"
+                alt=""
+                width={iconSize}
+                height={iconSize}
+                aria-hidden="true"
+                className="block"
+              />
+            </div>
+            <span>{email}</span>
+          </a>
+
+          {/* LinkedIn */}
+          <a href={linkedInUrl} target="_blank" rel="noopener noreferrer" className={linkClasses}>
+             <div className={iconFrameClasses}>
+               <Image
+                 src="/icons/linkedin.svg"
+                 alt=""
+                 width={iconSize}
+                 height={iconSize}
+                 aria-hidden="true"
+                 className="block"
+               />
+             </div>
+            <span>LinkedIn</span>
+          </a>
+
+          {/* GitHub */}
+          <a href={gitHubUrl} target="_blank" rel="noopener noreferrer" className={linkClasses}>
+             <div className={iconFrameClasses}>
+               <Image
+                 src="/icons/github.svg"
+                 alt=""
+                 width={iconSize}
+                 height={iconSize}
+                 aria-hidden="true"
+                 className="block"
+               />
+             </div>
+             <span>GitHub</span>
+          </a>
+
+          {/* Instagram */}
+          <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className={linkClasses}>
+             <div className={iconFrameClasses}>
+               <Image
+                 src="/icons/instagram.svg"
+                 alt=""
+                 width={iconSize}
+                 height={iconSize}
+                 aria-hidden="true"
+                 className="block"
+               />
+             </div>
+            <span>Instagram</span>
+          </a>
+
+        </div>
       </div>
     </section>
   );

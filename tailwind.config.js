@@ -1,23 +1,24 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: 'class', // or 'media' if you prefer OS-based theme
+  darkMode: 'class', // Keep class-based dark mode
   content: [
-    './pages/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}',
-    // Add other paths if needed
+    // --- UPDATED PATHS ---
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}', // Scan app directory
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}', // Scan components directory
+    // Add other top-level directories if needed (e.g., './src/sections/**/*.{js,ts,jsx,tsx,mdx}')
+    // Remove './pages/**/*.{js,ts,jsx,tsx}' if you are only using the App Router
   ],
   theme: {
     extend: {
       colors: {
-        // Define your dark theme colors here
-        // Example:
-        'dark-bg': '#0a0a0a',        // Main background
-        'dark-surface': '#171717',  // Card/surface backgrounds
-        'dark-text-primary': '#ededed', // Primary text
-        'dark-text-secondary': '#a1a1aa', // Secondary text
-        'dark-accent': '#3b82f6', // Accent color (e.g., blue)
+        // Your custom dark theme colors [cite: tailwind.config.js]
+        'dark-bg': '#0a0a0a',
+        'dark-surface': '#171717',
+        'dark-text-primary': '#ededed',
+        'dark-text-secondary': '#a1a1aa',
+        'dark-accent': '#3b82f6',
       }
-      // You might extend other theme properties like typography or spacing
+      // Extend other properties if needed
     },
   },
   plugins: [],
