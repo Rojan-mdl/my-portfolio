@@ -7,15 +7,12 @@ import { notFound } from 'next/navigation';
 import type { Project } from '@/types';
 import ToolIcon from '@/components/ToolIcon';
 
-// --- MODIFIED: Explicit Props interface expecting a Promise for params ---
+// Explicit Props interface expecting a Promise for params
 interface Props {
-  // Type params as a Promise resolving to the object containing projectId
   params: Promise<{
     projectId: string;
   }>;
-  // searchParams?: Promise<{ [key: string]: string | string[] | undefined }>; // If you needed searchParams
 }
-// --- END MODIFICATION ---
 
 // Helper Function to Get Project Data
 // Runs on the server (in generateMetadata, generateStaticParams, and Page component)
@@ -35,7 +32,7 @@ async function getProjectData(projectId: string): Promise<Project | null> {
 // Generate Dynamic Metadata
 // Uses title template from layout.tsx by returning only the specific part
 export async function generateMetadata(
-  { params: paramsPromise }: Props // Receive the promise, rename for clarity
+  { params: paramsPromise }: Props // Receive the promise, rename for clarity or Vercel will start crying
 ): Promise<Metadata> {
   // Await the promise to get the actual params object
   const { projectId } = await paramsPromise;
@@ -56,9 +53,10 @@ export async function generateMetadata(
     openGraph: {
       title: project.title,
       description: project.brief,
-      images: project.image ? [
-          { url: `${process.env.NEXT_PUBLIC_SITE_URL || ''}${project.image}`, width: 1200, height: 630 }
-      ] : [], // Add fallback OG image from parent if desired: parentMetadata.openGraph?.images || []
+      // Let Next.js resolve relative URL using metadataBase
+      // Ensure project.image starts with "/" (e.g., "/project01.png")
+      // and the image exists in /public folder
+      images: project.image ? [ project.image ] : [],
     },
   }
 }
@@ -126,7 +124,7 @@ export default async function ProjectPage({ params: paramsPromise }: Props) { //
       {project.extendedImages && project.extendedImages.length > 0 && (
         <section className="mb-10" aria-labelledby="gallery-heading">
           <h2 id="gallery-heading" className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Gallery</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-4">
             {project.extendedImages.map((imgSrc, index) => (
                <div key={index} className="relative w-full aspect-video overflow-hidden rounded">
                  <Image
@@ -164,21 +162,20 @@ export default async function ProjectPage({ params: paramsPromise }: Props) { //
           <h2 id="tools-heading" className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Tools Used</h2>
           <div className="flex flex-wrap gap-4">
             {project.toolIcons.map((tool, index) => (
-              // Use the ToolIcon component, passing the correct props
-              <ToolIcon
+               <ToolIcon
                   key={index}
                   src={tool.src}
-                  alt={tool.label} // Use label for alt text
+                  alt={tool.label}
                   label={tool.label}
-                  size={32} // Or desired size for this page
-              />
+                  size={32}
+               />
             ))}
           </div>
         </section>
       )}
 
       {/* Link back to portfolio */}
-       <div className="mt-12 pt-8 border-t border-gray-700 text-center">
+       <div className="mt-12 pt-8 text-center">
           <Link href="/#portfolio" className="text-blue-400 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-400 rounded px-2 py-1">
              &larr; Back to All Projects
           </Link>

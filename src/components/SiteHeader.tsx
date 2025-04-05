@@ -15,13 +15,13 @@ const HamburgerIcon = ({ open }: { open: boolean }) => (
 export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Helper to close the menu
+  // Helper to close the mobile menu
   const closeMenu = () => setMenuOpen(false);
 
-  // Close menu on resize to desktop width
+  // Close mobile menu on resize to desktop width
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 640) { // Tailwind 'sm' breakpoint
+      if (window.innerWidth >= 640) {
         setMenuOpen(false);
       }
     };
@@ -44,8 +44,16 @@ export default function SiteHeader() {
     };
   }, [menuOpen]);
 
-  // Link Classes using focus-visible
-  const desktopLinkClasses = "uppercase text-sm border-b-2 border-transparent hover:text-gray-300 focus:outline-none focus-visible:text-white focus-visible:border-white transition duration-150 ease-in-out";
+  // Link Classes for Focus-Only Animated Underline
+  // Underline (scale-x) triggers only on focus (click or keyboard)
+  const desktopLinkClasses = `
+    relative uppercase text-sm text-gray-300 transition duration-150 ease-in-out
+    hover:text-white focus:outline-none focus:text-white
+    after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-white
+    after:origin-left after:scale-x-0 after:transition-transform after:duration-300 after:ease-out
+    focus:after:scale-x-100
+  `;
+  // Mobile link styling uses focus-visible for its underline
   const mobileLinkClasses = "text-lg hover:text-gray-300 focus:outline-none focus-visible:text-white focus-visible:underline";
 
 
@@ -60,12 +68,12 @@ export default function SiteHeader() {
           <div className="flex-shrink-0 sm:hidden">
             <Link href="#hero" onClick={closeMenu} aria-label="Homepage Logo">
               <Image
-                src="/image/MØ-white.png" // Ensure this path is correct in your /public folder
+                src="/image/MØ-white.png"
                 alt="Marius Øvrebø Logo"
-                width={45}
-                height={45}
-                className="h-auto" // Maintain aspect ratio
-                priority // Load logo quickly
+                width={60}
+                height={60}
+                className="h-auto"
+                priority
               />
             </Link>
           </div>
@@ -87,19 +95,19 @@ export default function SiteHeader() {
           <div className="hidden sm:flex w-full items-center justify-between">
             {/* Left Navigation */}
             <nav className="flex items-center space-x-5 lg:space-x-7" aria-label="Main desktop navigation left">
-              <Link href="#hero" className={desktopLinkClasses}>Home</Link>
-              <Link href="#about" className={desktopLinkClasses}>About</Link>
-              <Link href="#experience-education" className={desktopLinkClasses}>Experience</Link>
+              <Link href="#hero" className={desktopLinkClasses} onClick={closeMenu}>Home</Link>
+              <Link href="#about" className={desktopLinkClasses} onClick={closeMenu}>About</Link>
+              <Link href="#experience-education" className={desktopLinkClasses} onClick={closeMenu}>Experience</Link>
             </nav>
 
             {/* Centered Logo */}
             <div className="flex-shrink-0 px-4">
               <Link href="#hero" onClick={closeMenu} aria-label="Homepage Logo">
                 <Image
-                  src="/image/MØ-white.png" // Ensure path is correct
+                  src="/image/MØ-white.png"
                   alt="Marius Øvrebø Logo"
-                  width={50} // Slightly larger desktop logo
-                  height={50}
+                  width={80}
+                  height={80}
                   className="h-auto"
                   priority
                 />
@@ -108,9 +116,9 @@ export default function SiteHeader() {
 
             {/* Right Navigation */}
             <nav className="flex items-center space-x-5 lg:space-x-7" aria-label="Main desktop navigation right">
-               <Link href="#portfolio" className={desktopLinkClasses}>Portfolio</Link>
-               <Link href="#services" className={desktopLinkClasses}>Services</Link>
-               <Link href="#contact" className={desktopLinkClasses}>Contact</Link>
+               <Link href="#portfolio" className={desktopLinkClasses} onClick={closeMenu}>Portfolio</Link>
+               <Link href="#services" className={desktopLinkClasses} onClick={closeMenu}>Services</Link>
+               <Link href="#contact" className={desktopLinkClasses} onClick={closeMenu}>Contact</Link>
             </nav>
           </div>
         </div>
@@ -121,13 +129,13 @@ export default function SiteHeader() {
         {menuOpen && (
           <motion.div
             id="mobile-menu"
-            role="dialog" // Added role dialog
-            aria-modal="true" // Added aria-modal
+            role="dialog"
+            aria-modal="true"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="sm:hidden fixed inset-0 top-16 z-40 bg-black/95 backdrop-blur-sm pt-10 overflow-y-auto" // Added overflow-y-auto
+            className="sm:hidden fixed inset-0 top-16 z-40 bg-black/95 backdrop-blur-sm pt-8 overflow-y-auto"
           >
             {/* Navigation links within the mobile menu */}
             <nav className="flex flex-col items-center gap-y-6 px-4 pb-10" aria-label="Mobile navigation">

@@ -1,77 +1,80 @@
 [
-    {
-      "id": "1",
-      "title": "Project 1",
-      "brief": "Brief description of Project 1.",
-      "detail": "Detailed information about Project 1, including challenges faced and technologies used.",
-      "image": "/project01.png",
-      "extendedImages": [
-        "/project1-image1.jpg",
-        "/project1-image2.jpg"
-      ],
-      "extendedVideos": [
-        "/project1-video.mp4"
-      ],
-      "toolIcons": [
-        {
-          "src": "/icons/figma.svg",
-          "label": "Figma"
-        },
-        {
-          "src": "/icons/next-js.svg",
-          "label": "Next.js"
-        },
-        {
-          "src": "/icons/react.png",
-          "label": "React"
-        }
-      ]
-    },
-    {
-      "id": "2",
-      "title": "Project 2",
-      "brief": "Brief description of Project 2.",
-      "detail": "Detailed information about Project 2, describing its objectives, process, and outcomes.",
-      "image": "/project2.jpg",
-      "extendedImages": [
-        "/project2-image1.jpg",
-        "/project2-image2.jpg"
-      ],
-      "extendedVideos": [
-        "/project2-video.mp4"
-      ],
-      "toolIcons": [
-        {
-          "src": "/icons/typescript.svg",
-          "label": "TypeScript"
-        },
-        {
-          "src": "/icons/javascript.svg",
-          "label": "JavaScript"
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "title": "Project 3",
-      "brief": "Brief description of Project 3.",
-      "detail": "Detailed information about Project 3, including case studies and additional links.",
-      "image": "/project3.jpg",
-      "extendedImages": [
-        "/project3-image1.jpg",
-        "/project3-image2.jpg"
-      ],
-      "extendedVideos": [],
-      "toolIcons": [
-        {
-          "src": "/icons/c-sharp.svg",
-          "label": "C#"
-        },
-        {
-          "src": "/icons/sql.png",
-          "label": "SQL"
-        }
-      ]
-    }
-  ]
-  
+  {
+    "id": "1",
+    "title": "Unity Arena",
+    "brief": "Visualization of different capacity layouts for Unity Arena.",
+    "detail": "Unity Arena, which at the time was named Telenor Arena, hired me to help them kick off their new Black Box project.",
+    "image": "/image/project01/picture01.png",
+    "extendedImages": [
+      "/image/project01/box01.png",
+      "/image/project01/box02.png",
+      "/image/project01/bowl01.png",
+      "/image/project01/bowl02.png",
+      "/image/project01/full01.png",
+      "/image/project01/full02.png"
+    ],
+    "extendedVideos": [
+
+    ],
+    "toolIcons": [
+      {
+        "src": "/icons/blender.svg",
+        "label": "Blender"
+      },
+      {
+        "src": "/icons/davinci-resolve.svg",
+        "label": "DaVinci Resolve"
+      },
+      {
+        "src": "/icons/adobe-after-effects.svg",
+        "label": "Adobe After Effects"
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Project 2",
+    "brief": "Brief description of Project 2.",
+    "detail": "Detailed information about Project 2, describing its objectives, process, and outcomes.",
+    "image": "/project2.jpg",
+    "extendedImages": [
+      "/project2-image1.jpg",
+      "/project2-image2.jpg"
+    ],
+    "extendedVideos": [
+      "/project2-video.mp4"
+    ],
+    "toolIcons": [
+      {
+        "src": "/icons/typescript.svg",
+        "label": "TypeScript"
+      },
+      {
+        "src": "/icons/javascript.svg",
+        "label": "JavaScript"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Project 3",
+    "brief": "Brief description of Project 3.",
+    "detail": "Detailed information about Project 3, including case studies and additional links.",
+    "image": "/project3.jpg",
+    "extendedImages": [
+      "/project3-image1.jpg",
+      "/project3-image2.jpg"
+    ],
+    "extendedVideos": [],
+    "toolIcons": [
+      {
+        "src": "/icons/c-sharp.svg",
+        "label": "C#"
+      },
+      {
+        "src": "/icons/sql.png",
+        "label": "SQL"
+      }
+    ]
+  }
+]

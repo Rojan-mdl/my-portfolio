@@ -108,8 +108,9 @@ export default function ExperienceEducationSection() {
                  <div className="mt-2">
                    <p className="text-sm font-semibold">Tools:</p>
                     <div className="mt-1 flex flex-wrap gap-2">
-                       <ToolIcon src="/icons/adobe-after-effects.svg" alt="After Effects" label="After Effects" size={24} />
-                       <ToolIcon src="/icons/blender.svg" alt="Blender" label="Blender" size={24} />
+                      <ToolIcon src="/icons/blender.svg" alt="Blender" label="Blender" size={24} />
+                      <ToolIcon src="/icons/adobe-after-effects.svg" alt="After Effects" label="After Effects" size={24} />
+                      <ToolIcon src="/icons/davinci-resolve.svg" alt="DaVinci Resolve" label="DaVinci Resolve" size={24} />
                     </div>
                  </div>
                </div>
