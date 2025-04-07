@@ -9,6 +9,7 @@ import ExperienceEducationSection from "@/components/ExperienceEducationSection"
 import PortfolioSection from "@/components/PortfolioSection";
 import ServicesSection from "@/components/ServicesSection";
 import ContactSection from "@/components/ContactSection";
+import ArtSection from '@/components/ArtSection';
 
 
 // Server-side function to fetch projects
@@ -34,6 +35,7 @@ export default async function HomePage() {
       <AboutSection />
       <ExperienceEducationSection />
       <PortfolioSection projects={projects} />
+      <ArtSection />
       <ServicesSection />
       <ContactSection />
     </>

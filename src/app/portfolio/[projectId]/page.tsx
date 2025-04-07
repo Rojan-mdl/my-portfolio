@@ -6,12 +6,13 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import type { Project } from '@/types';
 import ToolIcon from '@/components/ToolIcon';
+import ReactMarkdown from 'react-markdown'; // Import the component
+import remarkGfm from 'remark-gfm';         // Import the GFM plugin
+import ProjectGallery from '@/components/ProjectGallery';
 
 // Explicit Props interface expecting a Promise for params
 interface Props {
-  params: Promise<{
-    projectId: string;
-  }>;
+  params: Promise<{ projectId: string; }>;
 }
 
 // Helper Function to Get Project Data
@@ -25,42 +26,31 @@ async function getProjectData(projectId: string): Promise<Project | null> {
     return project || null;
   } catch (error) {
     console.error("Error reading projects data:", error);
-    return null; // Return null on error
+    return null;
   }
 }
 
-// Generate Dynamic Metadata
-// Uses title template from layout.tsx by returning only the specific part
-export async function generateMetadata(
-  { params: paramsPromise }: Props // Receive the promise, rename for clarity or Vercel will start crying
-): Promise<Metadata> {
-  // Await the promise to get the actual params object
+// generateMetadata uses data from projects.json (remains mostly the same)
+export async function generateMetadata({ params: paramsPromise }: Props): Promise<Metadata> {
   const { projectId } = await paramsPromise;
-
-  const project = await getProjectData(projectId); // Use the awaited value
-
+  const project = await getProjectData(projectId); // Fetches data including 'brief'
+  // Note: This function DOES NOT use detailPath, only brief/title/image from JSON
   if (!project) {
     return {
       title: 'Project Not Found',
       description: 'The requested project could not be found.',
     }
   }
-
-  // Return project-specific metadata; Next.js merges title with parent template
   return {
     title: project.title,
-    description: project.brief,
+    description: project.brief, // Uses brief from JSON
     openGraph: {
-      title: project.title,
-      description: project.brief,
-      // Let Next.js resolve relative URL using metadataBase
-      // Ensure project.image starts with "/" (e.g., "/project01.png")
-      // and the image exists in /public folder
-      images: project.image ? [ project.image ] : [],
+        title: project.title,
+        description: project.brief,
+        images: project.image ? [project.image] : [],
     },
   }
 }
-
 // Generate Static Paths at Build Time
 // Tells Next.js which project IDs exist to pre-render pages
 export async function generateStaticParams() {
@@ -80,17 +70,30 @@ export async function generateStaticParams() {
 
 
 // The Page Component
-// Renders the individual project page content
-export default async function ProjectPage({ params: paramsPromise }: Props) { // Receive the promise
-  // Await the promise to get the actual params object
+export default async function ProjectPage({ params: paramsPromise }: Props) {
   const { projectId } = await paramsPromise;
+  const project = await getProjectData(projectId); // Fetches metadata including detailPath
 
-  const project = await getProjectData(projectId); // Use the awaited value
-
-  // If project data isn't found for the given ID, show the 404 page
   if (!project) {
     notFound();
   }
+
+  // --- Read Markdown content from the file specified by detailPath ---
+  let markdownContent = ''; // Default content
+  // Check if detailPath exists before trying to read the file
+  if (project.detailPath) { // Use detailPath here
+      try {
+          const markdownFilePath = path.join(process.cwd(), project.detailPath); // Use detailPath
+          markdownContent = await fs.readFile(markdownFilePath, 'utf8');
+      } catch (error) {
+          console.error(`Error reading markdown file at ${project.detailPath}:`, error);
+          markdownContent = 'Error loading project details.'; // Set fallback content
+      }
+  } else {
+      console.warn(`Project with id ${projectId} is missing the detailPath field.`);
+      markdownContent = 'Project details are not available.'; // Set fallback content
+  }
+
 
   return (
     <main className="pt-24 pb-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-gray-100">
@@ -98,7 +101,7 @@ export default async function ProjectPage({ params: paramsPromise }: Props) { //
       <h1 className="text-3xl sm:text-4xl font-bold mb-4">{project.title}</h1>
 
       {/* Main Project Image */}
-      {project.image && (
+      {project.image ? (
         <div className="mb-6 relative w-full aspect-[16/9] overflow-hidden rounded-lg shadow-lg">
           <Image
             src={project.image}
@@ -106,38 +109,28 @@ export default async function ProjectPage({ params: paramsPromise }: Props) { //
             fill
             style={{ objectFit: 'cover' }}
             priority
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 66vw" // Example sizes
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 66vw"
           />
         </div>
-      )}
+      ) : null}
 
       {/* Brief Description */}
       <p className="text-lg text-gray-300 mb-6 italic">{project.brief}</p>
 
-      {/* Detailed Information */}
+      {/* Detailed Information - Use markdownContent */}
       <div className="prose prose-invert max-w-none mb-8 text-gray-200">
-         {/* Render detail; consider markdown renderer if applicable */}
-        <p>{project.detail}</p>
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {markdownContent}
+        </ReactMarkdown>
       </div>
 
       {/* Extended Images Gallery */}
       {project.extendedImages && project.extendedImages.length > 0 && (
         <section className="mb-10" aria-labelledby="gallery-heading">
           <h2 id="gallery-heading" className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Gallery</h2>
-          <div className="space-y-4">
-            {project.extendedImages.map((imgSrc, index) => (
-               <div key={index} className="relative w-full aspect-video overflow-hidden rounded">
-                 <Image
-                    src={imgSrc}
-                    alt={`${project.title} - gallery image ${index + 1}`}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    sizes="(max-width: 640px) 100vw, 50vw"
-                    loading="lazy"
-                 />
-               </div>
-            ))}
-          </div>
+          {/* Render the client component, passing images and title */}
+          <ProjectGallery images={project.extendedImages.filter(img => img)} projectTitle={project.title} />
+           {/* Added filter(img => img) just in case of empty strings, ProjectGallery also handles it */}
         </section>
       )}
 
@@ -161,14 +154,18 @@ export default async function ProjectPage({ params: paramsPromise }: Props) { //
         <section aria-labelledby="tools-heading">
           <h2 id="tools-heading" className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Tools Used</h2>
           <div className="flex flex-wrap gap-4">
-            {project.toolIcons.map((tool, index) => (
-               <ToolIcon
+          {project.toolIcons.map((tool, index) => (
+              // --- MODIFIED: Check tool.src before rendering ToolIcon ---
+              // Render ToolIcon only if tool.src is a non-empty string and label exists
+              (tool.src && tool.label) ? (
+                <ToolIcon
                   key={index}
                   src={tool.src}
-                  alt={tool.label}
+                  alt={tool.label} // Alt text is required by ToolIcon
                   label={tool.label}
                   size={32}
-               />
+                />
+              ) : null
             ))}
           </div>
         </section>

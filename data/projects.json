@@ -3,7 +3,7 @@
     "id": "1",
     "title": "Unity Arena",
     "brief": "Visualization of different capacity layouts for Unity Arena.",
-    "detail": "Unity Arena, which at the time was named Telenor Arena, hired me to help them kick off their new Black Box project.",
+    "detailPath": "/data/markdown/unity-arena.md",
     "image": "/image/project01/picture01.png",
     "extendedImages": [
       "/image/project01/box01.png",
@@ -17,64 +17,70 @@
 
     ],
     "toolIcons": [
-      {
-        "src": "/icons/blender.svg",
-        "label": "Blender"
-      },
-      {
-        "src": "/icons/davinci-resolve.svg",
-        "label": "DaVinci Resolve"
-      },
-      {
-        "src": "/icons/adobe-after-effects.svg",
-        "label": "Adobe After Effects"
-      }
+      {"src": "/icons/blender.svg", "label": "Blender"},
+      {"src": "/icons/davinci-resolve.svg","label": "DaVinci Resolve"},
+      {"src": "/icons/adobe-after-effects.svg","label": "Adobe After Effects"}
+    ],
+    "lightboxSlides": [
+      { "type": "image", "src": "/image/project01/picture01.png", "alt": "Unity Arena Main Visual" },
+      { "type": "image", "src": "/image/project01/box01.png", "alt": "Box Layout 1" },
+      { "type": "image", "src": "/image/project01/box02.png", "alt": "Box Layout 2" },
+      { "type": "image", "src": "/image/project01/bowl01.png", "alt": "Bowl Layout 1" },
+      { "type": "youtube", "youtubeId": "https://youtu.be/Q8GmGq6gKjo", "alt": "Unity Arena Project Video" },
+      { "type": "image", "src": "/image/project01/full01.png", "alt": "Full Layout 1" }
     ]
   },
   {
     "id": "2",
-    "title": "Project 2",
-    "brief": "Brief description of Project 2.",
-    "detail": "Detailed information about Project 2, describing its objectives, process, and outcomes.",
-    "image": "/project2.jpg",
+    "title": "Portfolio website",
+    "brief": "Interactive portfolio showcasing Marius Øvrebø's 3D, design & web development skills. Built on Next.js.",
+    "detailPath": "/data/markdown/portfolio-website.md",
+    "image": "/image/project02/image01.png",
     "extendedImages": [
       "/project2-image1.jpg",
       "/project2-image2.jpg"
     ],
     "extendedVideos": [
-      "/project2-video.mp4"
     ],
     "toolIcons": [
-      {
-        "src": "/icons/typescript.svg",
-        "label": "TypeScript"
-      },
-      {
-        "src": "/icons/javascript.svg",
-        "label": "JavaScript"
-      }
+      { "src": "/icons/next-js.svg", "label": "Next.js" },
+      { "src": "/icons/react.png", "label": "React" },
+      { "src": "/icons/typescript.svg", "label": "TypeScript" },
+      { "src": "/icons/tailwindcss.svg", "label": "Tailwind CSS"},
+      { "src": "/icons/threejs.svg", "label": "Three.js / R3F"},
+      { "src": "/icons/framer-motion.png", "label": "Framer Motion"},
+      { "src": "/icons/vercel.svg", "label": "Vercel"}
     ]
   },
   {
     "id": "3",
-    "title": "Project 3",
-    "brief": "Brief description of Project 3.",
-    "detail": "Detailed information about Project 3, including case studies and additional links.",
-    "image": "/project3.jpg",
+    "title": "Oslo Throwdown 2024",
+    "brief": "Visualization of the layout of Oslo Throwdown 2024, a CrossFit competition in Oslo, Norway.",
+    "detailPath": "/data/markdown/project-3.md",
+    "image": "/image/project03/image01.png",
     "extendedImages": [
       "/project3-image1.jpg",
       "/project3-image2.jpg"
     ],
-    "extendedVideos": [],
+    "extendedVideos": [
+
+    ],
     "toolIcons": [
-      {
-        "src": "/icons/c-sharp.svg",
-        "label": "C#"
-      },
-      {
-        "src": "/icons/sql.png",
-        "label": "SQL"
-      }
+      {"src": "/icons/blender.svg", "label": "Blender"},
+      {"src": "/icons/davinci-resolve.svg", "label": "DaVinci Resolve"}
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Oslo Throwdown 2025",
+    "brief": "To be announced.",
+    "detailPath": "/data/markdown/project-3.md",
+    "image": "/image/to-be-announced.png",
+    "extendedImages": [
+    ],
+    "extendedVideos": [
+    ],
+    "toolIcons": [
     ]
   }
 ]
