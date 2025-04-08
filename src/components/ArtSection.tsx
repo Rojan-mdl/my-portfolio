@@ -2,15 +2,19 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import Lightbox from "yet-another-react-lightbox";
+import dynamic from 'next/dynamic'; // Import dynamic
 import type { Slide } from "yet-another-react-lightbox";
+// Import plugins statically
 import Video from "yet-another-react-lightbox/plugins/video";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+// Import CSS statically as before
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 
-// Import Zoom if needed
-// import Zoom from "yet-another-react-lightbox/plugins/zoom";
+// Dynamically import only the main Lightbox component
+const Lightbox = dynamic(() => import('yet-another-react-lightbox'));
+
 
 // Define structure for pieces data
 type ArtPiece = {
@@ -120,13 +124,16 @@ export default function ArtSection() {
         </div>
       </section>
 
-      <Lightbox
-        open={open}
-        close={() => setOpen(false)}
-        index={index}
-        slides={slides}
-        plugins={[Video, Thumbnails]}
-      />
+      {/* Conditionally render Lightbox only when open is true */}
+      {open && (
+        <Lightbox
+          open={open}
+          close={() => setOpen(false)}
+          index={index}
+          slides={slides}
+          plugins={[Video, Thumbnails, Zoom]}
+        />
+      )}
     </>
   );
 }

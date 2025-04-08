@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import type { Project } from '@/types';
 import ToolIcon from '@/components/ToolIcon';
-import ReactMarkdown from 'react-markdown'; // Import the component
-import remarkGfm from 'remark-gfm';         // Import the GFM plugin
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import ProjectGallery from '@/components/ProjectGallery';
 
 // Explicit Props interface expecting a Promise for params
@@ -30,7 +30,7 @@ async function getProjectData(projectId: string): Promise<Project | null> {
   }
 }
 
-// generateMetadata uses data from projects.json (remains mostly the same)
+// generateMetadata uses data from projects.json
 export async function generateMetadata({ params: paramsPromise }: Props): Promise<Metadata> {
   const { projectId } = await paramsPromise;
   const project = await getProjectData(projectId); // Fetches data including 'brief'
@@ -60,7 +60,7 @@ export async function generateStaticParams() {
     const projects: Project[] = JSON.parse(jsonData);
 
     return projects.map((project) => ({
-      projectId: project.id, // Must match the dynamic segment name '[projectId]'
+      projectId: project.id,
     }));
   } catch (error) {
      console.error("Error reading projects data for static params:", error);
@@ -78,10 +78,9 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
     notFound();
   }
 
-  // --- Read Markdown content from the file specified by detailPath ---
+  // Read Markdown content from the file specified by detailPath
   let markdownContent = ''; // Default content
-  // Check if detailPath exists before trying to read the file
-  if (project.detailPath) { // Use detailPath here
+  if (project.detailPath) {
       try {
           const markdownFilePath = path.join(process.cwd(), project.detailPath); // Use detailPath
           markdownContent = await fs.readFile(markdownFilePath, 'utf8');
@@ -130,7 +129,7 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
           <h2 id="gallery-heading" className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Gallery</h2>
           {/* Render the client component, passing images and title */}
           <ProjectGallery images={project.extendedImages.filter(img => img)} projectTitle={project.title} />
-           {/* Added filter(img => img) just in case of empty strings, ProjectGallery also handles it */}
+           {/* Filtering (img => img) just in case of empty strings, ProjectGallery also handles it */}
         </section>
       )}
 
@@ -155,7 +154,7 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
           <h2 id="tools-heading" className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Tools Used</h2>
           <div className="flex flex-wrap gap-4">
           {project.toolIcons.map((tool, index) => (
-              // --- MODIFIED: Check tool.src before rendering ToolIcon ---
+              // Check tool.src before rendering ToolIcon
               // Render ToolIcon only if tool.src is a non-empty string and label exists
               (tool.src && tool.label) ? (
                 <ToolIcon

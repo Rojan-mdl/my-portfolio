@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
+import { usePathname } from 'next/navigation'; // Import usePathname
 import { motion, AnimatePresence } from "framer-motion";
 
 // Hamburger Icon Component
@@ -14,6 +15,13 @@ const HamburgerIcon = ({ open }: { open: boolean }) => (
 
 export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname(); // Get the current path
+  const isProjectPage = pathname.startsWith('/portfolio/'); // Check if it's a project page
+
+  // Helper function to generate the correct href
+  const getLinkHref = (sectionId: string) => {
+    return isProjectPage ? `/${sectionId}` : sectionId;
+  };
 
   // Helper to close the mobile menu
   const closeMenu = () => setMenuOpen(false);
@@ -66,7 +74,7 @@ export default function SiteHeader() {
 
           {/* Mobile View: Logo (Left) */}
           <div className="flex-shrink-0 sm:hidden">
-            <Link href="#hero" onClick={closeMenu} aria-label="Homepage Logo">
+            <Link href={getLinkHref('#hero')} onClick={closeMenu} aria-label="Homepage Logo">
               <Image
                 src="/image/MØ-white.png"
                 alt="Marius Øvrebø Logo"
@@ -95,14 +103,14 @@ export default function SiteHeader() {
           <div className="hidden sm:flex w-full items-center justify-between">
             {/* Left Navigation */}
             <nav className="flex items-center space-x-5 lg:space-x-7" aria-label="Main desktop navigation left">
-              <Link href="#hero" className={desktopLinkClasses} onClick={closeMenu}>Home</Link>
-              <Link href="#about" className={desktopLinkClasses} onClick={closeMenu}>About</Link>
-              <Link href="#experience-education" className={desktopLinkClasses} onClick={closeMenu}>Experience</Link>
+              <Link href={getLinkHref('#about')} className={desktopLinkClasses} onClick={closeMenu}>About</Link>
+              <Link href={getLinkHref('#experience-education')} className={desktopLinkClasses} onClick={closeMenu}>Experience</Link>
+              <Link href={getLinkHref('#portfolio')} className={desktopLinkClasses} onClick={closeMenu}>Portfolio</Link>
             </nav>
 
             {/* Centered Logo */}
             <div className="flex-shrink-0 px-4">
-              <Link href="#hero" onClick={closeMenu} aria-label="Homepage Logo">
+              <Link href={getLinkHref('#hero')} onClick={closeMenu} aria-label="Homepage Logo">
                 <Image
                   src="/image/MØ-white.png"
                   alt="Marius Øvrebø Logo"
@@ -116,9 +124,9 @@ export default function SiteHeader() {
 
             {/* Right Navigation */}
             <nav className="flex items-center space-x-5 lg:space-x-7" aria-label="Main desktop navigation right">
-               <Link href="#portfolio" className={desktopLinkClasses} onClick={closeMenu}>Portfolio</Link>
-               <Link href="#services" className={desktopLinkClasses} onClick={closeMenu}>Services</Link>
-               <Link href="#contact" className={desktopLinkClasses} onClick={closeMenu}>Contact</Link>
+                <Link href={getLinkHref('#art')} className={desktopLinkClasses} onClick={closeMenu}>Art</Link>
+                <Link href={getLinkHref('#services')} className={desktopLinkClasses} onClick={closeMenu}>Services</Link>
+                <Link href={getLinkHref('#contact')} className={desktopLinkClasses} onClick={closeMenu}>Contact</Link>
             </nav>
           </div>
         </div>
@@ -139,12 +147,12 @@ export default function SiteHeader() {
           >
             {/* Navigation links within the mobile menu */}
             <nav className="flex flex-col items-center gap-y-6 px-4 pb-10" aria-label="Mobile navigation">
-               <Link href="#hero" className={mobileLinkClasses} onClick={closeMenu}>Home</Link>
-               <Link href="#about" className={mobileLinkClasses} onClick={closeMenu}>About</Link>
-               <Link href="#experience-education" className={mobileLinkClasses} onClick={closeMenu}>Experience</Link>
-               <Link href="#portfolio" className={mobileLinkClasses} onClick={closeMenu}>Portfolio</Link>
-               <Link href="#services" className={mobileLinkClasses} onClick={closeMenu}>Services</Link>
-               <Link href="#contact" className={mobileLinkClasses} onClick={closeMenu}>Contact</Link>
+               <Link href={getLinkHref('#about')} className={mobileLinkClasses} onClick={closeMenu}>About</Link>
+               <Link href={getLinkHref('#experience-education')} className={mobileLinkClasses} onClick={closeMenu}>Experience</Link>
+               <Link href={getLinkHref('#portfolio')} className={mobileLinkClasses} onClick={closeMenu}>Portfolio</Link>
+               <Link href={getLinkHref('#art')} className={mobileLinkClasses} onClick={closeMenu}>Art</Link>
+               <Link href={getLinkHref('#services')} className={mobileLinkClasses} onClick={closeMenu}>Services</Link>
+               <Link href={getLinkHref('#contact')} className={mobileLinkClasses} onClick={closeMenu}>Contact</Link>
             </nav>
           </motion.div>
         )}

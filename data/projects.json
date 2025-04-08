@@ -14,7 +14,6 @@
       "/image/project01/full02.png"
     ],
     "extendedVideos": [
-
     ],
     "toolIcons": [
       {"src": "/icons/blender.svg", "label": "Blender"},
@@ -33,12 +32,10 @@
   {
     "id": "2",
     "title": "Portfolio website",
-    "brief": "Interactive portfolio showcasing Marius Øvrebø's 3D, design & web development skills. Built on Next.js.",
+    "brief": "Interactive portfolio showcasing my 3D, design & web development skills. Built on Next.js.",
     "detailPath": "/data/markdown/portfolio-website.md",
     "image": "/image/project02/image01.png",
     "extendedImages": [
-      "/project2-image1.jpg",
-      "/project2-image2.jpg"
     ],
     "extendedVideos": [
     ],
@@ -50,17 +47,22 @@
       { "src": "/icons/threejs.svg", "label": "Three.js / R3F"},
       { "src": "/icons/framer-motion.png", "label": "Framer Motion"},
       { "src": "/icons/vercel.svg", "label": "Vercel"}
+    ],
+    "lightboxSlides": [
     ]
   },
   {
     "id": "3",
     "title": "Oslo Throwdown 2024",
     "brief": "Visualization of the layout of Oslo Throwdown 2024, a CrossFit competition in Oslo, Norway.",
-    "detailPath": "/data/markdown/project-3.md",
-    "image": "/image/project03/image01.png",
+    "detailPath": "/data/markdown/project03.md",
+    "image": "/image/project03/hero.png",
     "extendedImages": [
-      "/project3-image1.jpg",
-      "/project3-image2.jpg"
+      "/image/project03/image01.png",
+      "/image/project03/image02.png",
+      "/image/project03/image03.png",
+      "/image/project03/image04.png",
+      "/image/project03/image05.png"
     ],
     "extendedVideos": [
 
@@ -68,6 +70,13 @@
     "toolIcons": [
       {"src": "/icons/blender.svg", "label": "Blender"},
       {"src": "/icons/davinci-resolve.svg", "label": "DaVinci Resolve"}
+    ],
+    "lightboxSlides": [
+      { "type": "image", "src": "/image/project03/image01.png", "alt": "Unity Arena Main Visual" },
+      { "type": "image", "src": "/image/project03/image02.png", "alt": "Unity Arena Main Visual" },
+      { "type": "image", "src": "/image/project03/image03.png", "alt": "Unity Arena Main Visual" },
+      { "type": "image", "src": "/image/project03/image04.png", "alt": "Unity Arena Main Visual" },
+      { "type": "image", "src": "/image/project03/image05.png", "alt": "Unity Arena Main Visual" }
     ]
   },
   {

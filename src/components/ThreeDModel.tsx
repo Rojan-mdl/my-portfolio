@@ -15,7 +15,8 @@ function Model() {
 
 export default function ThreeDModel() {
   return (
-    <Canvas style={{ width: "100%", height: "400px" }}>
+    // Add frameloop="demand" to optimize rendering
+    <Canvas style={{ width: "100%", height: "400px" }} frameloop="demand">
       <ambientLight intensity={0.5} />
       <directionalLight position={[5, 5, 5]} intensity={1} />
       <Model />

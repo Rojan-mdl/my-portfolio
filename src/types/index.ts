@@ -1,9 +1,7 @@
-// src/types/index.ts
-
 // Base properties common to different slide types
 interface LightboxSlideBase {
-  alt?: string;   // Optional description/alt text
-  width?: number; // Optional dimensions
+  alt?: string;
+  width?: number;
   height?: number;
 }
 
@@ -42,7 +40,6 @@ export interface Project {
   extendedVideos?: string[]; // Keep if you display these outside the lightbox
   toolIcons?: { src: string; label: string }[];
 
-  // --- ADDED: Array specifically for lightbox content ---
+  // Array specifically for lightbox content
   lightboxSlides?: LightboxSlide[];
-  // --- END ADDITION ---
 }
