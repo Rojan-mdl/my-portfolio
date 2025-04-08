@@ -1,39 +1,60 @@
-## Purpose
 
-The primary goal of this website is to serve as a professional online portfolio for Marius Øvrebø, presenting his skills, experience [cite: resume.pdf], and project work to potential employers, clients, and collaborators. It aims to highlight his unique blend of creative design (especially 3D) and technical development capabilities.
+## Overview
 
-## Content & Structure
+This project is a modern, dynamic personal portfolio website designed to showcase skills, projects, experience, and artistic work. It serves as a central hub for presenting my professional profile online.
 
-The website is structured as a multi-section single-page application experience initially, linking out to dynamically generated pages for individual portfolio projects. Key sections include:
+## Technologies used
 
-- **Hero Section:** An engaging visual introduction, featuring a background video and animated text displaying Marius's name and core skill areas (CGI / Design / Code). 
-- **About Section:** Presents a personal summary, detailing Marius's background. Includes an expandable section revealing more details and a list of key skills/tools represented by icons.
-- **Experience & Education Section:** Uses a tabbed interface to separate professional experience (SATS, Unity Arena, PlayStation, etc.) and educational background (Kristiania, Noroff), including relevant details, dates, and tools used for each entry (displayed with interactive tooltips).
-- **Portfolio Section:** Displays a grid of project cards. Each card links to a dedicated dynamic page for that project. The cards feature an image and an overlay (always visible on mobile, hover-triggered on desktop) showing the project title and brief.
-- **Project Detail Pages:** Dynamically generated pages for each project, loading data from projects.json. These pages showcase the project title, main image, detailed description, image/video galleries, and tools used. They feature unique metadata (title, description) for SEO.
-- **Services Section:** Likely outlines the services Marius offers (e.g., Web Development, 3D Visualization, Interactive Design) using interactive cards that expand to show more detail.
-- **Contact Section:** Provides contact information (email) and links (with icons and frames) to professional profiles like LinkedIn, GitHub, and Instagram.
+*   **Framework:** [Next.js](https://nextjs.org/) (React framework) utilizing the App Router.
+*   **Language:** [TypeScript](https://www.typescriptlang.org/) for type safety and improved developer experience.
+*   **Styling:** [Tailwind CSS](https://tailwindcss.com/) for utility-first CSS styling, configured via `tailwind.config.ts` and `postcss.config.mjs`. Global styles are defined in `src/app/globals.css`.
+*   **Linting:** ESLint (`eslint.config.mjs`) is used to maintain code quality and consistency.
+*   **Package management:** npm (indicated by `package.json` and `package-lock.json`).
 
-## Technology Stack
+## Project structure
 
-The website leverages a modern tech stack:
+The project follows a standard Next.js App Router structure:
 
-- **Framework:** Next.js 15 (App Router, Server Components, Turbopack for dev)
-- **UI Library:** React 19
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS 4 (including a custom dark theme with gradients)
-- **Animation:** Framer Motion
-- **3D:** React Three Fiber, Three.js, Drei (for showcasing 3D work)
-- **Data:** Project data managed via a local projects.json file, fetched server-side for page generation.
-- **Deployment:** Hosted on Vercel, utilizing Vercel Analytics.
+*   **`src/app/`**: Contains the core application routing and pages.
+    *   `layout.tsx`: Defines the main site layout.
+    *   `page.tsx`: The main landing/home page.
+    *   `portfolio/[projectId]/page.tsx`: Dynamic route for displaying individual project details.
+*   **`src/components/`**: Houses reusable React components used across the site, such as:
+    *   `SiteHeader.tsx`
+    *   `HeroSection.tsx`
+    *   `AboutSection.tsx`
+    *   `PortfolioSection.tsx`
+    *   `ProjectGallery.tsx`
+    *   `ArtSection.tsx`
+    *   `ExperienceEducationSection.tsx`
+    *   `ServicesSection.tsx`
+    *   `ContactSection.tsx`
+    *   `ToolIcon.tsx`
+*   **`src/types/`**: Contains TypeScript type definitions (`index.ts`) for data structures used in the application.
+*   **`data/`**: Stores site content data.
+    *   `projects.json`: Contains structured data for each portfolio project (title, description, images, technologies used, etc.).
+    *   `markdown/`: Holds Markdown files, for detailed project descriptions (e.g., `portfolio-website.md`, `project03.md`, `unity-arena.md`).
+*   **`public/`**: Stores static assets accessible directly via URL.
+    *   `art/`: Images showcasing artistic work.
+    *   `icons/`: SVG and image icons representing skills, tools, social links, etc.
+    *   `image/`: General images, including project-specific visuals organized by project ID (e.g., `project01/`, `project03/`).
+    *   `video/`: Video assets (e.g., `Black-hole.mp4`).
+    *   `resume.pdf`: A downloadable resume file.
+*   **Configuration files:** Root directory contains configuration for Next.js (`next.config.ts`), TypeScript (`tsconfig.json`), Tailwind CSS (`tailwind.config.ts`), PostCSS (`postcss.config.mjs`), ESLint (`eslint.config.mjs`), and Git (`.gitignore`).
 
-## Design & UX
+## Key features & content
 
-Features include:
+*   **Homepage:** Includes a Hero section, introduction, and links/previews of other sections.
+*   **About section:** Information about the me.
+*   **Portfolio section:** Displays a collection of projects. Clicking a project navigates to a dedicated project page (`/portfolio/[projectId]`).
+*   **Individual project pages:** Detailed view of specific projects, using data from `projects.json` and corresponding Markdown files. Includes image galleries (`ProjectGallery.tsx`).
+*   **Art section:** Showcases visual/artistic creations.
+*   **Experience & Education section:** Details professional and academic background.
+*   **Services section:** Outlines offered services.
+*   **Contact section:** Provides ways to get in touch.
+*   **Skills/Tools showcase:** Uses icons (`ToolIcon.tsx`) to visually represent proficiency in various technologies and tools listed in `public/icons/`.
+*   **Responsive design:** Due to the use of Tailwind CSS.
 
-- Dark theme with a gradient background.
-- Responsive design adapting from mobile to desktop.
-- Smooth scrolling.
-- Animated transitions (page elements, underlines, tooltips).
-- Accessible focus states (`focus-visible`).
-- Navigation includes a centered logo on desktop and a hamburger menu on mobile.
+## Deployment
+
+Deployed on [Vercel](https://vercel.com/), a platform well-suited for Next.js applications.

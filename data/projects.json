@@ -25,8 +25,10 @@
       { "type": "image", "src": "/image/project01/box01.png", "alt": "Box Layout 1" },
       { "type": "image", "src": "/image/project01/box02.png", "alt": "Box Layout 2" },
       { "type": "image", "src": "/image/project01/bowl01.png", "alt": "Bowl Layout 1" },
-      { "type": "youtube", "youtubeId": "https://youtu.be/Q8GmGq6gKjo", "alt": "Unity Arena Project Video" },
       { "type": "image", "src": "/image/project01/full01.png", "alt": "Full Layout 1" }
+    ],
+    "youtubeVideos": [
+      { "youtubeId": "https://youtu.be/Q8GmGq6gKjo", "alt": "Unity Arena Project Video" }
     ]
   },
   {

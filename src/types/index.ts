@@ -42,4 +42,7 @@ export interface Project {
 
   // Array specifically for lightbox content
   lightboxSlides?: LightboxSlide[];
+
+  // Array specifically for standalone YouTube videos
+  youtubeVideos?: { youtubeId: string; alt?: string }[];
 }

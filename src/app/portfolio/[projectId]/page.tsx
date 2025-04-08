@@ -10,6 +10,16 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import ProjectGallery from '@/components/ProjectGallery';
 
+// Helper function to extract YouTube Video ID from various URL formats
+const getYouTubeId = (url: string): string | null => {
+  if (!url) return null;
+  // Regular expression to cover various YouTube URL formats
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+};
+
+
 // Explicit Props interface expecting a Promise for params
 interface Props {
   params: Promise<{ projectId: string; }>;
@@ -117,7 +127,8 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
       <p className="text-lg text-gray-300 mb-6 italic">{project.brief}</p>
 
       {/* Detailed Information - Use markdownContent */}
-      <div className="prose prose-invert max-w-none mb-8 text-gray-200">
+      {/* Corrected className to use 'markdown-content' for manual styling */}
+      <div className="markdown-content max-w-none mb-8 text-gray-200">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
           {markdownContent}
         </ReactMarkdown>
@@ -145,12 +156,38 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
                  </video>
               </div>
            ))}
-        </section>
+         </section>
        )}
 
-      {/* Tools Used */}
-      {project.toolIcons && project.toolIcons.length > 0 && (
-        <section aria-labelledby="tools-heading">
+      {/* YouTube Videos Section */}
+      {project.youtubeVideos && project.youtubeVideos.length > 0 && (
+        <section className="mb-10" aria-labelledby="youtube-videos-heading">
+          <h2 id="youtube-videos-heading" className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Videos</h2>
+          <div className="space-y-6">
+            {project.youtubeVideos.map((video, index) => {
+              const videoId = getYouTubeId(video.youtubeId);
+              if (!videoId) return null; // Skip if ID extraction fails
+
+              return (
+                <div key={index} className="aspect-video w-full bg-black rounded overflow-hidden shadow-lg">
+                  <iframe
+                    className="w-full h-full"
+                    src={`https://www.youtube.com/embed/${videoId}`}
+                    title={video.alt || `YouTube video ${index + 1}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+       {/* Tools Used */}
+       {project.toolIcons && project.toolIcons.length > 0 && (
+         <section aria-labelledby="tools-heading">
           <h2 id="tools-heading" className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Tools Used</h2>
           <div className="flex flex-wrap gap-4">
           {project.toolIcons.map((tool, index) => (
