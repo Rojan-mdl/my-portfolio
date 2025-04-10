@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react"; // Added useCallback
 import { usePathname } from 'next/navigation'; // Import usePathname
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -16,11 +16,13 @@ const HamburgerIcon = ({ open }: { open: boolean }) => (
 export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname(); // Get the current path
-  const isProjectPage = pathname.startsWith('/portfolio/'); // Check if it's a project page
+  const isHomePage = pathname === '/'; // Check if it's the home page
 
   // Helper function to generate the correct href
   const getLinkHref = (sectionId: string) => {
-    return isProjectPage ? `/${sectionId}` : sectionId;
+    // If on a project page (not home), link to the homepage section
+    // Otherwise, link directly to the section ID (for same-page scrolling)
+    return !isHomePage ? `/${sectionId}` : sectionId;
   };
 
   // Helper to close the mobile menu
@@ -51,6 +53,26 @@ export default function SiteHeader() {
       document.body.style.overflow = originalOverflow;
     };
   }, [menuOpen]);
+
+  // Add Escape key listener to close mobile menu
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      closeMenu();
+    }
+  }, []); // Empty dependency array as closeMenu doesn't change
+
+  useEffect(() => {
+    if (menuOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.removeEventListener('keydown', handleKeyDown);
+    }
+    // Cleanup listener on component unmount or when menu closes
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [menuOpen, handleKeyDown]);
+
 
   // Link Classes for Focus-Only Animated Underline
   // Underline (scale-x) triggers only on focus (click or keyboard)
@@ -103,9 +125,9 @@ export default function SiteHeader() {
           <div className="hidden sm:flex w-full items-center justify-between">
             {/* Left Navigation */}
             <nav className="flex items-center space-x-5 lg:space-x-7" aria-label="Main desktop navigation left">
-              <Link href={getLinkHref('#about')} className={desktopLinkClasses} onClick={closeMenu}>About</Link>
-              <Link href={getLinkHref('#experience-education')} className={desktopLinkClasses} onClick={closeMenu}>Experience</Link>
-              <Link href={getLinkHref('#portfolio')} className={desktopLinkClasses} onClick={closeMenu}>Portfolio</Link>
+              <Link href={getLinkHref('#about')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#about') === '#about' ? 'page' : undefined}>About</Link>
+              <Link href={getLinkHref('#experience-education')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#experience-education') === '#experience-education' ? 'page' : undefined}>Experience</Link>
+              <Link href={getLinkHref('#portfolio')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#portfolio') === '#portfolio' ? 'page' : undefined}>Portfolio</Link>
             </nav>
 
             {/* Centered Logo */}
@@ -124,9 +146,9 @@ export default function SiteHeader() {
 
             {/* Right Navigation */}
             <nav className="flex items-center space-x-5 lg:space-x-7" aria-label="Main desktop navigation right">
-                <Link href={getLinkHref('#art')} className={desktopLinkClasses} onClick={closeMenu}>Art</Link>
-                <Link href={getLinkHref('#services')} className={desktopLinkClasses} onClick={closeMenu}>Services</Link>
-                <Link href={getLinkHref('#contact')} className={desktopLinkClasses} onClick={closeMenu}>Contact</Link>
+                <Link href={getLinkHref('#art')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#art') === '#art' ? 'page' : undefined}>Art</Link>
+                <Link href={getLinkHref('#services')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#services') === '#services' ? 'page' : undefined}>Services</Link>
+                <Link href={getLinkHref('#contact')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#contact') === '#contact' ? 'page' : undefined}>Contact</Link>
             </nav>
           </div>
         </div>
@@ -147,12 +169,12 @@ export default function SiteHeader() {
           >
             {/* Navigation links within the mobile menu */}
             <nav className="flex flex-col items-center gap-y-6 px-4 pb-10" aria-label="Mobile navigation">
-               <Link href={getLinkHref('#about')} className={mobileLinkClasses} onClick={closeMenu}>About</Link>
-               <Link href={getLinkHref('#experience-education')} className={mobileLinkClasses} onClick={closeMenu}>Experience</Link>
-               <Link href={getLinkHref('#portfolio')} className={mobileLinkClasses} onClick={closeMenu}>Portfolio</Link>
-               <Link href={getLinkHref('#art')} className={mobileLinkClasses} onClick={closeMenu}>Art</Link>
-               <Link href={getLinkHref('#services')} className={mobileLinkClasses} onClick={closeMenu}>Services</Link>
-               <Link href={getLinkHref('#contact')} className={mobileLinkClasses} onClick={closeMenu}>Contact</Link>
+               <Link href={getLinkHref('#about')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#about') === '#about' ? 'page' : undefined}>About</Link>
+               <Link href={getLinkHref('#experience-education')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#experience-education') === '#experience-education' ? 'page' : undefined}>Experience</Link>
+               <Link href={getLinkHref('#portfolio')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#portfolio') === '#portfolio' ? 'page' : undefined}>Portfolio</Link>
+               <Link href={getLinkHref('#art')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#art') === '#art' ? 'page' : undefined}>Art</Link>
+               <Link href={getLinkHref('#services')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#services') === '#services' ? 'page' : undefined}>Services</Link>
+               <Link href={getLinkHref('#contact')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#contact') === '#contact' ? 'page' : undefined}>Contact</Link>
             </nav>
           </motion.div>
         )}

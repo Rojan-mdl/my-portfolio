@@ -150,13 +150,14 @@ export default function ExperienceEducationSection() {
                <div className="flex-shrink-0 mb-3 sm:mb-0">
                  <Link
                    href="https://www.kristiania.no/studier/bachelor/informasjonsteknologi-interaksjonsdesign/"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   className={`inline-block rounded focus:outline-none ${focusVisibleShadow}`}
-                 >
-                   <Image src="/icons/kristiania.jpg" alt="Kristiania Logo" width={48} height={48} className="rounded" loading="lazy"/>
-                 </Link>
-               </div>
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`inline-block rounded focus:outline-none ${focusVisibleShadow}`}
+                  >
+                    <Image src="/icons/kristiania.jpg" alt="Kristiania Logo" width={48} height={48} className="rounded" loading="lazy"/>
+                    <span className="sr-only"> (opens Kristiania website in new tab)</span>
+                  </Link>
+                </div>
                <div className="flex-grow">
                  <h3 className="text-xl font-semibold">Kristiania — Bachelor&apos;s in Interactive Design</h3>
                  <p className="text-gray-400">Sep 2022 - Jul 2025</p>
@@ -185,13 +186,14 @@ export default function ExperienceEducationSection() {
                <div className="flex-shrink-0 mb-3 sm:mb-0">
                  <Link
                    href="https://www.noroff.no/studier/fagskole/3d-design-spillteknologi-interaktiv"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   className={`inline-block rounded focus:outline-none ${focusVisibleShadow}`}
-                 >
-                   <Image src="/icons/noroff.png" alt="Noroff Logo" width={48} height={48} className="rounded" loading="lazy"/>
-                 </Link>
-               </div>
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`inline-block rounded focus:outline-none ${focusVisibleShadow}`}
+                  >
+                    <Image src="/icons/noroff.png" alt="Noroff Logo" width={48} height={48} className="rounded" loading="lazy"/>
+                     <span className="sr-only"> (opens Noroff website in new tab)</span>
+                  </Link>
+                </div>
                <div className="flex-grow">
                  <h3 className="text-xl font-semibold">Noroff — Gamedesign</h3>
                  <p className="text-gray-400">Aug 2019 - Jul 2020</p>
@@ -214,13 +216,14 @@ export default function ExperienceEducationSection() {
                <div className="flex-shrink-0 mb-3 sm:mb-0">
                  <Link
                    href="https://www.noroff.no/studier/fagskole/3d-design-spillteknologi-interaktiv"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   className={`inline-block rounded focus:outline-none ${focusVisibleShadow}`}
-                 >
-                   <Image src="/icons/noroff.png" alt="Noroff Logo" width={48} height={48} className="rounded" loading="lazy"/>
-                 </Link>
-               </div>
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`inline-block rounded focus:outline-none ${focusVisibleShadow}`}
+                  >
+                    <Image src="/icons/noroff.png" alt="Noroff Logo" width={48} height={48} className="rounded" loading="lazy"/>
+                     <span className="sr-only"> (opens Noroff website in new tab)</span>
+                  </Link>
+                </div>
                <div className="flex-grow">
                  <h3 className="text-xl font-semibold">Noroff — 3D Design & Animation</h3>
                  <p className="text-gray-400">Jan 2018 - Jun 2019</p>

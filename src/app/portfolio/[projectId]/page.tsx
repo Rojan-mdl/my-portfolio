@@ -19,7 +19,6 @@ const getYouTubeId = (url: string): string | null => {
   return (match && match[2].length === 11) ? match[2] : null;
 };
 
-
 // Explicit Props interface expecting a Promise for params
 interface Props {
   params: Promise<{ projectId: string; }>;
@@ -114,6 +113,7 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
         <div className="mb-6 relative w-full aspect-[16/9] overflow-hidden rounded-lg shadow-lg">
           <Image
             src={project.image}
+            // TODO: Consider providing more descriptive alt text from projects.json if this image conveys specific info
             alt={`Main image for ${project.title}`}
             fill
             style={{ objectFit: 'cover' }}
@@ -152,6 +152,7 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
               <div key={index} className="mb-4 aspect-video bg-black rounded overflow-hidden">
                  <video controls className="w-full h-full" preload="metadata">
                     <source src={videoSrc} type="video/mp4" />
+                    {/* TODO: Add <track> elements for captions (WCAG 1.2.2) and audio descriptions (WCAG 1.2.5) if needed */}
                     Your browser does not support the video tag.
                  </video>
               </div>
@@ -159,31 +160,33 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
          </section>
        )}
 
-      {/* YouTube Videos Section */}
-      {project.youtubeVideos && project.youtubeVideos.length > 0 && (
-        <section className="mb-10" aria-labelledby="youtube-videos-heading">
-          <h2 id="youtube-videos-heading" className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Videos</h2>
-          <div className="space-y-6">
-            {project.youtubeVideos.map((video, index) => {
-              const videoId = getYouTubeId(video.youtubeId);
-              if (!videoId) return null; // Skip if ID extraction fails
+      {/* Embedded YouTube Video (if URL provided in JSON) */}
+      {(() => {
+        // Check if the URL exists first
+        if (!project.youtubeVideoUrl) return null;
 
-              return (
-                <div key={index} className="aspect-video w-full bg-black rounded overflow-hidden shadow-lg">
-                  <iframe
-                    className="w-full h-full"
-                    src={`https://www.youtube.com/embed/${videoId}`}
-                    title={video.alt || `YouTube video ${index + 1}`}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-              );
-            })}
+        // Then try to get the ID
+        const videoId = getYouTubeId(project.youtubeVideoUrl);
+        if (!videoId) return null; // Don't render if ID extraction fails
+
+        // Render the iframe if we have a valid ID
+        return (
+          <section className="mb-10" aria-labelledby="youtube-video-heading">
+            <h2 id="youtube-video-heading" className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Video</h2>
+            <div className="aspect-video w-full bg-black rounded overflow-hidden shadow-lg">
+              <iframe
+                className="w-full h-full"
+                src={`https://www.youtube.com/embed/${videoId}`}
+                title={`${project.title} Video`}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
           </div>
         </section>
-      )}
+        );
+      })()}
+
 
        {/* Tools Used */}
        {project.toolIcons && project.toolIcons.length > 0 && (

@@ -1,12 +1,30 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // Added useEffect
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+
+// Hook to check for reduced motion preference (copied from HeroSection)
+const usePrefersReducedMotion = () => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handleChange = () => {
+      setPrefersReducedMotion(mediaQuery.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+  return prefersReducedMotion;
+};
 
 
 export default function AboutSection() {
   const [aboutExpanded, setAboutExpanded] = useState(false);
+  const prefersReducedMotion = usePrefersReducedMotion(); // Use the hook
 
   // Focus visible style variable for consistency
   const focusVisibleShadow = "focus-visible:shadow-[0_0_10px_2px_#ffffff]";
@@ -26,51 +44,52 @@ export default function AboutSection() {
           {aboutExpanded && (
             <motion.div
               className="mt-4 overflow-hidden"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
+              initial={prefersReducedMotion ? undefined : { opacity: 0, height: 0 }}
+              animate={prefersReducedMotion ? undefined : { opacity: 1, height: "auto" }}
+              exit={prefersReducedMotion ? undefined : { opacity: 0, height: 0 }}
+              transition={prefersReducedMotion ? undefined : { duration: 0.5, ease: "easeInOut" }}
             >
               {/* Expanded paragraph */}
               <p className="mb-4 text-base sm:text-lg">
                 I blend creative design with technical expertise to build immersive digital experiences. I&apos;ve worked on projects ranging from dynamic web applications to captivating 3D visualizations. My multidisciplinary skills allow me to approach challenges with a unique perspective, delivering innovative and engaging solutions.
               </p>
               {/* Skills section */}
-              <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Skills &amp; tools</h3>
+              <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Skills & tools</h3>
               <div className="flex flex-wrap gap-3 sm:gap-4 mb-6">
-                 <div className="flex items-center space-x-2" title="Figma">
+                 {/* Removed title attributes */}
+                 <div className="flex items-center space-x-2">
                    <Image src="/icons/figma.svg" alt="Figma" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
                    <span className="text-sm sm:text-base hidden md:inline">Figma</span>
                  </div>
-                 <div className="flex items-center space-x-2" title="TypeScript">
+                 <div className="flex items-center space-x-2">
                    <Image src="/icons/typescript.svg" alt="TypeScript" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
                    <span className="text-sm sm:text-base hidden md:inline">Typescript</span>
                  </div>
-                 <div className="flex items-center space-x-2" title="JavaScript">
+                 <div className="flex items-center space-x-2">
                    <Image src="/icons/javascript.svg" alt="JavaScript" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
                    <span className="text-sm sm:text-base hidden md:inline">Javascript</span>
                  </div>
-                 <div className="flex items-center space-x-2" title="Java">
+                 <div className="flex items-center space-x-2">
                    <Image src="/icons/java.svg" alt="Java" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
                    <span className="text-sm sm:text-base hidden md:inline">Java</span>
                  </div>
-                 <div className="flex items-center space-x-2" title="C#">
+                 <div className="flex items-center space-x-2">
                    <Image src="/icons/c-sharp.svg" alt="C#" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
                    <span className="text-sm sm:text-base hidden md:inline">C#</span>
                  </div>
-                 <div className="flex items-center space-x-2" title="Next.js">
+                 <div className="flex items-center space-x-2">
                    <Image src="/icons/next-js.svg" alt="Next.js" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
                    <span className="text-sm sm:text-base hidden md:inline">Next.js</span>
                  </div>
-                 <div className="flex items-center space-x-2" title="React">
+                 <div className="flex items-center space-x-2">
                    <Image src="/icons/react.png" alt="React" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
                    <span className="text-sm sm:text-base hidden md:inline">React</span>
                  </div>
-                 <div className="flex items-center space-x-2" title="Blender">
+                 <div className="flex items-center space-x-2">
                    <Image src="/icons/blender.svg" alt="Blender" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
                    <span className="text-sm sm:text-base hidden md:inline">Blender</span>
                  </div>
-                 <div className="flex items-center space-x-2" title="Unreal Engine">
+                 <div className="flex items-center space-x-2">
                    <Image src="/icons/unreal-engine.svg" alt="Unreal Engine" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
                    <span className="text-sm sm:text-base hidden md:inline">Unreal Engine</span>
                  </div>
@@ -90,9 +109,9 @@ export default function AboutSection() {
               {aboutExpanded ? "Show Less" : "Read More"}
               <motion.svg
                 className="ml-1.5 h-3.5 w-3.5 sm:ml-2 sm:h-4 sm:w-4"
-                initial={false}
-                animate={{ rotate: aboutExpanded ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
+                initial={false} // Initial state doesn't need animation disabling
+                animate={prefersReducedMotion ? undefined : { rotate: aboutExpanded ? 180 : 0 }}
+                transition={prefersReducedMotion ? undefined : { duration: 0.3 }}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -107,10 +126,10 @@ export default function AboutSection() {
             <AnimatePresence>
                {aboutExpanded && (
                  <motion.div
-                    initial={{ opacity: 0, x: 10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 10 }}
-                    transition={{ duration: 0.3 }}
+                    initial={prefersReducedMotion ? undefined : { opacity: 0, x: 10 }}
+                    animate={prefersReducedMotion ? undefined : { opacity: 1, x: 0 }}
+                    exit={prefersReducedMotion ? undefined : { opacity: 0, x: 10 }}
+                    transition={prefersReducedMotion ? undefined : { duration: 0.3 }}
                  >
                    <a
                      href="/resume.pdf"
@@ -119,6 +138,7 @@ export default function AboutSection() {
                      className={`inline-block bg-[#450086] px-4 py-2 text-xs sm:text-sm text-white font-semibold rounded transition hover:bg-[#360066] focus:outline-none ${focusVisibleShadow}`}
                    >
                      Download CV
+                     <span className="sr-only"> (opens in new tab)</span> {/* Added notification */}
                    </a>
                  </motion.div>
                )}

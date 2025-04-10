@@ -20,14 +20,8 @@ interface LightboxVideoSlide extends LightboxSlideBase {
   poster?: string;
 }
 
-// Specific type for YouTube slides
-interface LightboxYoutubeSlide extends LightboxSlideBase {
-  type: 'youtube';
-  youtubeId: string; // Required YouTube Video ID
-}
-
 // Union type representing any possible lightbox slide
-export type LightboxSlide = LightboxImageSlide | LightboxVideoSlide | LightboxYoutubeSlide;
+export type LightboxSlide = LightboxImageSlide | LightboxVideoSlide;
 
 // Update the main Project interface
 export interface Project {
@@ -43,6 +37,6 @@ export interface Project {
   // Array specifically for lightbox content
   lightboxSlides?: LightboxSlide[];
 
-  // Array specifically for standalone YouTube videos
-  youtubeVideos?: { youtubeId: string; alt?: string }[];
+  // Optional URL for a standalone YouTube video to embed
+  youtubeVideoUrl?: string;
 }

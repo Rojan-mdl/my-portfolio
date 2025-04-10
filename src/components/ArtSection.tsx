@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // Added useEffect
 import Image from "next/image";
 import dynamic from 'next/dynamic'; // Import dynamic
 import type { Slide } from "yet-another-react-lightbox";
@@ -27,26 +27,48 @@ type ArtPiece = {
   height?: number;
 };
 
+// Hook to check for reduced motion preference (copied from previous components)
+const usePrefersReducedMotion = () => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  useEffect(() => {
+    // Check if window is defined (for server-side rendering safety)
+    if (typeof window === 'undefined') return;
+
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handleChange = () => {
+      setPrefersReducedMotion(mediaQuery.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+  return prefersReducedMotion;
+};
+
+
 export default function ArtSection() {
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(-1);
+  const prefersReducedMotion = usePrefersReducedMotion(); // Use the hook
 
   // Art pieces
   const artPieces: ArtPiece[] = [
-    { type: "image", src: "/art/green-eye.png", alt: "Description of 3D art piece 1" },
-    { type: "image", src: "/art/cellular-wave.png", alt: "Description of 3D art piece 2" },
+    { type: "image", src: "/art/green-eye.png", alt: "Floating eye with grass around it and a tree growing from the top." },
+    { type: "image", src: "/art/cellular-wave.png", alt: "Interconnected molecules close-up." },
     {
        type: "video",
        sources: [ { src: "/video/Black-hole.mp4", type: "video/mp4" } ],
        poster: "/art/black-hole.png",
-       alt: "Black hole simulation video",
+       alt: "Black hole in the palm of a hand.", // Updated video poster alt text
        width: 1920, height: 1080
      },
-    { type: "image", src: "/art/distance.png", alt: "Description of 3D art piece 3" },
-    { type: "image", src: "/art/frozen-orb.png", alt: "Description of 3D art piece 4" },
-    { type: "image", src: "/art/hand-sphere.png", alt: "Description of 3D art piece 5" },
-    { type: "image", src: "/art/hex-orb.png", alt: "Description of 3D art piece 6" },
-    { type: "image", src: "/art/playing-board.png", alt: "Description of 3D art piece 7" },
+    { type: "image", src: "/art/distance.png", alt: "A vast futuristic horizon with squares, circles, triangles and x's floating in the distance." },
+    { type: "image", src: "/art/frozen-orb.png", alt: "A hexagon with a glowing centre shining through frozen glass patches, sitting on a wet surface." },
+    { type: "image", src: "/art/hand-sphere.png", alt: "A shattered black and golden hand, where the palm is replaced by a red-rimmed glowing sphere." },
+    { type: "image", src: "/art/hex-orb.png", alt: "A golden plated sphere mostly encompassing a red-rimmed orb inside it, resting on a display plate." },
+    { type: "image", src: "/art/playing-board.png", alt: "A hexagonal board-playing world with water, forest, rocks, houses and boats." },
   ];
 
   // Prepare slides array for the lightbox with explicit types
@@ -102,19 +124,21 @@ export default function ArtSection() {
                      );
                      if (slideIndex !== -1) {
                        setIndex(slideIndex);
-                       setOpen(true);
-                     }
-                   }}
-                   className={`relative aspect-square overflow-hidden rounded-lg shadow-lg group transition duration-200 ease-in-out hover:scale-[1.03] focus:outline-none ${focusVisibleShadow}`}
-                   aria-label={`View larger for ${piece.alt}`}
-                 >
-                   <Image
+                      setOpen(true);
+                    }
+                  }}
+                  // Conditionally apply hover scale transition
+                  className={`relative aspect-square overflow-hidden rounded-lg shadow-lg group focus:outline-none ${focusVisibleShadow} ${prefersReducedMotion ? '' : 'transition duration-200 ease-in-out hover:scale-[1.03]'}`}
+                  aria-label={`View larger for ${piece.alt}`}
+                >
+                  <Image
                       src={thumbnailSrc} // Use the determined thumbnail source
                       alt={piece.alt}
                       fill
                       style={{ objectFit: 'cover' }}
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="transition duration-300 group-hover:scale-105"
+                      // Conditionally apply group-hover scale transition
+                      className={`${prefersReducedMotion ? '' : 'transition duration-300 group-hover:scale-105'}`}
                       loading="lazy"
                    />
                  </button>

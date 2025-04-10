@@ -34,10 +34,10 @@ export default function ContactSection() {
             <div className={iconFrameClasses}>
               <Image
                 src="/icons/email.png"
-                alt=""
+                alt="" // Decorative icon
                 width={iconSize}
                 height={iconSize}
-                aria-hidden="true"
+                // aria-hidden="true" is redundant when alt="" is present
                 className="block"
               />
             </div>
@@ -49,14 +49,13 @@ export default function ContactSection() {
              <div className={iconFrameClasses}>
                <Image
                  src="/icons/linkedin.svg"
-                 alt=""
+                 alt="" // Decorative icon
                  width={iconSize}
                  height={iconSize}
-                 aria-hidden="true"
                  className="block"
                />
              </div>
-            <span>LinkedIn</span>
+            <span>LinkedIn<span className="sr-only"> (opens in new tab)</span></span>
           </a>
 
           {/* GitHub */}
@@ -64,14 +63,13 @@ export default function ContactSection() {
              <div className={iconFrameClasses}>
                <Image
                  src="/icons/github.svg"
-                 alt=""
+                 alt="" // Decorative icon
                  width={iconSize}
                  height={iconSize}
-                 aria-hidden="true"
                  className="block"
                />
              </div>
-             <span>GitHub</span>
+             <span>GitHub<span className="sr-only"> (opens in new tab)</span></span>
           </a>
 
           {/* Instagram */}
@@ -79,14 +77,13 @@ export default function ContactSection() {
              <div className={iconFrameClasses}>
                <Image
                  src="/icons/instagram.svg"
-                 alt=""
+                 alt="" // Decorative icon
                  width={iconSize}
                  height={iconSize}
-                 aria-hidden="true"
                  className="block"
                />
              </div>
-            <span>Instagram</span>
+            <span>Instagram<span className="sr-only"> (opens in new tab)</span></span>
           </a>
 
         </div>

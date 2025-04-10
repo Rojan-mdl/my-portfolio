@@ -27,9 +27,7 @@
       { "type": "image", "src": "/image/project01/bowl01.png", "alt": "Bowl Layout 1" },
       { "type": "image", "src": "/image/project01/full01.png", "alt": "Full Layout 1" }
     ],
-    "youtubeVideos": [
-      { "youtubeId": "https://youtu.be/Q8GmGq6gKjo", "alt": "Unity Arena Project Video" }
-    ]
+    "youtubeVideoUrl": "https://youtu.be/Q8GmGq6gKjo"
   },
   {
     "id": "2",

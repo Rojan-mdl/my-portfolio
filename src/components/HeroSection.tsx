@@ -1,8 +1,29 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react"; // Import hooks
+
+// Hook to check for reduced motion preference
+const usePrefersReducedMotion = () => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handleChange = () => {
+      setPrefersReducedMotion(mediaQuery.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+  return prefersReducedMotion;
+};
+
 
 export default function HeroSection() {
+  const prefersReducedMotion = usePrefersReducedMotion();
+
   return (
     <section
       id="hero"
@@ -27,14 +48,14 @@ export default function HeroSection() {
       </video>
 
       {/* Overlay */}
-      <div aria-hidden="true" className="absolute inset-0 bg-black/40" />
+      <div aria-hidden="true" className="absolute inset-0 bg-black/50" /> {/* Increased opacity */}
 
       {/* Animated Text Content */}
       <motion.div
         className="relative z-10 text-center text-white px-4"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+        animate={prefersReducedMotion ? false : { opacity: 1, y: 0 }}
+        transition={prefersReducedMotion ? undefined : { duration: 1, ease: "easeOut" }}
       >
         {/* ID for aria-labelledby */}
         <h1 id="hero-heading" className="text-5xl md:text-7xl font-bold">
