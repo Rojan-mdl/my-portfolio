@@ -1,14 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react"; // Added useEffect
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import dynamic from 'next/dynamic'; // Import dynamic
+import dynamic from 'next/dynamic';
+// Removed motion import
 import type { Slide } from "yet-another-react-lightbox";
-// Import plugins statically
 import Video from "yet-another-react-lightbox/plugins/video";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
-// Import CSS statically as before
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 
@@ -102,7 +101,9 @@ export default function ArtSection() {
 
   return (
     <>
-      <section id="art" className="py-16 text-gray-100" aria-labelledby="art-heading">
+      {/* Removed id="art" as it's handled by the wrapper in page.tsx */}
+      <section className="py-16 text-gray-100" aria-labelledby="art-heading">
+        {/* Removed Animation Wrapper */}
         <div className="max-w-6xl mx-auto px-4">
           <h2 id="art-heading" className="text-3xl font-bold mb-8 text-center">
             Art
@@ -142,10 +143,10 @@ export default function ArtSection() {
                       loading="lazy"
                    />
                  </button>
-               ) : null;
+              ) : null;
              })}
           </div>
-        </div>
+        </div> {/* End max-w-6xl container */}
       </section>
 
       {/* Conditionally render Lightbox only when open is true */}

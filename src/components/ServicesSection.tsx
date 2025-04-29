@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react"; // Added useEffect
+// Removed motion import
 // If you want animations for the text expansion later:
-// import { motion, AnimatePresence } from "framer-motion";
+// import { motion, AnimatePresence } from "motion/react";
 
 // Hook to check for reduced motion preference (copied from previous components)
 const usePrefersReducedMotion = () => {
@@ -40,7 +41,9 @@ export default function ServicesSection() {
   ];
 
   return (
-    <section id="services" className="py-16 text-gray-100" aria-labelledby="services-heading">
+    // Removed id="services" as it's handled by the wrapper in page.tsx
+    <section className="py-16 text-gray-100" aria-labelledby="services-heading">
+      {/* Removed Animation Wrapper */}
       <div className="max-w-6xl mx-auto px-4">
         <h2 id="services-heading" className="text-3xl font-bold mb-8 text-center">Services</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -73,7 +76,7 @@ export default function ServicesSection() {
             );
           })}
         </div>
-      </div>
+      </div> {/* End max-w-6xl container */}
     </section>
   );
 }

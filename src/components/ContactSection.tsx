@@ -1,9 +1,13 @@
-// Simple Server Component
+"use client"; // Keep as client component if other client-side logic exists, otherwise could revert
 
-import React from "react";
+import React from "react"; // Removed useState, useEffect
 import Image from "next/image";
+// Removed motion import
+
+// Removed usePrefersReducedMotion hook definition
 
 export default function ContactSection() {
+  // Removed prefersReducedMotion hook usage
   const email = "marius.frilans@gmail.com";
   const linkedInUrl = "https://www.linkedin.com/in/marius-Øvrebø-604235187";
   const gitHubUrl = "https://github.com/Rojan-mdl";
@@ -19,7 +23,9 @@ export default function ContactSection() {
   const iconFrameClasses = "bg-white p-1 rounded-md inline-block leading-none";
 
   return (
-    <section id="contact" className="py-16 text-gray-100" aria-labelledby="contact-heading">
+    // Removed id="contact" as it's handled by the wrapper in page.tsx
+    <section className="py-16 text-gray-100" aria-labelledby="contact-heading">
+      {/* Removed Animation Wrapper */}
       <div className="max-w-4xl mx-auto px-4 text-center">
         <h2 id="contact-heading" className="text-3xl font-bold mb-6">Get In Touch</h2>
         <p className="mb-8 text-lg text-gray-300">
@@ -87,7 +93,7 @@ export default function ContactSection() {
           </a>
 
         </div>
-      </div>
+      </div> {/* End max-w-4xl container */}
     </section>
   );
 }

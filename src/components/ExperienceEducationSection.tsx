@@ -1,13 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState } from "react"; // Removed useEffect
 import Image from "next/image";
 import Link from "next/link";
+// Removed motion import
 import ToolIcon from './ToolIcon';
 
+// Removed usePrefersReducedMotion hook definition
 
 export default function ExperienceEducationSection() {
   const [activeTab, setActiveTab] = useState<"experience" | "education">("experience");
+  // Removed prefersReducedMotion hook usage
 
   // Fixed minimum height for the tab content container to reduce layout shift
   const tabContentMinHeight = "min-h-[650px]";
@@ -16,7 +19,9 @@ export default function ExperienceEducationSection() {
   const focusVisibleShadow = "focus-visible:shadow-[0_0_3px_1px_#ffffff]";
 
   return (
-    <section id="experience-education" className="py-16 text-gray-100" aria-labelledby="exp-edu-heading">
+    // Removed id="experience-education" as it's handled by the wrapper in page.tsx
+    <section className="py-16 text-gray-100" aria-labelledby="exp-edu-heading">
+      {/* Removed Animation Wrapper */}
       <div className="max-w-6xl mx-auto px-4">
         <h2 id="exp-edu-heading" className="text-3xl font-bold mb-8 text-center">
           Experience & Education
@@ -244,7 +249,7 @@ export default function ExperienceEducationSection() {
              </div>
            </div>
         </div>
-      </div>
+      </div> {/* End max-w-6xl container */}
     </section>
   );
 }

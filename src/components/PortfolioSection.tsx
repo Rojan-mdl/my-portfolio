@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react"; // Import hooks
 import Image from "next/image";
 import Link from "next/link";
+// Removed motion import
 import type { Project } from '@/types';
 
 // Props interface defining the expected props for this component
@@ -48,7 +49,9 @@ export default function PortfolioSection({ projects }: PortfolioSectionProps) {
 
   // Render the portfolio section if projects exist
   return (
-    <section id="portfolio" className="py-16 text-gray-100" aria-labelledby="portfolio-heading">
+    // Removed id="portfolio" as it's handled by the wrapper in page.tsx
+    <section className="py-16 text-gray-100" aria-labelledby="portfolio-heading">
+      {/* Removed Animation Wrapper */}
       <div className="max-w-6xl mx-auto px-4">
         <h2 id="portfolio-heading" className="text-3xl font-bold mb-8 text-center">Portfolio</h2>
         {/* Grid layout for project cards */}
@@ -88,7 +91,7 @@ export default function PortfolioSection({ projects }: PortfolioSectionProps) {
             </Link>
           ))}
         </div>
-      </div>
+      </div> {/* End max-w-6xl container */}
     </section>
   );
 }

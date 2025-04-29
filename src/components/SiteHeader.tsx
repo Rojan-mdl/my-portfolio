@@ -2,21 +2,32 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import React, { useState, useEffect, useCallback } from "react"; // Added useCallback
-import { usePathname } from 'next/navigation'; // Import usePathname
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence, useSpring } from "motion/react"; // Import useSpring, remove animate
 
 // Hamburger Icon Component
+// TODO: Replace with a more accessible icon or SVG
 const HamburgerIcon = ({ open }: { open: boolean }) => (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-transform duration-300 ease-in-out" style={{ transform: open ? 'rotate(90deg)' : 'rotate(0deg)' }} aria-hidden="true">
         <path d={open ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
 );
 
-export default function SiteHeader() {
+// Define props interface
+interface SiteHeaderProps {
+  activeSection: string; // ID of the currently active section
+}
+
+export default function SiteHeader({ activeSection }: SiteHeaderProps) { // Destructure props
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname(); // Get the current path
   const isHomePage = pathname === '/'; // Check if it's the home page
+
+  // Refs for underline animation
+  const navContainerRef = useRef<HTMLDivElement>(null); // Ref for the container of both navs
+  const underlineRef = useRef<HTMLDivElement>(null); // Ref for the underline element
+  const linkRefs = useRef<Map<string, HTMLAnchorElement | null>>(new Map()); // Map to store refs of nav links
 
   // Helper function to generate the correct href
   const getLinkHref = (sectionId: string) => {
@@ -74,14 +85,46 @@ export default function SiteHeader() {
   }, [menuOpen, handleKeyDown]);
 
 
-  // Link Classes for Focus-Only Animated Underline
-  // Underline (scale-x) triggers only on focus (click or keyboard)
+  // --- Underline Animation Logic ---
+  // Define spring physics options
+  const springOptions = { stiffness: 300, damping: 30, restDelta: 0.001 };
+  const underlineXSpring = useSpring(0, springOptions);
+  const underlineWidthSpring = useSpring(0, springOptions);
+  const underlineOpacitySpring = useSpring(0, { duration: 0.2 }); // Separate spring for opacity fade
+
+  useEffect(() => {
+    if (!isHomePage || !navContainerRef.current) return; // Only run on homepage with refs
+
+    const activeLinkElement = linkRefs.current.get(activeSection);
+
+    if (activeLinkElement) {
+      const navRect = navContainerRef.current.getBoundingClientRect();
+      const linkRect = activeLinkElement.getBoundingClientRect();
+
+      // Calculate position relative to the nav container
+      const targetX = linkRect.left - navRect.left;
+      const targetWidth = linkRect.width;
+
+      // Update spring targets
+      underlineXSpring.set(targetX);
+      underlineWidthSpring.set(targetWidth);
+      underlineOpacitySpring.set(1); // Make visible
+
+    } else {
+       // If no link matches (e.g., scrolling past 'contact'), fade out the underline
+       underlineOpacitySpring.set(0);
+       // Optionally reset width/position when hidden, though opacity handles visibility
+       // underlineXSpring.set(underlineXSpring.get()); // Keep current X
+       // underlineWidthSpring.set(0); // Shrink width
+    }
+
+  }, [activeSection, isHomePage, underlineXSpring, underlineWidthSpring, underlineOpacitySpring]); // Rerun when activeSection changes or navigating away/to homepage
+
+  // --- Link Classes ---
+  // Removed the focus-based ::after underline, we'll use the motion.div now
   const desktopLinkClasses = `
     relative uppercase text-sm text-gray-300 transition duration-150 ease-in-out
     hover:text-white focus:outline-none focus:text-white
-    after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-white
-    after:origin-left after:scale-x-0 after:transition-transform after:duration-300 after:ease-out
-    focus:after:scale-x-100
   `;
   // Mobile link styling uses focus-visible for its underline
   const mobileLinkClasses = "text-lg hover:text-gray-300 focus:outline-none focus-visible:text-white focus-visible:underline";
@@ -121,13 +164,14 @@ export default function SiteHeader() {
             </button>
           </div>
 
-          {/* Desktop View Container (Hidden Mobile) */}
-          <div className="hidden sm:flex w-full items-center justify-between">
+          {/* Desktop View Container (Hidden Mobile) - Add ref here */}
+          <div ref={navContainerRef} className="hidden sm:flex w-full items-center justify-between relative"> {/* Added relative positioning */}
             {/* Left Navigation */}
             <nav className="flex items-center space-x-5 lg:space-x-7" aria-label="Main desktop navigation left">
-              <Link href={getLinkHref('#about')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#about') === '#about' ? 'page' : undefined}>About</Link>
-              <Link href={getLinkHref('#experience-education')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#experience-education') === '#experience-education' ? 'page' : undefined}>Experience</Link>
-              <Link href={getLinkHref('#portfolio')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#portfolio') === '#portfolio' ? 'page' : undefined}>Portfolio</Link>
+              {/* Corrected refs assignment */}
+              <Link ref={(el) => { linkRefs.current.set('about', el); }} href={getLinkHref('#about')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'about' ? 'page' : undefined}>About</Link>
+              <Link ref={(el) => { linkRefs.current.set('experience-education', el); }} href={getLinkHref('#experience-education')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'experience-education' ? 'page' : undefined}>Experience</Link>
+              <Link ref={(el) => { linkRefs.current.set('portfolio', el); }} href={getLinkHref('#portfolio')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'portfolio' ? 'page' : undefined}>Portfolio</Link>
             </nav>
 
             {/* Centered Logo */}
@@ -146,10 +190,26 @@ export default function SiteHeader() {
 
             {/* Right Navigation */}
             <nav className="flex items-center space-x-5 lg:space-x-7" aria-label="Main desktop navigation right">
-                <Link href={getLinkHref('#art')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#art') === '#art' ? 'page' : undefined}>Art</Link>
-                <Link href={getLinkHref('#services')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#services') === '#services' ? 'page' : undefined}>Services</Link>
-                <Link href={getLinkHref('#contact')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#contact') === '#contact' ? 'page' : undefined}>Contact</Link>
+                {/* Corrected refs assignment */}
+                <Link ref={(el) => { linkRefs.current.set('art', el); }} href={getLinkHref('#art')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'art' ? 'page' : undefined}>Art</Link>
+                <Link ref={(el) => { linkRefs.current.set('services', el); }} href={getLinkHref('#services')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'services' ? 'page' : undefined}>Services</Link>
+                <Link ref={(el) => { linkRefs.current.set('contact', el); }} href={getLinkHref('#contact')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'contact' ? 'page' : undefined}>Contact</Link>
             </nav>
+
+            {/* Animated Underline Element (only on homepage) */}
+            {isHomePage && (
+              <motion.div
+                ref={underlineRef}
+                className="absolute h-0.5 bg-white" // Removed left-0, position controlled by style
+                style={{
+                  x: underlineXSpring, // Use spring value for x
+                  width: underlineWidthSpring, // Use spring value for width
+                  opacity: underlineOpacitySpring, // Use spring value for opacity
+                  top: '47px', // Adjusted Y position lower
+                  originX: 0, // Animate width from the left
+                }}
+              />
+            )}
           </div>
         </div>
       </header>

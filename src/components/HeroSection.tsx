@@ -1,32 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useState, useEffect } from "react"; // Import hooks
-
-// Hook to check for reduced motion preference
-const usePrefersReducedMotion = () => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-
-    const handleChange = () => {
-      setPrefersReducedMotion(mediaQuery.matches);
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
-  return prefersReducedMotion;
-};
-
+// Removed motion and related hook imports/definitions
 
 export default function HeroSection() {
-  const prefersReducedMotion = usePrefersReducedMotion();
+  // Removed prefersReducedMotion hook usage
 
   return (
     <section
-      id="hero"
+      // id="hero" // ID is now handled by the AnimatedSection wrapper in page.tsx
       role="banner"
       aria-labelledby="hero-heading"
       // Consider min-h-screen if h-screen causes issues on mobile viewports
@@ -50,19 +31,14 @@ export default function HeroSection() {
       {/* Overlay */}
       <div aria-hidden="true" className="absolute inset-0 bg-black/50" /> {/* Increased opacity */}
 
-      {/* Animated Text Content */}
-      <motion.div
-        className="relative z-10 text-center text-white px-4"
-        initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-        animate={prefersReducedMotion ? false : { opacity: 1, y: 0 }}
-        transition={prefersReducedMotion ? undefined : { duration: 1, ease: "easeOut" }}
-      >
+      {/* Text Content (Removed motion wrapper) */}
+      <div className="relative z-10 text-center text-white px-4">
         {/* ID for aria-labelledby */}
         <h1 id="hero-heading" className="text-5xl md:text-7xl font-bold">
           MARIUS ØVREBØ
         </h1>
         <p className="mt-4 text-xl md:text-2xl">CGI / DESIGN / CODE</p>
-      </motion.div>
+      </div>
     </section>
   );
 }

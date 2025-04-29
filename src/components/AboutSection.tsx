@@ -1,37 +1,39 @@
 "use client";
 
-import React, { useState, useEffect } from "react"; // Added useEffect
+import React, { useState, useEffect } from "react"; // Added useEffect back
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+// Removed motion import, kept AnimatePresence and motion for internal animations
+import { motion, AnimatePresence } from "motion/react";
 
-// Hook to check for reduced motion preference (copied from HeroSection)
-const usePrefersReducedMotion = () => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-
-    const handleChange = () => {
-      setPrefersReducedMotion(mediaQuery.matches);
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
-  return prefersReducedMotion;
-};
-
+// Removed usePrefersReducedMotion hook definition
 
 export default function AboutSection() {
   const [aboutExpanded, setAboutExpanded] = useState(false);
-  const prefersReducedMotion = usePrefersReducedMotion(); // Use the hook
+  // Removed prefersReducedMotion hook usage for the main section animation
 
   // Focus visible style variable for consistency
   const focusVisibleShadow = "focus-visible:shadow-[0_0_10px_2px_#ffffff]";
 
+  // We still need prefersReducedMotion for the *internal* animations (button icon, CV link)
+  // Re-add the hook definition here or move it to a shared utility file
+  // For now, let's re-add it here for simplicity, but ideally it should be shared.
+  const usePrefersReducedMotion = () => {
+    const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+    useEffect(() => {
+      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      setPrefersReducedMotion(mediaQuery.matches);
+      const handleChange = () => setPrefersReducedMotion(mediaQuery.matches);
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }, []);
+    return prefersReducedMotion;
+  };
+  const prefersReducedMotion = usePrefersReducedMotion(); // Call the hook for internal animations
+
   return (
-    <section id="about" className="py-12 sm:py-16 text-gray-100" aria-labelledby="about-heading">
-      {/* Responsive container */}
+    // Removed id="about" as it's handled by the wrapper in page.tsx
+    <section className="py-12 sm:py-16 text-gray-100" aria-labelledby="about-heading">
+      {/* Responsive container (Removed outer motion.div wrapper) */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 id="about-heading" className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">About Me</h2>
         {/* Initial paragraph */}
@@ -106,7 +108,7 @@ export default function AboutSection() {
               aria-expanded={aboutExpanded}
               className={`inline-flex items-center bg-[#450086] px-4 py-2 text-xs sm:text-sm text-white font-semibold rounded transition hover:bg-[#360066] focus:outline-none ${focusVisibleShadow}`}
             >
-              {aboutExpanded ? "Show Less" : "Read More"}
+              {aboutExpanded ? "Show less" : "Read more"}
               <motion.svg
                 className="ml-1.5 h-3.5 w-3.5 sm:ml-2 sm:h-4 sm:w-4"
                 initial={false} // Initial state doesn't need animation disabling
@@ -145,7 +147,7 @@ export default function AboutSection() {
             </AnimatePresence>
         </div>
 
-      </div>
+      </div> {/* End Responsive container */}
     </section>
   );
 }

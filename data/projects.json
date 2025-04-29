@@ -45,7 +45,7 @@
       { "src": "/icons/typescript.svg", "label": "TypeScript" },
       { "src": "/icons/tailwindcss.svg", "label": "Tailwind CSS"},
       { "src": "/icons/threejs.svg", "label": "Three.js / R3F"},
-      { "src": "/icons/framer-motion.png", "label": "Framer Motion"},
+      { "src": "/icons/motion.png", "label": "Motion"},
       { "src": "/icons/vercel.svg", "label": "Vercel"}
     ],
     "lightboxSlides": [
@@ -55,7 +55,7 @@
     "id": "3",
     "title": "Oslo Throwdown 2024",
     "brief": "Visualization of the layout of Oslo Throwdown 2024, a CrossFit competition in Oslo, Norway.",
-    "detailPath": "/data/markdown/project03.md",
+    "detailPath": "/data/markdown/oslo-throwdown.md",
     "image": "/image/project03/hero.png",
     "extendedImages": [
       "/image/project03/image01.png",
@@ -83,7 +83,7 @@
     "id": "4",
     "title": "Oslo Throwdown 2025",
     "brief": "To be announced.",
-    "detailPath": "/data/markdown/project-3.md",
+    "detailPath": "",
     "image": "/image/to-be-announced.png",
     "extendedImages": [
     ],

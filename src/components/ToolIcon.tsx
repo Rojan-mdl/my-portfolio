@@ -1,10 +1,10 @@
-"use client"; // Added directive
+"use client";
 
-import React, { useState, useEffect } from "react"; // Added hooks
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 
-// Hook to check for reduced motion preference (copied from previous components)
+// Hook to check for reduced motion preference
 const usePrefersReducedMotion = () => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   useEffect(() => {
@@ -37,10 +37,8 @@ export default function ToolIcon({ src, alt, label, size }: ToolIconProps) {
   const prefersReducedMotion = usePrefersReducedMotion(); // Use the hook
 
   return (
-    // Removed title={label}
     <div className="relative group inline-block">
       <Image src={src} alt={alt} width={size} height={size} className="rounded" loading="lazy"/>
-      {/* Removed pointer-events-none, conditionally apply transition */}
       <span className={`absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-full opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 bg-black text-white text-xs px-2 py-1 rounded mt-1 whitespace-nowrap z-10 ${prefersReducedMotion ? '' : 'transition'}`}>
         {label}
       </span>
