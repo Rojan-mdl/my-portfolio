@@ -4,140 +4,154 @@ import Link from "next/link";
 import Image from "next/image";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence, useSpring } from "motion/react"; // Import useSpring, remove animate
+import { motion, AnimatePresence, useSpring } from "motion/react"; // Framer Motion components for animations and spring physics
 
 // Hamburger Icon Component
-// TODO: Replace with a more accessible icon or SVG
+// TODO: Replace with a dedicated icon library (e.g., react-icons) or a more robust SVG implementation for better accessibility and maintainability.
 const HamburgerIcon = ({ open }: { open: boolean }) => (
+    // SVG element for the hamburger/close icon
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-transform duration-300 ease-in-out" style={{ transform: open ? 'rotate(90deg)' : 'rotate(0deg)' }} aria-hidden="true">
+        {/* Path changes based on the 'open' state to animate between hamburger and close (X) icons */}
         <path d={open ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
 );
 
-// Define props interface
+// Define the props interface for the SiteHeader component
 interface SiteHeaderProps {
-  activeSection: string; // ID of the currently active section
+  activeSection?: string; // ID of the currently active section (optional, mainly for homepage underline)
 }
 
+// SiteHeader component definition
 export default function SiteHeader({ activeSection }: SiteHeaderProps) { // Destructure props
+  // State to manage the mobile menu's open/closed status
   const [menuOpen, setMenuOpen] = useState(false);
-  const pathname = usePathname(); // Get the current path
-  const isHomePage = pathname === '/'; // Check if it's the home page
+  // Get the current URL pathname
+  const pathname = usePathname();
+  // Determine if the current page is the homepage
+  const isHomePage = pathname === '/';
 
-  // Refs for underline animation
-  const navContainerRef = useRef<HTMLDivElement>(null); // Ref for the container of both navs
-  const underlineRef = useRef<HTMLDivElement>(null); // Ref for the underline element
-  const linkRefs = useRef<Map<string, HTMLAnchorElement | null>>(new Map()); // Map to store refs of nav links
+  // Refs for managing the underline animation elements
+  const navContainerRef = useRef<HTMLDivElement>(null); // Ref for the desktop navigation container
+  const underlineRef = useRef<HTMLDivElement>(null); // Ref for the animated underline element
+  const linkRefs = useRef<Map<string, HTMLAnchorElement | null>>(new Map()); // Map to store refs of individual navigation links
 
-  // Helper function to generate the correct href
+  // Helper function to generate the correct href for navigation links
+  // Ensures links point correctly whether on the homepage or a subpage
   const getLinkHref = (sectionId: string) => {
-    // If on a project page (not home), link to the homepage section
-    // Otherwise, link directly to the section ID (for same-page scrolling)
+    // If not on the homepage (e.g., a project page), prepend '/' to link back to the homepage section
+    // Otherwise (on homepage), use the hash directly for same-page scrolling
     return !isHomePage ? `/${sectionId}` : sectionId;
+    // TODO: Consider refining this logic if deep linking to sections on other pages becomes necessary.
   };
 
-  // Helper to close the mobile menu
+  // Helper function to close the mobile menu
   const closeMenu = () => setMenuOpen(false);
 
-  // Close mobile menu on resize to desktop width
+  // Effect to automatically close the mobile menu when resizing the window to desktop widths
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 640) {
-        setMenuOpen(false);
+      if (window.innerWidth >= 640) { // Tailwind's 'sm' breakpoint
+        closeMenu();
       }
     };
     window.addEventListener('resize', handleResize);
-    // Cleanup listener on component unmount
+    // Cleanup: remove the event listener when the component unmounts
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once on mount
 
-  // Prevent body scroll when mobile menu is open
+  // Effect to prevent body scrolling when the mobile menu is open
   useEffect(() => {
-    const originalOverflow = document.body.style.overflow;
+    const originalOverflow = document.body.style.overflow; // Store original body overflow style
     if (menuOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden'; // Disable body scroll
     } else {
-      document.body.style.overflow = originalOverflow; // Restore original value
+      document.body.style.overflow = originalOverflow; // Restore original overflow style
     }
-    // Cleanup function to restore scroll on component unmount
+    // Cleanup: restore original overflow style when the component unmounts or menu closes
     return () => {
       document.body.style.overflow = originalOverflow;
     };
-  }, [menuOpen]);
+  }, [menuOpen]); // Rerun this effect whenever menuOpen state changes
 
-  // Add Escape key listener to close mobile menu
+  // Callback function to handle the 'Escape' key press for closing the mobile menu
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     if (event.key === 'Escape') {
       closeMenu();
     }
-  }, []); // Empty dependency array as closeMenu doesn't change
+  }, []); // useCallback ensures the function reference is stable
 
+  // Effect to add/remove the Escape key listener based on menu state
   useEffect(() => {
     if (menuOpen) {
       document.addEventListener('keydown', handleKeyDown);
     } else {
       document.removeEventListener('keydown', handleKeyDown);
     }
-    // Cleanup listener on component unmount or when menu closes
+    // Cleanup: remove the event listener when the component unmounts or menu closes
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [menuOpen, handleKeyDown]);
-
+  }, [menuOpen, handleKeyDown]); // Rerun when menuOpen or handleKeyDown changes
 
   // --- Underline Animation Logic ---
-  // Define spring physics options
+  // Configuration for the spring animation physics
   const springOptions = { stiffness: 300, damping: 30, restDelta: 0.001 };
+  // Create spring animations for underline position (x), width, and opacity
   const underlineXSpring = useSpring(0, springOptions);
   const underlineWidthSpring = useSpring(0, springOptions);
-  const underlineOpacitySpring = useSpring(0, { duration: 0.2 }); // Separate spring for opacity fade
+  const underlineOpacitySpring = useSpring(0, { duration: 0.2 }); // Use a simpler duration-based spring for opacity fade
 
+  // Effect to update the underline position and visibility based on the active section
   useEffect(() => {
-    if (!isHomePage || !navContainerRef.current) return; // Only run on homepage with refs
+    // Guard clauses: Only run on the homepage and if the nav container ref is available
+    if (!isHomePage || !navContainerRef.current || !activeSection) {
+        underlineOpacitySpring.set(0); // Ensure underline is hidden if not on homepage or no active section
+        return;
+    }
 
+    // Get the DOM element of the currently active navigation link
     const activeLinkElement = linkRefs.current.get(activeSection);
 
-    if (activeLinkElement) {
+    if (activeLinkElement && navContainerRef.current) {
+      // Get the bounding rectangles of the navigation container and the active link
       const navRect = navContainerRef.current.getBoundingClientRect();
       const linkRect = activeLinkElement.getBoundingClientRect();
 
-      // Calculate position relative to the nav container
+      // Calculate the target X position and width for the underline relative to the nav container
       const targetX = linkRect.left - navRect.left;
       const targetWidth = linkRect.width;
 
-      // Update spring targets
+      // Update the spring animation targets
       underlineXSpring.set(targetX);
       underlineWidthSpring.set(targetWidth);
-      underlineOpacitySpring.set(1); // Make visible
+      underlineOpacitySpring.set(1); // Make the underline visible
 
     } else {
-       // If no link matches (e.g., scrolling past 'contact'), fade out the underline
+       // If no active link element is found (e.g., scrolled past the last section), fade out the underline
        underlineOpacitySpring.set(0);
-       // Optionally reset width/position when hidden, though opacity handles visibility
-       // underlineXSpring.set(underlineXSpring.get()); // Keep current X
-       // underlineWidthSpring.set(0); // Shrink width
+       // TODO: Consider whether to reset X/Width springs here or let them stay at the last position. Current behavior is fine.
     }
 
-  }, [activeSection, isHomePage, underlineXSpring, underlineWidthSpring, underlineOpacitySpring]); // Rerun when activeSection changes or navigating away/to homepage
+  }, [activeSection, isHomePage, underlineXSpring, underlineWidthSpring, underlineOpacitySpring]); // Dependencies for the effect
 
   // --- Link Classes ---
-  // Removed the focus-based ::after underline, we'll use the motion.div now
+  // Base classes for desktop navigation links (underline handled by motion.div)
   const desktopLinkClasses = `
     relative uppercase text-sm text-gray-300 transition duration-150 ease-in-out
     hover:text-white focus:outline-none focus:text-white
   `;
-  // Mobile link styling uses focus-visible for its underline
+  // Base classes for mobile navigation links (uses focus-visible for underline)
   const mobileLinkClasses = "text-lg hover:text-gray-300 focus:outline-none focus-visible:text-white focus-visible:underline";
-
+  // TODO: Ensure focus styles are consistent and meet accessibility contrast requirements.
 
   return (
     <>
-      {/* Header Element */}
+      {/* Header Element: Fixed position, full width, background, border */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-black h-16 flex items-center border-b border-gray-800/50">
-        {/* Max Width Container */}
+        {/* Max Width Container: Centers content and applies padding */}
         <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-full">
 
-          {/* Mobile View: Logo (Left) */}
+          {/* Mobile View: Logo (Aligned Left) - Hidden on sm screens and up */}
           <div className="flex-shrink-0 sm:hidden">
             <Link href={getLinkHref('#hero')} onClick={closeMenu} aria-label="Homepage Logo">
               <Image
@@ -145,42 +159,42 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) { // Dest
                 alt="Marius Øvrebø Logo"
                 width={60}
                 height={60}
-                className="h-auto"
-                priority
+                className="h-auto" // Maintain aspect ratio
+                priority // Prioritize loading this image (likely LCP)
               />
             </Link>
           </div>
 
-          {/* Mobile View: Hamburger Button (Right) */}
+          {/* Mobile View: Hamburger Button (Aligned Right) - Hidden on sm screens and up */}
           <div className="sm:hidden">
             <button
-              onClick={() => setMenuOpen(!menuOpen)}
+              onClick={() => setMenuOpen(!menuOpen)} // Toggle menu state on click
               aria-label="Toggle menu"
-              aria-expanded={menuOpen}
-              aria-controls="mobile-menu"
-              className="p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white" // Use focus-visible for ring
+              aria-expanded={menuOpen} // Indicate menu state to assistive technologies
+              aria-controls="mobile-menu" // Link button to the menu it controls
+              className="p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white" // Styling and focus management
             >
-              <HamburgerIcon open={menuOpen} />
+              <HamburgerIcon open={menuOpen} /> {/* Display hamburger or close icon */}
             </button>
           </div>
 
-          {/* Desktop View Container (Hidden Mobile) - Add ref here */}
-          <div ref={navContainerRef} className="hidden sm:flex w-full items-center justify-between relative"> {/* Added relative positioning */}
-            {/* Left Navigation */}
+          {/* Desktop View Container: Hidden on mobile, flex layout, full width, relative positioning for underline */}
+          <div ref={navContainerRef} className="hidden sm:flex w-full items-center justify-between relative">
+            {/* Desktop Left Navigation */}
             <nav className="flex items-center space-x-5 lg:space-x-7" aria-label="Main desktop navigation left">
-              {/* Corrected refs assignment */}
+              {/* Navigation Links: Assign refs for underline calculation, use helper for href, close menu on click */}
               <Link ref={(el) => { linkRefs.current.set('about', el); }} href={getLinkHref('#about')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'about' ? 'page' : undefined}>About</Link>
               <Link ref={(el) => { linkRefs.current.set('experience-education', el); }} href={getLinkHref('#experience-education')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'experience-education' ? 'page' : undefined}>Experience</Link>
               <Link ref={(el) => { linkRefs.current.set('portfolio', el); }} href={getLinkHref('#portfolio')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'portfolio' ? 'page' : undefined}>Portfolio</Link>
             </nav>
 
-            {/* Centered Logo */}
-            <div className="flex-shrink-0 px-4">
+            {/* Desktop Centered Logo */}
+            <div className="flex-shrink-0 px-4"> {/* Added padding to prevent overlap with nav links */}
               <Link href={getLinkHref('#hero')} onClick={closeMenu} aria-label="Homepage Logo">
                 <Image
                   src="/image/MØ-white.png"
                   alt="Marius Øvrebø Logo"
-                  width={80}
+                  width={80} // Larger logo for desktop
                   height={80}
                   className="h-auto"
                   priority
@@ -188,53 +202,56 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) { // Dest
               </Link>
             </div>
 
-            {/* Right Navigation */}
+            {/* Desktop Right Navigation */}
             <nav className="flex items-center space-x-5 lg:space-x-7" aria-label="Main desktop navigation right">
-                {/* Corrected refs assignment */}
+                {/* Navigation Links: Assign refs, use helper for href, close menu on click */}
                 <Link ref={(el) => { linkRefs.current.set('art', el); }} href={getLinkHref('#art')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'art' ? 'page' : undefined}>Art</Link>
                 <Link ref={(el) => { linkRefs.current.set('services', el); }} href={getLinkHref('#services')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'services' ? 'page' : undefined}>Services</Link>
                 <Link ref={(el) => { linkRefs.current.set('contact', el); }} href={getLinkHref('#contact')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'contact' ? 'page' : undefined}>Contact</Link>
             </nav>
 
-            {/* Animated Underline Element (only on homepage) */}
+            {/* Animated Underline Element: Rendered only on the homepage */}
             {isHomePage && (
               <motion.div
-                ref={underlineRef}
-                className="absolute h-0.5 bg-white" // Removed left-0, position controlled by style
+                ref={underlineRef} // Assign ref
+                className="absolute h-0.5 bg-white" // Styling: absolute positioning, height, background color
                 style={{
-                  x: underlineXSpring, // Use spring value for x
-                  width: underlineWidthSpring, // Use spring value for width
-                  opacity: underlineOpacitySpring, // Use spring value for opacity
-                  top: '47px', // Adjusted Y position lower
-                  originX: 0, // Animate width from the left
+                  x: underlineXSpring, // Apply animated X position from spring
+                  width: underlineWidthSpring, // Apply animated width from spring
+                  opacity: underlineOpacitySpring, // Apply animated opacity from spring
+                  top: '47px', // Position below the links (adjust as needed)
+                  originX: 0, // Ensure width animation originates from the left
                 }}
+                aria-hidden="true" // Hide decorative element from screen readers
               />
             )}
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu Drawer (Overlay) */}
+      {/* Mobile Menu Drawer (Overlay): Uses AnimatePresence for enter/exit animations */}
       <AnimatePresence>
-        {menuOpen && (
+        {menuOpen && ( // Conditionally render the mobile menu
           <motion.div
-            id="mobile-menu"
-            role="dialog"
-            aria-modal="true"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="sm:hidden fixed inset-0 top-16 z-40 bg-black/95 backdrop-blur-sm pt-8 overflow-y-auto"
+            id="mobile-menu" // ID for aria-controls
+            role="dialog" // ARIA role for modal dialog
+            aria-modal="true" // Indicate it's a modal
+            initial={{ opacity: 0 }} // Initial animation state (invisible)
+            animate={{ opacity: 1 }} // Animate to visible
+            exit={{ opacity: 0 }} // Animate to invisible on exit
+            transition={{ duration: 0.2, ease: "easeInOut" }} // Animation timing
+            className="sm:hidden fixed inset-0 top-16 z-40 bg-black/95 backdrop-blur-sm pt-8 overflow-y-auto" // Styling: fixed position, overlay, background, blur, padding, scroll
           >
-            {/* Navigation links within the mobile menu */}
+            {/* Mobile Navigation Links */}
             <nav className="flex flex-col items-center gap-y-6 px-4 pb-10" aria-label="Mobile navigation">
-               <Link href={getLinkHref('#about')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#about') === '#about' ? 'page' : undefined}>About</Link>
-               <Link href={getLinkHref('#experience-education')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#experience-education') === '#experience-education' ? 'page' : undefined}>Experience</Link>
-               <Link href={getLinkHref('#portfolio')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#portfolio') === '#portfolio' ? 'page' : undefined}>Portfolio</Link>
-               <Link href={getLinkHref('#art')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#art') === '#art' ? 'page' : undefined}>Art</Link>
-               <Link href={getLinkHref('#services')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#services') === '#services' ? 'page' : undefined}>Services</Link>
-               <Link href={getLinkHref('#contact')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && getLinkHref('#contact') === '#contact' ? 'page' : undefined}>Contact</Link>
+               {/* Links use helper for href, close menu on click, apply mobile styles */}
+               <Link href={getLinkHref('#about')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'about' ? 'page' : undefined}>About</Link>
+               <Link href={getLinkHref('#experience-education')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'experience-education' ? 'page' : undefined}>Experience</Link>
+               <Link href={getLinkHref('#portfolio')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'portfolio' ? 'page' : undefined}>Portfolio</Link>
+               <Link href={getLinkHref('#art')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'art' ? 'page' : undefined}>Art</Link>
+               <Link href={getLinkHref('#services')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'services' ? 'page' : undefined}>Services</Link>
+               <Link href={getLinkHref('#contact')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'contact' ? 'page' : undefined}>Contact</Link>
+               {/* TODO: Add social links or other relevant items to the mobile menu if desired. */}
             </nav>
           </motion.div>
         )}

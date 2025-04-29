@@ -1,44 +1,57 @@
-"use client";
+"use client"; // Directive for Next.js to ensure this component runs on the client-side
 
-import type { Project } from '@/types';
-import { useState, useEffect, useRef } from 'react';
-import { useScroll, useMotionValueEvent } from "motion/react"; // Removed motion import
+import type { Project } from '@/types'; // Import the Project type definition
+import { useState, useEffect, useRef } from 'react'; // Import React hooks for state, side effects, and refs
+import { useScroll, useMotionValueEvent } from "motion/react"; // Import Framer Motion hooks for scroll tracking
 
-import SiteHeader from '@/components/SiteHeader';
-import AnimatedSection from '@/components/AnimatedSection'; // Import the new wrapper
-import HeroSection from "@/components/HeroSection";
-import AboutSection from "@/components/AboutSection";
-import ExperienceEducationSection from "@/components/ExperienceEducationSection";
-import PortfolioSection from "@/components/PortfolioSection";
-import ServicesSection from "@/components/ServicesSection";
-import ContactSection from "@/components/ContactSection";
-import ArtSection from '@/components/ArtSection';
+import SiteHeader from '@/components/SiteHeader'; // Import the main site header component
+import AnimatedSection from '@/components/AnimatedSection'; // Import the wrapper component for section animations
+import HeroSection from "@/components/HeroSection"; // Import the hero section component
+import AboutSection from "@/components/AboutSection"; // Import the about section component
+import ExperienceEducationSection from "@/components/ExperienceEducationSection"; // Import the experience/education section component
+import PortfolioSection from "@/components/PortfolioSection"; // Import the portfolio section component
+import ServicesSection from "@/components/ServicesSection"; // Import the services section component
+import ContactSection from "@/components/ContactSection"; // Import the contact section component
+import ArtSection from '@/components/ArtSection'; // Import the art section component
 
-// Client-side function to fetch projects from my API
+// Client-side asynchronous function to fetch project data from the internal API endpoint
 async function fetchProjects(): Promise<Project[]> {
   try {
-    // API route can fetch the static JSON
+    // Make a GET request to the '/api/projects' endpoint
     const response = await fetch('/api/projects');
+    // Check if the response was successful (status code 200-299)
     if (!response.ok) {
+      // Throw an error if the response status indicates failure
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+    // Parse the JSON response body
     const projectsData = await response.json();
-    // API returns the array directly
+    // Return the 'items' array from the data, or the data itself if 'items' doesn't exist, or an empty array as a fallback
+    // TODO: Standardize the API response format for consistency (e.g., always return { items: [...] }).
     return projectsData.items || projectsData || [];
   } catch (error) {
+    // Log any errors that occur during the fetch process
     console.error("Error fetching projects via API:", error);
-    return []; // Return empty array on error
+    // TODO: Implement user-facing error handling (e.g., display a message) instead of just logging.
+    // TODO: Consider adding a loading state indicator while projects are being fetched.
+    return []; // Return an empty array in case of an error
   }
 }
 
 
-// The main page component
+// The main page component for the homepage
 export default function HomePage() {
+  // State to store the array of project data fetched from the API
   const [projects, setProjects] = useState<Project[]>([]);
-  const [activeSection, setActiveSection] = useState<string>('hero'); // Default to 'hero'
-  const sectionsRef = useRef<HTMLElement[]>([]); // Ref to hold section elements
+  // State to track the ID of the currently active section in view, used for header navigation highlighting
+  const [activeSection, setActiveSection] = useState<string>('hero'); // Default to 'hero' section on initial load
 
-  // Refs for each section - Typed as HTMLDivElement for compatibility with AnimatedSection
+  // Ref to hold an array of the actual DOM elements for each major section (currently unused, but potentially useful)
+  const sectionsRef = useRef<HTMLElement[]>([]);
+
+  // Refs for each individual section component's container element
+  // These are passed to AnimatedSection to potentially trigger animations or for scroll tracking.
+  // Typed as HTMLDivElement because AnimatedSection likely forwards the ref to a div.
   const heroRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
   const experienceRef = useRef<HTMLDivElement>(null);
@@ -47,43 +60,55 @@ export default function HomePage() {
   const servicesRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll(); // Track overall scroll progress
+  // Hook from Framer Motion to track the overall scroll progress of the page (0 to 1)
+  const { scrollYProgress } = useScroll();
 
-  // TODO: Implement logic to determine activeSection based on scrollYProgress
-  // This is a placeholder - a more robust solution is needed.
-  // For now, it just sets the active section based on rough progress thresholds.
+  // Effect hook that listens for changes in scrollYProgress
+  // TODO: Replace this threshold-based logic with a more reliable method like Intersection Observer.
+  // This current implementation is inaccurate, especially with varying section heights and screen sizes.
+  // It attempts to set the activeSection based on scroll percentage thresholds.
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    // Example thresholds
-    if (latest < 0.1) setActiveSection('hero');
-    else if (latest < 0.25) setActiveSection('about');
-    else if (latest < 0.4) setActiveSection('experience-education');
-    else if (latest < 0.6) setActiveSection('portfolio');
-    else if (latest < 0.75) setActiveSection('art');
-    else if (latest < 0.9) setActiveSection('services');
-    else setActiveSection('contact');
-    // console.log("Page scroll: ", latest, "Active Section:", activeSection);
+    // Example thresholds (highly dependent on content length and viewport)
+    let currentSection = 'hero'; // Default assumption
+    if (latest >= 0.9) currentSection = 'contact';
+    else if (latest >= 0.75) currentSection = 'services';
+    else if (latest >= 0.6) currentSection = 'art';
+    else if (latest >= 0.4) currentSection = 'portfolio';
+    else if (latest >= 0.25) currentSection = 'experience-education';
+    else if (latest >= 0.1) currentSection = 'about';
+
+    // Update state only if the determined section is different from the current active one
+    if (currentSection !== activeSection) {
+        setActiveSection(currentSection);
+        // console.log("Page scroll: ", latest, "Active Section:", currentSection); // Debugging log
+    }
   });
 
+  // Effect hook that runs once when the component mounts
   useEffect(() => {
+    // Fetch the project data and update the state
     fetchProjects().then(setProjects);
 
-    // Populate sectionsRef array - Cast needed as refs are now HTMLDivElement
+    // Populate the sectionsRef array with the actual DOM elements from the refs
+    // Filter out any null values (if a ref hasn't been attached yet) and assert the type.
+    // Note: This array isn't actively used elsewhere currently.
     sectionsRef.current = [
         heroRef.current, aboutRef.current, experienceRef.current,
         portfolioRef.current, artRef.current, servicesRef.current, contactRef.current
-    ].filter(Boolean) as HTMLDivElement[]; // Filter out nulls and cast
+    ].filter(Boolean) as HTMLDivElement[];
 
-  }, []); // Fetch projects and set up refs on component mount
+  }, []); // Empty dependency array ensures this runs only on mount
 
-
+  // Render the component structure
   return (
     <>
-      {/* Pass activeSection to SiteHeader */}
+      {/* Render the SiteHeader, passing the current activeSection state for navigation highlighting */}
       <SiteHeader activeSection={activeSection} />
 
-      {/* Use AnimatedSection wrapper */}
-      {/* Note: HeroSection might have its own internal animation, review later */}
-      <AnimatedSection id="hero" ref={heroRef} delay={0}> {/* No delay for hero */}
+      {/* Render each section wrapped in the AnimatedSection component */}
+      {/* Pass the section ID, the corresponding ref, and potentially a delay */}
+      {/* TODO: Review if HeroSection needs the AnimatedSection wrapper or handles its own entry animation. */}
+      <AnimatedSection id="hero" ref={heroRef} delay={0}> {/* No entry delay for the hero section */}
         <HeroSection />
       </AnimatedSection>
       <AnimatedSection id="about" ref={aboutRef}>
@@ -93,6 +118,7 @@ export default function HomePage() {
         <ExperienceEducationSection />
       </AnimatedSection>
       <AnimatedSection id="portfolio" ref={portfolioRef}>
+        {/* Pass the fetched projects data to the PortfolioSection */}
         <PortfolioSection projects={projects} />
       </AnimatedSection>
       <AnimatedSection id="art" ref={artRef}>
