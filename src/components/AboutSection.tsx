@@ -54,15 +54,15 @@ export default function AboutSection() {
           {aboutExpanded && (
             // motion.div handles the expand/collapse animation (height and opacity)
             <motion.div
-              className="mt-4 overflow-hidden" // Margin top and hide overflow during animation
-              // Initial animation state (collapsed) - disabled if reduced motion is preferred
+              className="mt-4 overflow-hidden" // Re-added overflow-hidden
+              // Initial animation state (collapsed and faded out) - disabled if reduced motion is preferred
               initial={prefersReducedMotion ? undefined : { opacity: 0, height: 0 }}
-              // Animate to state (expanded) - disabled if reduced motion is preferred
+              // Animate to state (expanded and fully visible) - disabled if reduced motion is preferred
               animate={prefersReducedMotion ? undefined : { opacity: 1, height: "auto" }}
-              // Exit animation state (collapsing) - disabled if reduced motion is preferred
+              // Exit animation state (collapsing and fading out) - disabled if reduced motion is preferred
               exit={prefersReducedMotion ? undefined : { opacity: 0, height: 0 }}
               // Animation transition settings - disabled if reduced motion is preferred
-              transition={prefersReducedMotion ? undefined : { duration: 0.5, ease: "easeInOut" }}
+              transition={prefersReducedMotion ? undefined : { duration: 0.5, ease: "easeInOut" }} // Increased duration
               // TODO: Consider adding aria-live="polite" to announce content changes to screen readers, though AnimatePresence might handle focus management adequately.
             >
               {/* Additional paragraph shown when expanded */}

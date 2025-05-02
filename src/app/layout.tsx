@@ -1,4 +1,4 @@
-import "./globals.css"; // Import global styles
+import "./globals.css";
 import { Montserrat } from "next/font/google"; // Import Montserrat font from Google Fonts via Next.js font optimization
 import SiteHeader from "@/components/SiteHeader"; // Import the site header component
 import React from "react"; // Import React library
@@ -7,8 +7,8 @@ import { Analytics } from "@vercel/analytics/react"; // Import Vercel Analytics 
 
 // Initialize Montserrat font with specific subsets, weights, and display strategy
 const montserrat = Montserrat({
-  subsets: ["latin"], // Specify character subsets to load
-  weight: ["400", "700"], // Specify font weights to load
+  subsets: ["latin"],
+  weight: ["400", "700"],
   display: "swap", // Use font-display: swap for better performance
 });
 

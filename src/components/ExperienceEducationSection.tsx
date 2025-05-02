@@ -1,21 +1,43 @@
 "use client"; // Directive for Next.js client components
 
+"use client"; // Directive for Next.js client components
+
 import React, { useState } from "react"; // Import React and useState hook
 import Image from "next/image"; // Import Next.js Image component
 import Link from "next/link"; // Import Next.js Link component for navigation
 import ToolIcon from './ToolIcon'; // Import the reusable ToolIcon component
+import { motion, AnimatePresence } from "motion/react"; // Import motion components
 
 // Note: usePrefersReducedMotion hook was removed, assuming animations are handled by parent or not needed here.
 
 // ExperienceEducationSection component definition
+// Define animation variants for a gentler sliding/fading effect
+const variants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 50 : -50, // Start slightly off-center
+    opacity: 0,
+  }),
+  center: {
+    x: 0, // Center position
+    opacity: 1,
+  },
+  exit: (direction: number) => ({
+    x: direction < 0 ? 50 : -50, // Exit slightly off-center
+    opacity: 0,
+  }),
+};
+
 export default function ExperienceEducationSection() {
   // State to manage which tab ('experience' or 'education') is currently active
-  const [activeTab, setActiveTab] = useState<"experience" | "education">("experience");
+  // Store both the name and an index for direction calculation
+  const [[activeTabIndex, activeTabName], setActiveTab] = useState<[number, "experience" | "education"]>([0, "experience"]);
+  const [direction, setDirection] = useState(0); // State to store the animation direction
 
-  // Fixed minimum height for the content area below the tabs.
-  // This helps prevent layout shifts when switching between tabs with different content heights.
-  // TODO: Re-evaluate if a fixed min-height is the best approach, or if dynamic height with smooth transitions is preferable.
-  const tabContentMinHeight = "min-h-[650px]"; // Tailwind class for minimum height
+  // Function to handle tab changes and set direction
+  const handleTabChange = (newIndex: number, newName: "experience" | "education") => {
+    setDirection(newIndex > activeTabIndex ? 1 : -1); // 1 for right, -1 for left
+    setActiveTab([newIndex, newName]);
+  };
 
   // Consistent focus style variables for accessibility and visual feedback
   const focusVisibleRing = "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:ring-[#450086]"; // Ring style for tab buttons
@@ -38,13 +60,13 @@ export default function ExperienceEducationSection() {
           {/* Experience Tab Button */}
           <button
             role="tab" // ARIA role for a tab button
-            aria-selected={activeTab === "experience"} // Indicates if this tab is currently selected
+            aria-selected={activeTabName === "experience"} // Indicates if this tab is currently selected
             aria-controls="experience-panel" // Links this button to the corresponding tab panel
             id="experience-tab" // Unique ID for the tab button
-            onClick={() => setActiveTab("experience")} // Set the active tab state on click
+            onClick={() => handleTabChange(0, "experience")} // Use handler with index 0
             // Styling: Padding, rounded corners, font weight, transition, focus styles, conditional background/text color based on active state
             className={`px-4 py-2 rounded font-semibold transition focus:outline-none ${focusVisibleRing} ${
-              activeTab === "experience"
+              activeTabName === "experience"
                 ? "bg-[#450086] text-white" // Active tab style
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600" // Inactive tab style
             }`}
@@ -54,13 +76,13 @@ export default function ExperienceEducationSection() {
           {/* Education Tab Button */}
           <button
             role="tab" // ARIA role
-            aria-selected={activeTab === "education"} // Indicates selection state
+            aria-selected={activeTabName === "education"} // Indicates selection state
             aria-controls="education-panel" // Links to the education panel
             id="education-tab" // Unique ID
-            onClick={() => setActiveTab("education")} // Set state on click
+            onClick={() => handleTabChange(1, "education")} // Use handler with index 1
             // Styling: Similar to the experience tab button
              className={`px-4 py-2 rounded font-semibold transition focus:outline-none ${focusVisibleRing} ${
-              activeTab === "education"
+              activeTabName === "education"
                 ? "bg-[#450086] text-white" // Active style
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600" // Inactive style
             }`}
@@ -69,19 +91,30 @@ export default function ExperienceEducationSection() {
           </button>
         </div>
 
-        {/* Tab Content Container */}
-        {/* Applies the minimum height to prevent layout shifts */}
-        <div className={tabContentMinHeight}>
-          {/* Experience Panel */}
-          <div
-             role="tabpanel" // ARIA role for the content panel associated with a tab
-             id="experience-panel" // Unique ID, linked by aria-controls on the tab button
-             aria-labelledby="experience-tab" // Links this panel back to its controlling tab button
-             hidden={activeTab !== "experience"} // Hides the panel if it's not the active one (important for accessibility)
-             // Additional class to ensure visibility is controlled correctly (redundant with 'hidden' but safe)
-             className={`space-y-8 ${activeTab !== 'experience' ? 'hidden' : ''}`}
-             // TODO: Consider adding transition animations (e.g., fade) when switching tabs for a smoother user experience.
-           >
+        {/* Tab Content Container with AnimatePresence for transitions */}
+        {/* Added overflow-hidden to clip exiting content */}
+        <div className="relative overflow-hidden h-[650px]"> {/* Reinstated height, adjust as needed */}
+          {/* Use custom direction state */}
+          <AnimatePresence initial={false} custom={direction} mode="wait">
+            {/* Experience Panel - Conditionally rendered */}
+            {activeTabName === "experience" && (
+              <motion.div
+                key="experience" // Unique key for AnimatePresence
+                custom={direction} // Pass direction to variants
+                variants={variants} // Use defined variants
+                role="tabpanel"
+                id="experience-panel"
+                aria-labelledby="experience-tab"
+                className="space-y-8 absolute w-full" // Added absolute positioning and full width
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  duration: 0.5, // Slower duration
+                  ease: "easeInOut" // Smoother easing
+                }}
+              >
+                 {/* --- SATS Experience Item --- */}
              {/* --- SATS Experience Item --- */}
              <div className="flex flex-col sm:flex-row sm:space-x-4">
                {/* Logo */}
@@ -166,18 +199,29 @@ export default function ExperienceEducationSection() {
                  </div>
                </div>
              </div>
-             {/* TODO: Add more experience items if applicable. */}
-          </div>
+                {/* TODO: Add more experience items if applicable. */}
+              </motion.div>
+            )}
 
-          {/* Education Panel */}
-           <div
-             role="tabpanel" // ARIA role
-             id="education-panel" // Unique ID, linked by aria-controls
-             aria-labelledby="education-tab" // Links back to the tab button
-             hidden={activeTab !== "education"} // Hide if not active
-             // Additional class for visibility control
-             className={`space-y-8 ${activeTab !== 'education' ? 'hidden' : ''}`}
-           >
+            {/* Education Panel - Conditionally rendered */}
+            {activeTabName === "education" && (
+              <motion.div
+                key="education" // Unique key for AnimatePresence
+                custom={direction} // Pass direction to variants
+                variants={variants} // Use defined variants
+                role="tabpanel"
+                id="education-panel"
+                aria-labelledby="education-tab"
+                className="space-y-8 absolute w-full" // Added absolute positioning and full width
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  duration: 0.5, // Slower duration
+                  ease: "easeInOut" // Smoother easing
+                }}
+              >
+                 {/* --- Kristiania Education Item --- */}
              {/* --- Kristiania Education Item --- */}
              <div className="flex flex-col sm:flex-row sm:space-x-4">
                {/* Logo with Link */}
@@ -288,8 +332,10 @@ export default function ExperienceEducationSection() {
                  </div>
                </div>
              </div>
-             {/* TODO: Add more education items if applicable. */}
-           </div>
+                {/* TODO: Add more education items if applicable. */}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div> {/* End max-w-6xl container */}
     </section>

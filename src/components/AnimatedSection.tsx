@@ -62,9 +62,9 @@ const AnimatedSection = React.forwardRef<HTMLDivElement, AnimatedSectionProps>(
         id={id} // Apply the provided id attribute, if any
         className={className} // Apply any additional CSS classes
         // Initial animation state (before entering viewport)
-        // If reduced motion is preferred, set to false to disable initial animation state
+        // If reduced motion is preferred, set to undefined to disable initial animation state
         // Otherwise, start with opacity 0 and slightly moved down (y: 20)
-        initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+        initial={prefersReducedMotion ? undefined : { opacity: 0, y: 20 }}
         // Animation state when the element is in view
         // If reduced motion is preferred, set to undefined to disable the 'in view' animation
         // Otherwise, animate to full opacity (1) and original position (y: 0)
@@ -75,6 +75,10 @@ const AnimatedSection = React.forwardRef<HTMLDivElement, AnimatedSectionProps>(
           amount: 0.2 // Trigger when 20% of the element is visible
           // TODO: Consider making the 'amount' prop configurable if different trigger points are needed for various sections.
         }}
+        // Animation state when the element exits (unmounts)
+        // If reduced motion is preferred, set to undefined to disable exit animation
+        // Otherwise, animate back to opacity 0 and slightly moved down (y: 20)
+        exit={prefersReducedMotion ? undefined : { opacity: 0, y: 20 }}
         // Transition settings for the animation
         // If reduced motion is preferred, set to undefined to disable transitions
         // Otherwise, define duration, easing, and apply the specified delay
