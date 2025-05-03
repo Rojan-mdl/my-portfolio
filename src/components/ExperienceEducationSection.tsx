@@ -96,7 +96,7 @@ export default function ExperienceEducationSection() {
 
         {/* Tab Content Container with AnimatePresence for transitions */}
         {/* Added overflow-hidden to clip exiting content */}
-        <div className="relative overflow-hidden h-[1100px] sm:h-[650px]"> {/* Reinstated height, adjust as needed */}
+        <div className="relative overflow-hidden h-[1200px] sm:h-[650px]"> {/* Reinstated height, adjust as needed */}
           {/* Use custom direction state */}
           <AnimatePresence initial={false} custom={direction} mode="wait">
             {/* Experience Panel - Conditionally rendered */}
