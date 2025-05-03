@@ -9,6 +9,9 @@ import ToolIcon from '@/components/ToolIcon'; // Import the reusable ToolIcon co
 import ReactMarkdown from 'react-markdown'; // Import component to render Markdown content
 import remarkGfm from 'remark-gfm'; // Import remark plugin for GitHub Flavored Markdown support (tables, strikethrough, etc.)
 import ProjectGallery from '@/components/ProjectGallery'; // Import the gallery component
+// Removed IconType and react-icons imports as mapping is now in ToolIcon
+
+// Removed iconMap as mapping is now in ToolIcon
 
 // Helper function to extract YouTube Video ID from various URL formats
 // Returns the 11-character video ID or null if not found/invalid.
@@ -266,19 +269,18 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
           <h2 id="tools-heading" className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Tools Used</h2>
           {/* Flex container for tool icons */}
           <div className="flex flex-wrap gap-4">
-          {/* Map through the tool icons data */}
-          {project.toolIcons.map((tool, index) => (
-              // Render the ToolIcon component only if source and label are valid
-              (tool.src && tool.label) ? (
+           {/* Map through the tool icons data */}
+           {project.toolIcons.map((tool, index) => (
+              // Render ToolIcon using iconName prop. ToolIcon handles mapping and fallbacks.
+              (tool.label) ? ( // Only need label now
                 <ToolIcon
-                  key={index} // Unique key
-                  src={tool.src} // Icon image source
-                  // Use the label as alt text (ToolIcon might need adjustment if more specific alt text is desired)
-                  alt={tool.label}
-                  label={tool.label} // Tooltip label
-                  size={32} // Icon size
+                  key={`${tool.label}-${index}`} // Use label in key
+                  iconName={tool.label} // Pass the label string
+                  alt={tool.label} // Alt text remains the label
+                  label={tool.label}
+                  size={32}
                 />
-              ) : null // Render nothing if src or label is missing
+              ) : null // Render nothing if label is missing
             ))}
           </div>
         </section>

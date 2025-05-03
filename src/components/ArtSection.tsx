@@ -1,9 +1,17 @@
 "use client"; // Directive for Next.js client components
 
-import React, { useState, useEffect } from "react"; // Import React and hooks
+import React, { useState, useRef } from "react"; // Import React and hooks
 import Image from "next/image"; // Import Next.js Image component
 import dynamic from 'next/dynamic'; // Import dynamic for code splitting
 import type { Slide } from "yet-another-react-lightbox"; // Import Slide type for lightbox
+import {
+    motion,
+    useScroll,
+    useMotionValue,
+    useMotionValueEvent,
+    animate,
+    MotionValue
+} from "motion/react"; // Import motion components and hooks
 // Import lightbox plugins
 import Video from "yet-another-react-lightbox/plugins/video";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
@@ -12,8 +20,7 @@ import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 
-// Dynamically import the Lightbox component to reduce initial bundle size.
-// It will only be loaded when the user clicks to open the lightbox.
+// Dynamically import the Lightbox component
 const Lightbox = dynamic(() => import('yet-another-react-lightbox'));
 
 // Define the structure for individual art pieces in the gallery
@@ -24,37 +31,63 @@ type ArtPiece = {
   sources?: { src: string; type: string }[]; // Array of sources for video (e.g., different formats)
   poster?: string; // Poster image URL for videos
   width?: number; // Intrinsic width for lightbox sizing (especially for videos)
-  height?: number; // Intrinsic height for lightbox sizing (especially for videos)
+  height?: number; // Intrinsic height for lightbox sizing
 };
 
-// TODO: Extract this hook into a shared utility file (e.g., src/hooks/usePrefersReducedMotion.ts)
-// to avoid duplication across components.
-// Custom hook to detect user's preference for reduced motion
-const usePrefersReducedMotion = () => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  useEffect(() => {
-    // Safety check for server-side rendering
-    if (typeof window === 'undefined') return;
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-    const handleChange = () => setPrefersReducedMotion(mediaQuery.matches);
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
-  return prefersReducedMotion;
-};
+// Constants for the mask gradient
+const left = `0%`;
+const right = `100%`;
+const leftInset = `15%`; // Adjust inset percentage as needed
+const rightInset = `85%`; // Adjust inset percentage as needed
+const transparent = `#0000`;
+const opaque = `#000f`; // Use black with full opacity for the mask
+
+// Hook to generate the dynamic mask gradient based on scroll progress
+function useScrollOverflowMask(scrollXProgress: MotionValue<number>) {
+    const maskImage = useMotionValue(
+        `linear-gradient(90deg, ${opaque}, ${opaque} ${left}, ${opaque} ${rightInset}, ${transparent})`
+    );
+
+    useMotionValueEvent(scrollXProgress, "change", (value) => {
+        // Animate the mask based on scroll position (start, end, middle)
+        if (value === 0) {
+            animate(
+                maskImage,
+                `linear-gradient(90deg, ${opaque}, ${opaque} ${left}, ${opaque} ${rightInset}, ${transparent})`
+            );
+        } else if (value === 1) {
+            animate(
+                maskImage,
+                `linear-gradient(90deg, ${transparent}, ${opaque} ${leftInset}, ${opaque} ${right}, ${opaque})`
+            );
+        } else if (
+            scrollXProgress.getPrevious() === 0 ||
+            scrollXProgress.getPrevious() === 1
+        ) {
+            // Ensure smooth transition when scrolling away from edges
+            animate(
+                maskImage,
+                `linear-gradient(90deg, ${transparent}, ${opaque} ${leftInset}, ${opaque} ${rightInset}, ${transparent})`
+            );
+        }
+    });
+
+    return maskImage;
+}
+
 
 // ArtSection component definition
 export default function ArtSection() {
-  // State to control the lightbox visibility (open/closed)
-  const [open, setOpen] = useState(false);
-  // State to track the index of the currently selected slide in the lightbox
-  const [index, setIndex] = useState(-1);
-  // Check for user's reduced motion preference
-  const prefersReducedMotion = usePrefersReducedMotion();
+  const [open, setOpen] = useState(false); // Lightbox open state
+  const [index, setIndex] = useState(-1); // Lightbox slide index
+  const scrollRef = useRef<HTMLUListElement>(null); // Ref for the scrollable container
 
-  // Array containing the data for each art piece in the gallery
-  // TODO: Consider fetching this data from a CMS or API instead of hardcoding.
+  // Get scroll progress for the container
+  const { scrollXProgress } = useScroll({ container: scrollRef });
+  // Generate the mask image style based on scroll progress
+  const maskImage = useScrollOverflowMask(scrollXProgress);
+
+  // Array containing the data for each art piece
   const artPieces: ArtPiece[] = [
     { type: "image", src: "/art/green-eye.png", alt: "Floating eye with grass around it and a tree growing from the top." },
     { type: "image", src: "/art/cellular-wave.png", alt: "Interconnected molecules close-up." },
@@ -70,11 +103,10 @@ export default function ArtSection() {
     { type: "image", src: "/art/hand-sphere.png", alt: "A shattered black and golden hand, where the palm is replaced by a red-rimmed glowing sphere." },
     { type: "image", src: "/art/hex-orb.png", alt: "A golden plated sphere mostly encompassing a red-rimmed orb inside it, resting on a display plate." },
     { type: "image", src: "/art/playing-board.png", alt: "A hexagonal board-playing world with water, forest, rocks, houses and boats." },
-    // TODO: Add more art pieces as needed.
+    // Add more art pieces as needed.
   ];
 
-  // Prepare the 'slides' array required by the Lightbox component
-  // This maps the artPieces data into the format expected by yet-another-react-lightbox
+  // Prepare the 'slides' array for the Lightbox component
   const slides = artPieces
     // Filter out any pieces that might lack necessary source data to prevent errors
     .filter(piece => (piece.type === 'image' && piece.src) || (piece.type === 'video' && piece.sources && piece.sources.length > 0))
@@ -97,87 +129,85 @@ export default function ArtSection() {
              type: "image",
              src: piece.src!, // Use non-null assertion as filter should guarantee src exists for images
              alt: piece.alt,
-             // TODO: Add srcSet property here if providing multiple image resolutions for optimization.
+             // Add srcSet if needed
           };
        }
   });
 
-  // Consistent focus style for gallery items
+  // Consistent focus style
   const focusVisibleShadow = "focus-visible:shadow-[0_0_10px_2px_#ffffff]";
 
   return (
     <>
       {/* Art Section Container */}
-      {/* id="art" is handled by the parent AnimatedSection wrapper in page.tsx */}
-      <section className="py-16 text-gray-100" aria-labelledby="art-heading">
-        {/* Responsive container */}
-        <div className="max-w-6xl mx-auto px-4">
+      <section className="py-16 my-26 text-gray-100 overflow-hidden" aria-labelledby="art-heading">
+        {/* Container - Adjusted padding for horizontal scroll */}
+        <div className="max-w-6xl mx-auto px-0 sm:px-4"> {/* Remove horizontal padding on smallest screens */}
           {/* Section Heading */}
-          <h2 id="art-heading" className="text-3xl font-bold mb-8 text-center">
+          <h2 id="art-heading" className="text-3xl font-bold mb-8 text-center px-4 sm:px-0"> {/* Add padding back here */}
             Art
           </h2>
-          {/* Grid layout for art thumbnails */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Map through the original artPieces to create clickable thumbnails */}
+
+          {/* Horizontal Scrolling Container */}
+          <motion.ul
+            ref={scrollRef}
+            style={{ maskImage }} // Apply the dynamic mask
+            className="flex list-none h-[300px] overflow-x-scroll py-5 px-4 sm:px-0 gap-5 scrollbar-thin scrollbar-thumb-accent scrollbar-track-gray-800/50" // Horizontal flex, scroll, padding, gap, custom scrollbar
+          >
+            {/* Map through artPieces to create clickable list items */}
             {artPieces.map((piece, idx) => {
-               // Determine the source for the thumbnail (poster for video, src for image)
                const thumbnailSrc = piece.type === 'video' ? piece.poster : piece.src;
 
-               // Render the button only if a valid thumbnail source exists
                return thumbnailSrc ? (
-                 <button
-                   key={idx} // Unique key for React list rendering
-                   onClick={() => {
-                     // Find the corresponding index in the potentially filtered 'slides' array
-                     // This ensures the correct slide opens even if some artPieces were filtered out
-                     const slideIndex = slides.findIndex(slide =>
-                       (slide.type === 'image' && slide.src === piece.src) ||
-                       (slide.type === 'video' && slide.poster === piece.poster) // Match based on poster for videos
-                       // TODO: Refine matching logic if posters/srcs aren't unique identifiers.
-                     );
-                     // If a matching slide is found, set the index and open the lightbox
-                     if (slideIndex !== -1) {
-                       setIndex(slideIndex);
-                       setOpen(true);
-                     }
-                   }}
-                   // Styling: Relative positioning, square aspect ratio, overflow hidden, rounded corners, shadow, group for hover effects, focus style
-                   // Hover effect: Slight scale increase (disabled if reduced motion preferred)
-                   className={`relative aspect-square overflow-hidden rounded-lg shadow-lg group focus:outline-none ${focusVisibleShadow} ${prefersReducedMotion ? '' : 'transition duration-200 ease-in-out hover:scale-[1.03]'}`}
-                   aria-label={`View larger for ${piece.alt}`} // Accessibility label for the button
-                 >
-                   {/* Thumbnail Image */}
-                   <Image
-                      src={thumbnailSrc} // Use the determined thumbnail source
-                      alt={piece.alt} // Alt text
-                      fill // Fill the container
-                      style={{ objectFit: 'cover' }} // Cover the container
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" // Responsive sizes hint
-                      // Hover effect: Slight inner image scale (disabled if reduced motion preferred)
-                      className={`${prefersReducedMotion ? '' : 'transition duration-300 group-hover:scale-105'}`}
-                      loading="lazy" // Lazy load thumbnails
-                      // TODO: Consider adding placeholder blur effect.
-                   />
-                 </button>
-              ) : null; // Render nothing if thumbnailSrc is missing
+                 <li key={idx} className="flex-shrink-0 w-[250px] h-full"> {/* Fixed width list items */}
+                   <button
+                     onClick={() => {
+                       const slideIndex = slides.findIndex(slide =>
+                         (slide.type === 'image' && slide.src === piece.src) ||
+                         (slide.type === 'video' && slide.poster === piece.poster)
+                       );
+                       if (slideIndex !== -1) {
+                         setIndex(slideIndex);
+                         setOpen(true);
+                       }
+                     }}
+                     className={`relative w-full h-full overflow-hidden rounded-lg shadow-lg group focus:outline-none ${focusVisibleShadow}`}
+                     aria-label={`View larger for ${piece.alt}`}
+                   >
+                     <Image
+                        src={thumbnailSrc}
+                        alt={piece.alt}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                        sizes="250px" // Size matches the li width
+                        className="transition duration-300 group-hover:scale-105" // Keep subtle hover scale on image
+                        loading="lazy"
+                     />
+                   </button>
+                 </li>
+               ) : null;
              })}
-          </div>
+          </motion.ul>
         </div> {/* End max-w-6xl container */}
       </section>
 
-      {/* Lightbox Component */}
-      {/* Conditionally render the Lightbox only when 'open' state is true to leverage dynamic import */}
+      {/* Lightbox Component (remains the same) */}
       {open && (
         <Lightbox
-          open={open} // Controls visibility
-          close={() => setOpen(false)} // Function to close the lightbox
-          index={index} // Index of the slide to open initially
-          slides={slides} // Array of slides (images/videos) to display
-          // Enable plugins for video playback, thumbnails, and zoom functionality
+          open={open}
+          close={() => setOpen(false)}
+          index={index}
+          slides={slides}
           plugins={[Video, Thumbnails, Zoom]}
-          // TODO: Explore further customization options for the lightbox (animations, styles, etc.).
         />
       )}
     </>
   );
 }
+
+// Note: Added Tailwind scrollbar plugin classes:
+// scrollbar-thin scrollbar-thumb-accent scrollbar-track-gray-800/50
+// Ensure you have `tailwind-scrollbar` plugin installed and configured,
+// or adjust these classes based on your setup. If not using a plugin,
+// you might need custom CSS for scrollbar styling.
+// The mask effect relies on the `maskImage` style property applied via motion.

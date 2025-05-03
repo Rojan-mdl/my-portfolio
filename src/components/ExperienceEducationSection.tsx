@@ -7,6 +7,9 @@ import Image from "next/image"; // Import Next.js Image component
 import Link from "next/link"; // Import Next.js Link component for navigation
 import ToolIcon from './ToolIcon'; // Import the reusable ToolIcon component
 import { motion, AnimatePresence } from "motion/react"; // Import motion components
+// Removed react-icons imports as ToolIcon now handles the mapping internally
+// Removed duplicate Image import
+
 
 // Note: usePrefersReducedMotion hook was removed, assuming animations are handled by parent or not needed here.
 
@@ -46,7 +49,7 @@ export default function ExperienceEducationSection() {
   return (
     // Section container for Experience & Education
     // id="experience-education" is handled by the parent AnimatedSection wrapper in page.tsx
-    <section className="py-16 text-gray-100" aria-labelledby="exp-edu-heading">
+    <section className="py-16 my-26 text-gray-100" aria-labelledby="exp-edu-heading">
       {/* Container to constrain width and add padding */}
       <div className="max-w-6xl mx-auto px-4">
         {/* Section Heading */}
@@ -93,7 +96,7 @@ export default function ExperienceEducationSection() {
 
         {/* Tab Content Container with AnimatePresence for transitions */}
         {/* Added overflow-hidden to clip exiting content */}
-        <div className="relative overflow-hidden h-[650px]"> {/* Reinstated height, adjust as needed */}
+        <div className="relative overflow-hidden h-[1100px] sm:h-[650px]"> {/* Reinstated height, adjust as needed */}
           {/* Use custom direction state */}
           <AnimatePresence initial={false} custom={direction} mode="wait">
             {/* Experience Panel - Conditionally rendered */}
@@ -135,16 +138,16 @@ export default function ExperienceEducationSection() {
                  <div className="mt-2">
                    <p className="text-sm font-semibold">Tools:</p>
                    <div className="mt-1 flex flex-wrap gap-2">
-                      {/* Reusable ToolIcon components */}
-                      <ToolIcon src="/icons/figma.svg" alt="Figma" label="Figma" size={24} />
-                      <ToolIcon src="/icons/next-js.svg" alt="Next.js" label="Next.js" size={24} />
-                      <ToolIcon src="/icons/react.png" alt="React" label="React" size={24} />
-                      <ToolIcon src="/icons/typescript.svg" alt="TypeScript" label="TypeScript" size={24} />
-                      <ToolIcon src="/icons/javascript.svg" alt="JavaScript" label="JavaScript" size={24} />
-                      <ToolIcon src="/icons/c-sharp.svg" alt="C#" label="C#" size={24} />
-                      <ToolIcon src="/icons/jira.svg" alt="Jira" label="Jira" size={24} />
-                      <ToolIcon src="/icons/azure.svg" alt="Azure" label="Azure" size={24} />
-                      <ToolIcon src="/icons/sql.png" alt="SQL" label="SQL" size={24} />
+                      {/* Reusable ToolIcon components using iconName prop */}
+                      <ToolIcon iconName="Figma" alt="Figma" label="Figma" size={24} />
+                      <ToolIcon iconName="Next.js" alt="Next.js" label="Next.js" size={24} />
+                      <ToolIcon iconName="React" alt="React" label="React" size={24} />
+                      <ToolIcon iconName="TypeScript" alt="TypeScript" label="TypeScript" size={24} />
+                      <ToolIcon iconName="JavaScript" alt="JavaScript" label="JavaScript" size={24} />
+                      <ToolIcon iconName="C#" alt="C#" label="C#" size={24} />
+                      <ToolIcon iconName="Jira" alt="Jira" label="Jira" size={24} />
+                      <ToolIcon iconName="Azure" alt="Azure" label="Azure" size={24} />
+                      <ToolIcon iconName="SQL" alt="SQL" label="SQL" size={24} />
                    </div>
                  </div>
                </div>
@@ -168,9 +171,9 @@ export default function ExperienceEducationSection() {
                  <div className="mt-2">
                    <p className="text-sm font-semibold">Tools:</p>
                     <div className="mt-1 flex flex-wrap gap-2">
-                      <ToolIcon src="/icons/blender.svg" alt="Blender" label="Blender" size={24} />
-                      <ToolIcon src="/icons/adobe-after-effects.svg" alt="After Effects" label="After Effects" size={24} />
-                      <ToolIcon src="/icons/davinci-resolve.svg" alt="DaVinci Resolve" label="DaVinci Resolve" size={24} />
+                      <ToolIcon iconName="Blender" alt="Blender" label="Blender" size={24} />
+                      <ToolIcon iconName="After Effects" alt="After Effects" label="After Effects" size={24} />
+                      <ToolIcon iconName="DaVinci Resolve" alt="DaVinci Resolve" label="DaVinci Resolve" size={24} />
                     </div>
                  </div>
                </div>
@@ -194,7 +197,7 @@ export default function ExperienceEducationSection() {
                  <div className="mt-2">
                    <p className="text-sm font-semibold">Tools:</p>
                     <div className="mt-1 flex flex-wrap gap-2">
-                      <ToolIcon src="/icons/blender.svg" alt="Blender" label="Blender" size={24} />
+                      <ToolIcon iconName="Blender" alt="Blender" label="Blender" size={24} />
                     </div>
                  </div>
                </div>
@@ -252,15 +255,15 @@ export default function ExperienceEducationSection() {
                  <div className="mt-2">
                    <p className="text-sm font-semibold">Tools:</p>
                     <div className="mt-1 flex flex-wrap gap-2">
-                      <ToolIcon src="/icons/figma.svg" alt="Figma" label="Figma" size={24} />
-                      <ToolIcon src="/icons/react.png" alt="React" label="React" size={24} />
-                      <ToolIcon src="/icons/typescript.svg" alt="Typescript" label="Typescript" size={24} />
-                      <ToolIcon src="/icons/javascript.svg" alt="Javascript" label="Javascript" size={24} />
-                      <ToolIcon src="/icons/c-sharp.svg" alt="C#" label="C#" size={24} />
-                      <ToolIcon src="/icons/java.svg" alt="Java" label="Java" size={24} />
-                      <ToolIcon src="/icons/sql.png" alt="SQL" label="SQL" size={24} />
-                      <ToolIcon src="/icons/html5.svg" alt="HTML5" label="HTML5" size={24} />
-                      <ToolIcon src="/icons/css.png" alt="CSS" label="CSS" size={24} />
+                      <ToolIcon iconName="Figma" alt="Figma" label="Figma" size={24} />
+                      <ToolIcon iconName="React" alt="React" label="React" size={24} />
+                      <ToolIcon iconName="Typescript" alt="Typescript" label="Typescript" size={24} />
+                      <ToolIcon iconName="Javascript" alt="Javascript" label="Javascript" size={24} />
+                      <ToolIcon iconName="C#" alt="C#" label="C#" size={24} />
+                      <ToolIcon iconName="Java" alt="Java" label="Java" size={24} />
+                      <ToolIcon iconName="SQL" alt="SQL" label="SQL" size={24} />
+                      <ToolIcon iconName="HTML5" alt="HTML5" label="HTML5" size={24} />
+                      <ToolIcon iconName="CSS" alt="CSS" label="CSS" size={24} />
                     </div>
                  </div>
                </div>
@@ -292,8 +295,8 @@ export default function ExperienceEducationSection() {
                  <div className="mt-2">
                    <p className="text-sm font-semibold">Tools:</p>
                    <div className="mt-1 flex flex-wrap gap-2">
-                      <ToolIcon src="/icons/blender.svg" alt="Blender" label="Blender" size={24} />
-                      <ToolIcon src="/icons/unreal-engine.svg" alt="Unreal Engine" label="Unreal Engine" size={24} />
+                      <ToolIcon iconName="Blender" alt="Blender" label="Blender" size={24} />
+                      <ToolIcon iconName="Unreal Engine" alt="Unreal Engine" label="Unreal Engine" size={24} />
                    </div>
                  </div>
                </div>
@@ -324,10 +327,11 @@ export default function ExperienceEducationSection() {
                  <div className="mt-2">
                    <p className="text-sm font-semibold">Tools:</p>
                    <div className="mt-1 flex flex-wrap gap-2">
-                       <ToolIcon src="/icons/3ds-max.svg" alt="3ds Max" label="3ds Max" size={24} />
-                       <ToolIcon src="/icons/nuke.svg" alt="Nuke" label="Nuke" size={24} />
-                       <ToolIcon src="/icons/zbrush.svg" alt="Zbrush" label="Zbrush" size={24} />
-                       <ToolIcon src="/icons/substance-painter.png" alt="Substance Painter" label="Substance Painter" size={24} />
+                       {/* Use ToolIcon for all, including those that will fallback to Image */}
+                       <ToolIcon iconName="3ds Max" alt="3ds Max" label="3ds Max" size={24} /> {/* Using "3ds Max" label */}
+                       <ToolIcon iconName="Nuke" alt="Nuke" label="Nuke" size={24} />
+                       <ToolIcon iconName="Zbrush" alt="Zbrush" label="Zbrush" size={24} />
+                       <ToolIcon iconName="Substance Painter" alt="Substance Painter" label="Substance Painter" size={24} />
                    </div>
                  </div>
                </div>

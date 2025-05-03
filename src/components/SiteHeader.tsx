@@ -5,16 +5,17 @@ import Image from "next/image";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence, useSpring } from "motion/react"; // Framer Motion components for animations and spring physics
+import { LiaTimesSolid, LiaBarsSolid } from "react-icons/lia";
+
 
 // Hamburger Icon Component
-// TODO: Replace with a dedicated icon library (e.g., react-icons) or a more robust SVG implementation for better accessibility and maintainability.
-const HamburgerIcon = ({ open }: { open: boolean }) => (
-    // SVG element for the hamburger/close icon
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-transform duration-300 ease-in-out" style={{ transform: open ? 'rotate(90deg)' : 'rotate(0deg)' }} aria-hidden="true">
-        {/* Path changes based on the 'open' state to animate between hamburger and close (X) icons */}
-        <path d={open ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-);
+function HamburgerIcon({ open }: { open: boolean }) {
+  return (
+    <div className="flex items-center justify-center w-8 h-8 text-gray-300 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white">
+      {open ? <LiaTimesSolid size={32} /> : <LiaBarsSolid size={32} />} {/* Toggle between hamburger and close icon */}
+    </div>
+  );
+}
 
 // Define the props interface for the SiteHeader component
 interface SiteHeaderProps {

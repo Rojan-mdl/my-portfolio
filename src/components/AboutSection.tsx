@@ -1,9 +1,14 @@
 "use client"; // Directive for Next.js client components
 
 import React, { useState, useEffect } from "react"; // Import React hooks
-import Image from "next/image"; // Import Next.js Image component for optimized images
+// Removed Image import
 // Import motion components for internal animations (expand/collapse, button icon, CV link)
 import { motion, AnimatePresence } from "motion/react";
+import {
+  SiFigma, SiTypescript, SiJavascript, SiNextdotjs, SiReact, SiBlender, SiUnrealengine
+} from 'react-icons/si';
+import { FaJava } from 'react-icons/fa';
+import { TbBrandCSharp } from "react-icons/tb";
 
 // TODO: Extract this hook into a shared utility file (e.g., src/hooks/usePrefersReducedMotion.ts)
 // to avoid duplication across components (AnimatedSection, AboutSection, etc.).
@@ -38,7 +43,7 @@ export default function AboutSection() {
     // Section container for the "About Me" content
     // Padding applied, text color set
     // id="about" is handled by the parent AnimatedSection wrapper in page.tsx
-    <section className="py-12 sm:py-16 text-gray-100" aria-labelledby="about-heading">
+    <section className="py-12 sm:py-16 my-26 text-gray-100" aria-labelledby="about-heading">
       {/* Responsive container to constrain width and add horizontal padding */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
@@ -77,39 +82,39 @@ export default function AboutSection() {
                  {/* TODO: Consider creating a reusable SkillIcon component to reduce repetition. */}
                  {/* TODO: Ensure all icons have appropriate alt text and consider adding tooltips for clarity if needed. */}
                  <div className="flex items-center space-x-2">
-                   <Image src="/icons/figma.svg" alt="Figma" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
+                   <SiFigma size={32} aria-label="Figma" /> {/* Using size 32 for consistency with sm:w-8/h-8 */}
                    <span className="text-sm sm:text-base hidden md:inline">Figma</span>
                  </div>
                  <div className="flex items-center space-x-2">
-                   <Image src="/icons/typescript.svg" alt="TypeScript" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
+                   <SiTypescript size={32} aria-label="TypeScript" />
                    <span className="text-sm sm:text-base hidden md:inline">Typescript</span>
                  </div>
                  <div className="flex items-center space-x-2">
-                   <Image src="/icons/javascript.svg" alt="JavaScript" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
+                   <SiJavascript size={32} aria-label="JavaScript" />
                    <span className="text-sm sm:text-base hidden md:inline">Javascript</span>
                  </div>
                  <div className="flex items-center space-x-2">
-                   <Image src="/icons/java.svg" alt="Java" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
+                   <FaJava size={32} aria-label="Java" />
                    <span className="text-sm sm:text-base hidden md:inline">Java</span>
                  </div>
                  <div className="flex items-center space-x-2">
-                   <Image src="/icons/c-sharp.svg" alt="C#" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
+                   <TbBrandCSharp size={32} aria-label="C#" />
                    <span className="text-sm sm:text-base hidden md:inline">C#</span>
                  </div>
                  <div className="flex items-center space-x-2">
-                   <Image src="/icons/next-js.svg" alt="Next.js" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
+                   <SiNextdotjs size={32} aria-label="Next.js" />
                    <span className="text-sm sm:text-base hidden md:inline">Next.js</span>
                  </div>
                  <div className="flex items-center space-x-2">
-                   <Image src="/icons/react.png" alt="React" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
+                   <SiReact size={32} aria-label="React" />
                    <span className="text-sm sm:text-base hidden md:inline">React</span>
                  </div>
                  <div className="flex items-center space-x-2">
-                   <Image src="/icons/blender.svg" alt="Blender" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
+                   <SiBlender size={32} aria-label="Blender" />
                    <span className="text-sm sm:text-base hidden md:inline">Blender</span>
                  </div>
                  <div className="flex items-center space-x-2">
-                   <Image src="/icons/unreal-engine.svg" alt="Unreal Engine" width={28} height={28} className="sm:w-8 sm:h-8" loading="lazy"/>
+                   <SiUnrealengine size={32} aria-label="Unreal Engine" />
                    <span className="text-sm sm:text-base hidden md:inline">Unreal Engine</span>
                  </div>
                  {/* TODO: Add more relevant skills/tools if applicable. */}

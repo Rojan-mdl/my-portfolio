@@ -1,7 +1,9 @@
 "use client"; // Directive for Next.js client components. Can potentially be removed if no client-side hooks/logic are needed.
 
-import React from "react"; // Import React (useState, useEffect were removed as they are no longer used)
-import Image from "next/image"; // Import Next.js Image component for optimized icons
+import React from "react"; // Import React
+// Removed Image import as it's replaced by react-icons
+import { SiLinkedin, SiGithub, SiInstagram } from 'react-icons/si'; // Import social icons
+import { MdOutlineEmail } from 'react-icons/md'; // Import email icon
 
 // Note: Motion imports and usePrefersReducedMotion hook were removed as animations are handled by the parent or not present.
 
@@ -20,18 +22,18 @@ export default function ContactSection() {
 
   // Define the size for the icons used in the links
   const iconSize = 20;
+  const iconColor = "white";
 
-  // Define consistent Tailwind CSS classes for the white frame around the icons
-  const iconFrameClasses = "bg-white p-1 rounded-md inline-block leading-none";
+  // Removed iconFrameClasses as it's not needed for react-icons
 
   return (
     // Section container for Contact information
     // id="contact" is handled by the parent AnimatedSection wrapper in page.tsx
-    <section className="py-16 text-gray-100" aria-labelledby="contact-heading">
+    <section className="py-16 my-26 text-gray-100" aria-labelledby="contact-heading">
       {/* Responsive container, centered text */}
       <div className="max-w-4xl mx-auto px-4 text-center">
         {/* Section Heading */}
-        <h2 id="contact-heading" className="text-3xl font-bold mb-6">Get In Touch</h2>
+        <h2 id="contact-heading" className="text-3xl font-bold mb-6">Get in touch</h2>
         {/* Introductory paragraph */}
         <p className="mb-8 text-lg text-gray-300">
           Feel free to reach out! You can contact me via email or connect with me online.
@@ -45,17 +47,8 @@ export default function ContactSection() {
           {/* Email Link */}
           {/* Uses mailto: protocol to open the user's default email client */}
           <a href={`mailto:${email}`} className={linkClasses}>
-            {/* Icon container */}
-            <div className={iconFrameClasses}>
-              {/* Email Icon */}
-              <Image
-                src="/icons/email.png"
-                alt="" // Alt text is empty as the icon is decorative; the link text provides context.
-                width={iconSize}
-                height={iconSize}
-                className="block" // Ensures proper display within the flex container
-              />
-            </div>
+            {/* Email Icon */}
+            <MdOutlineEmail size={24} color={iconColor} aria-hidden="true" /> {/* Replaced Image with react-icon */}
             {/* Email Address Text */}
             <span>{email}</span>
           </a>
@@ -64,17 +57,8 @@ export default function ContactSection() {
           {/* target="_blank" opens the link in a new tab */}
           {/* rel="noopener noreferrer" is a security measure for target="_blank" links */}
           <a href={linkedInUrl} target="_blank" rel="noopener noreferrer" className={linkClasses}>
-             {/* Icon container */}
-             <div className={iconFrameClasses}>
-               {/* LinkedIn Icon */}
-               <Image
-                 src="/icons/linkedin.svg"
-                 alt="" // Decorative icon
-                 width={iconSize}
-                 height={iconSize}
-                 className="block"
-               />
-             </div>
+             {/* LinkedIn Icon */}
+             <SiLinkedin size={iconSize} color={iconColor} aria-hidden="true" /> {/* Replaced Image with react-icon */}
              {/* Link Text */}
             <span>LinkedIn
               {/* Screen reader only text indicating the link opens in a new tab */}
@@ -84,17 +68,8 @@ export default function ContactSection() {
 
           {/* GitHub Link */}
           <a href={gitHubUrl} target="_blank" rel="noopener noreferrer" className={linkClasses}>
-             {/* Icon container */}
-             <div className={iconFrameClasses}>
-               {/* GitHub Icon */}
-               <Image
-                 src="/icons/github.svg"
-                 alt="" // Decorative icon
-                 width={iconSize}
-                 height={iconSize}
-                 className="block"
-               />
-             </div>
+             {/* GitHub Icon */}
+             <SiGithub size={iconSize} color={iconColor} aria-hidden="true" /> {/* Replaced Image with react-icon */}
              {/* Link Text */}
              <span>GitHub
                {/* Screen reader only text */}
@@ -104,17 +79,8 @@ export default function ContactSection() {
 
           {/* Instagram Link */}
           <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className={linkClasses}>
-             {/* Icon container */}
-             <div className={iconFrameClasses}>
-               {/* Instagram Icon */}
-               <Image
-                 src="/icons/instagram.svg"
-                 alt="" // Decorative icon
-                 width={iconSize}
-                 height={iconSize}
-                 className="block"
-               />
-             </div>
+             {/* Instagram Icon */}
+             <SiInstagram size={iconSize} color={iconColor} aria-hidden="true" /> {/* Replaced Image with react-icon */}
              {/* Link Text */}
             <span>Instagram
               {/* Screen reader only text */}

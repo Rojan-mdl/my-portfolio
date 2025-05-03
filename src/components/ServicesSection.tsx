@@ -47,7 +47,7 @@ export default function ServicesSection() {
   return (
     // Section container for Services
     // id="services" is handled by the parent AnimatedSection wrapper in page.tsx
-    <section className="py-16 text-gray-100" aria-labelledby="services-heading">
+    <section className="py-16 my-26 text-gray-100" aria-labelledby="services-heading">
       {/* Responsive container */}
       <div className="max-w-6xl mx-auto px-4">
         {/* Section Heading */}
