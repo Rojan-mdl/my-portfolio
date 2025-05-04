@@ -121,7 +121,7 @@ export default function ExperienceEducationSection() {
              {/* --- SATS Experience Item --- */}
              <div className="flex flex-col sm:flex-row sm:space-x-4">
                {/* Logo */}
-               <div className="flex-shrink-0 mb-3 sm:mb-0">
+               <div className="flex-shrink-0 mb-3 sm:mb-0 mt-4">
                  <Image src="/icons/sats.svg" alt="SATS Logo" width={48} height={48} className="rounded" loading="lazy"/>
                </div>
                {/* Details */}
@@ -155,7 +155,7 @@ export default function ExperienceEducationSection() {
               {/* --- Unity Arena Experience Item --- */}
              <div className="flex flex-col sm:flex-row sm:space-x-4">
                {/* Logo */}
-               <div className="flex-shrink-0 mb-3 sm:mb-0">
+               <div className="flex-shrink-0 mb-3 sm:mb-0 mt-2">
                  <Image src="/icons/unity-arena.svg" alt="Unity Arena Logo" width={48} height={48} className="rounded" loading="lazy"/>
                </div>
                {/* Details */}
@@ -330,8 +330,8 @@ export default function ExperienceEducationSection() {
                        {/* Use ToolIcon for all, including those that will fallback to Image */}
                        <ToolIcon iconName="3ds Max" alt="3ds Max" label="3ds Max" size={24} /> {/* Using "3ds Max" label */}
                        <ToolIcon iconName="Nuke" alt="Nuke" label="Nuke" size={24} />
-                       <ToolIcon iconName="Zbrush" alt="Zbrush" label="Zbrush" size={24} />
-                       <ToolIcon iconName="Substance Painter" alt="Substance Painter" label="Substance Painter" size={24} />
+                       <ToolIcon iconName="Zbrush" alt="Zbrush" label="Zbrush" size={26} />
+                       <ToolIcon iconName="Substance Painter" alt="Substance Painter" label="Substance Painter" size={26} />
                    </div>
                  </div>
                </div>

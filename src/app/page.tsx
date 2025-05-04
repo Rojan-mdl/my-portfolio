@@ -70,12 +70,12 @@ export default function HomePage() {
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     // Example thresholds (highly dependent on content length and viewport)
     let currentSection = 'hero'; // Default assumption
-    if (latest >= 0.9) currentSection = 'contact';
-    else if (latest >= 0.75) currentSection = 'services';
-    else if (latest >= 0.6) currentSection = 'art';
-    else if (latest >= 0.4) currentSection = 'portfolio';
-    else if (latest >= 0.25) currentSection = 'experience-education';
-    else if (latest >= 0.1) currentSection = 'about';
+    if (latest >= 1.0) currentSection = 'contact';
+    else if (latest >= 0.9) currentSection = 'services';
+    else if (latest >= 0.8) currentSection = 'art';
+    else if (latest >= 0.6) currentSection = 'portfolio';
+    else if (latest >= 0.35) currentSection = 'experience-education';
+    else if (latest >= 0.2) currentSection = 'about';
 
     // Update state only if the determined section is different from the current active one
     if (currentSection !== activeSection) {
