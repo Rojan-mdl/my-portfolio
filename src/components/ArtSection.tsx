@@ -152,7 +152,7 @@ export default function ArtSection() {
           <motion.ul
             ref={scrollRef}
             style={{ maskImage }} // Apply the dynamic mask
-            className="flex list-none h-[300px] overflow-x-scroll py-5 px-4 sm:px-0 gap-5 scrollbar-thin scrollbar-thumb-accent scrollbar-track-gray-800/50" // Horizontal flex, scroll, padding, gap, custom scrollbar
+            className="horizontal-scrollbar flex list-none h-[300px] overflow-x-scroll py-5 px-4 sm:px-0 gap-5" // Added custom class, removed scrollbar-* classes
           >
             {/* Map through artPieces to create clickable list items */}
             {artPieces.map((piece, idx) => {
@@ -205,9 +205,5 @@ export default function ArtSection() {
   );
 }
 
-// Note: Added Tailwind scrollbar plugin classes:
-// scrollbar-thin scrollbar-thumb-accent scrollbar-track-gray-800/50
-// Ensure you have `tailwind-scrollbar` plugin installed and configured,
-// or adjust these classes based on your setup. If not using a plugin,
-// you might need custom CSS for scrollbar styling.
+// Note: Custom scrollbar styling is now handled in globals.css targeting the .horizontal-scrollbar class.
 // The mask effect relies on the `maskImage` style property applied via motion.
