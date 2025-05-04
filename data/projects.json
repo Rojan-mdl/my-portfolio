@@ -13,19 +13,41 @@
       "/image/project01/full01.png",
       "/image/project01/full02.png"
     ],
-    "extendedVideos": [
-    ],
+    "extendedVideos": [],
     "toolIcons": [
-      {"src": "/icons/blender.svg", "label": "Blender"},
-      {"src": "/icons/davinci-resolve.svg","label": "DaVinci Resolve"},
-      {"src": "/icons/adobe-after-effects.svg","label": "Adobe After Effects"}
+      { "src": "/icons/blender.svg", "label": "Blender" },
+      { "src": "/icons/davinci-resolve.svg", "label": "DaVinci Resolve" },
+      {
+        "src": "/icons/adobe-after-effects.svg",
+        "label": "Adobe After Effects"
+      }
     ],
     "lightboxSlides": [
-      { "type": "image", "src": "/image/project01/picture01.png", "alt": "Unity Arena Main Visual" },
-      { "type": "image", "src": "/image/project01/box01.png", "alt": "Box Layout 1" },
-      { "type": "image", "src": "/image/project01/box02.png", "alt": "Box Layout 2" },
-      { "type": "image", "src": "/image/project01/bowl01.png", "alt": "Bowl Layout 1" },
-      { "type": "image", "src": "/image/project01/full01.png", "alt": "Full Layout 1" }
+      {
+        "type": "image",
+        "src": "/image/project01/picture01.png",
+        "alt": "Unity Arena Main Visual"
+      },
+      {
+        "type": "image",
+        "src": "/image/project01/box01.png",
+        "alt": "Box Layout 1"
+      },
+      {
+        "type": "image",
+        "src": "/image/project01/box02.png",
+        "alt": "Box Layout 2"
+      },
+      {
+        "type": "image",
+        "src": "/image/project01/bowl01.png",
+        "alt": "Bowl Layout 1"
+      },
+      {
+        "type": "image",
+        "src": "/image/project01/full01.png",
+        "alt": "Full Layout 1"
+      }
     ],
     "youtubeVideoUrl": "https://youtu.be/Q8GmGq6gKjo"
   },
@@ -35,21 +57,18 @@
     "brief": "Interactive portfolio showcasing my 3D, design & web development skills. Built on Next.js.",
     "detailPath": "/data/markdown/portfolio-website.md",
     "image": "/image/project02/image01.png",
-    "extendedImages": [
-    ],
-    "extendedVideos": [
-    ],
+    "extendedImages": [],
+    "extendedVideos": [],
     "toolIcons": [
       { "src": "/icons/next-js.svg", "label": "Next.js" },
       { "src": "/icons/react.png", "label": "React" },
       { "src": "/icons/typescript.svg", "label": "TypeScript" },
-      { "src": "/icons/tailwindcss.svg", "label": "Tailwind CSS"},
-      { "src": "/icons/threejs.svg", "label": "Three.js / R3F"},
-      { "src": "/icons/motion.png", "label": "Motion"},
-      { "src": "/icons/vercel.svg", "label": "Vercel"}
+      { "src": "/icons/tailwindcss.svg", "label": "Tailwind CSS" },
+      { "src": "/icons/threejs.svg", "label": "Three.js / R3F" },
+      { "src": "/icons/motion.png", "label": "Motion" },
+      { "src": "/icons/vercel.svg", "label": "Vercel" }
     ],
-    "lightboxSlides": [
-    ]
+    "lightboxSlides": []
   },
   {
     "id": "3",
@@ -64,19 +83,37 @@
       "/image/project03/image04.png",
       "/image/project03/image05.png"
     ],
-    "extendedVideos": [
-
-    ],
+    "extendedVideos": [],
     "toolIcons": [
-      {"src": "/icons/blender.svg", "label": "Blender"},
-      {"src": "/icons/davinci-resolve.svg", "label": "DaVinci Resolve"}
+      { "src": "/icons/blender.svg", "label": "Blender" },
+      { "src": "/icons/davinci-resolve.svg", "label": "DaVinci Resolve" }
     ],
     "lightboxSlides": [
-      { "type": "image", "src": "/image/project03/image01.png", "alt": "Unity Arena Main Visual" },
-      { "type": "image", "src": "/image/project03/image02.png", "alt": "Unity Arena Main Visual" },
-      { "type": "image", "src": "/image/project03/image03.png", "alt": "Unity Arena Main Visual" },
-      { "type": "image", "src": "/image/project03/image04.png", "alt": "Unity Arena Main Visual" },
-      { "type": "image", "src": "/image/project03/image05.png", "alt": "Unity Arena Main Visual" }
+      {
+        "type": "image",
+        "src": "/image/project03/image01.png",
+        "alt": "Unity Arena Main Visual"
+      },
+      {
+        "type": "image",
+        "src": "/image/project03/image02.png",
+        "alt": "Unity Arena Main Visual"
+      },
+      {
+        "type": "image",
+        "src": "/image/project03/image03.png",
+        "alt": "Unity Arena Main Visual"
+      },
+      {
+        "type": "image",
+        "src": "/image/project03/image04.png",
+        "alt": "Unity Arena Main Visual"
+      },
+      {
+        "type": "image",
+        "src": "/image/project03/image05.png",
+        "alt": "Unity Arena Main Visual"
+      }
     ]
   },
   {
@@ -85,11 +122,8 @@
     "brief": "To be announced.",
     "detailPath": "",
     "image": "/image/to-be-announced.png",
-    "extendedImages": [
-    ],
-    "extendedVideos": [
-    ],
-    "toolIcons": [
-    ]
+    "extendedImages": [],
+    "extendedVideos": [],
+    "toolIcons": []
   }
 ]

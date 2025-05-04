@@ -1,0 +1,15 @@
+# Ignore build outputs and node modules
+node_modules
+.next
+.vercel
+build
+dist
+
+# Ignore lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore environment files
+.env*
+!.env.example 

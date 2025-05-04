@@ -35,12 +35,11 @@ export default function HeroSection() {
         Your browser does not support the video tag.
         {/* TODO: Consider a more user-friendly fallback, perhaps just showing the poster image prominently. */}
       </video>
-
       {/* Dark Overlay */}
       {/* Adds a semi-transparent dark layer over the video to improve text readability */}
-      <div aria-hidden="true" className="absolute inset-0 bg-black/50" /> {/* Opacity set to 50% */}
+      <div aria-hidden="true" className="absolute inset-0 bg-black/50" />{" "}
+      {/* Opacity set to 50% */}
       {/* TODO: Make overlay opacity configurable or adjust based on design requirements. */}
-
       {/* Text Content Container */}
       {/* Styling: Relative positioning to sit above the overlay, z-index, centered text, white text color, horizontal padding */}
       <div className="relative z-10 text-center text-white px-4">

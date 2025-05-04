@@ -7,7 +7,7 @@ interface LightboxSlideBase {
 
 // Specific type for Image slides
 interface LightboxImageSlide extends LightboxSlideBase {
-  type: 'image';
+  type: "image";
   src: string; // Required image source path
   // Add srcSet here if using responsive images in lightbox
   // srcSet?: { src: string; width: number; height: number }[];
@@ -15,8 +15,8 @@ interface LightboxImageSlide extends LightboxSlideBase {
 
 // Specific type for self-hosted Video slides
 interface LightboxVideoSlide extends LightboxSlideBase {
-  type: 'video';
-  sources: { src: string; type: string; }[]; // Required sources array
+  type: "video";
+  sources: { src: string; type: string }[]; // Required sources array
   poster?: string;
 }
 

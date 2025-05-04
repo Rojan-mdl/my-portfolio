@@ -12,12 +12,12 @@ const usePrefersReducedMotion = () => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   useEffect(() => {
     // Safety check for server-side rendering
-    if (typeof window === 'undefined') return;
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (typeof window === "undefined") return;
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setPrefersReducedMotion(mediaQuery.matches);
     const handleChange = () => setPrefersReducedMotion(mediaQuery.matches);
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
   return prefersReducedMotion;
 };
@@ -38,20 +38,43 @@ export default function ServicesSection() {
   // Placeholder data for the services offered
   // TODO: Fetch this service data from a CMS or API for easier management.
   const services = [
-    { title: "Web Development", shortDesc: "Building responsive and fast websites.", longDesc: "Full-stack web development using modern technologies like Next.js, React, and TypeScript to create performant and user-friendly applications." },
-    { title: "3D Visualization", shortDesc: "Bringing concepts to life in 3D.", longDesc: "Creating compelling 3D models, animations, and visualizations for products, architecture, or interactive experiences using tools like Blender." },
-    { title: "Interactive Design", shortDesc: "Designing engaging user experiences.", longDesc: "Focusing on user interaction and experience design, prototyping with Figma, and implementing interactive elements that delight users." },
+    {
+      title: "Web Development",
+      shortDesc: "Building responsive and fast websites.",
+      longDesc:
+        "Full-stack web development using modern technologies like Next.js, React, and TypeScript to create performant and user-friendly applications.",
+    },
+    {
+      title: "3D Visualization",
+      shortDesc: "Bringing concepts to life in 3D.",
+      longDesc:
+        "Creating compelling 3D models, animations, and visualizations for products, architecture, or interactive experiences using tools like Blender.",
+    },
+    {
+      title: "Interactive Design",
+      shortDesc: "Designing engaging user experiences.",
+      longDesc:
+        "Focusing on user interaction and experience design, prototyping with Figma, and implementing interactive elements that delight users.",
+    },
     // TODO: Add or modify services as needed.
   ];
 
   return (
     // Section container for Services
     // id="services" is handled by the parent AnimatedSection wrapper in page.tsx
-    <section className="py-16 my-26 text-gray-100" aria-labelledby="services-heading">
+    <section
+      className="py-16 my-26 text-gray-100"
+      aria-labelledby="services-heading"
+    >
       {/* Responsive container */}
       <div className="max-w-6xl mx-auto px-4">
         {/* Section Heading */}
-        <h2 id="services-heading" className="text-3xl font-bold mb-8 text-center">Services</h2>
+        <h2
+          id="services-heading"
+          className="text-3xl font-bold mb-8 text-center"
+        >
+          Services
+        </h2>
         {/* Grid layout for service cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Map through the services data to render each service card */}
@@ -66,7 +89,7 @@ export default function ServicesSection() {
                 aria-expanded={isExpanded} // Indicate expansion state to assistive technologies
                 // Styling: Background, rounded corners, padding, text alignment, cursor, focus style
                 // Hover effect: Slight scale increase (disabled if reduced motion preferred)
-                className={`bg-[#0A0A0A] rounded-lg p-6 text-left cursor-pointer focus:outline-none focus-visible:shadow-[0_0_10px_2px_#ffffff] ${prefersReducedMotion ? '' : 'transition duration-200 ease-in-out hover:scale-[1.03]'}`}
+                className={`bg-[#0A0A0A] rounded-lg p-6 text-left cursor-pointer focus:outline-none focus-visible:shadow-[0_0_10px_2px_#ffffff] ${prefersReducedMotion ? "" : "transition duration-200 ease-in-out hover:scale-[1.03]"}`}
                 // TODO: Ensure sufficient contrast between text and background (#0A0A0A).
               >
                 {/* Service Title */}
@@ -76,21 +99,19 @@ export default function ServicesSection() {
                 {/* min-h-[6em] helps prevent the card height from changing drastically when text expands/collapses, reducing layout shift. */}
                 {/* TODO: Consider using Framer Motion's AnimatePresence and motion.p for smoother height/opacity animation on text change. */}
                 <p className="text-gray-400 transition-opacity duration-300 min-h-[6em]">
-                   {/* Conditionally render the long or short description based on expansion state */}
-                   {isExpanded
-                     ? service.longDesc
-                     : service.shortDesc
-                   }
-                   {/* Add visually hidden text to explicitly announce the state change to screen readers */}
-                   <span className="sr-only">
-                     {isExpanded ? " (collapse details)" : " (expand details)"}
-                   </span>
+                  {/* Conditionally render the long or short description based on expansion state */}
+                  {isExpanded ? service.longDesc : service.shortDesc}
+                  {/* Add visually hidden text to explicitly announce the state change to screen readers */}
+                  <span className="sr-only">
+                    {isExpanded ? " (collapse details)" : " (expand details)"}
+                  </span>
                 </p>
               </button>
             );
           })}
         </div>
-      </div> {/* End max-w-6xl container */}
+      </div>{" "}
+      {/* End max-w-6xl container */}
     </section>
   );
 }

@@ -11,7 +11,7 @@ const usePrefersReducedMotion = () => {
   // Effect runs only on the client after hydration
   useEffect(() => {
     // Create a media query to check the user's OS/browser setting
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     // Set the initial state based on the media query result
     setPrefersReducedMotion(mediaQuery.matches);
 
@@ -23,9 +23,9 @@ const usePrefersReducedMotion = () => {
     // Add a listener for changes to the media query
     // Includes fallback for older browsers that use addListener/removeListener
     if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handleChange);
+      mediaQuery.addEventListener("change", handleChange);
       // Cleanup function to remove the listener when the component unmounts
-      return () => mediaQuery.removeEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener("change", handleChange);
     } else {
       mediaQuery.addListener(handleChange);
       // Cleanup function for older browsers
@@ -72,7 +72,7 @@ const AnimatedSection = React.forwardRef<HTMLDivElement, AnimatedSectionProps>(
         // Viewport settings for triggering the whileInView animation
         viewport={{
           once: true, // Trigger the animation only once when it enters the viewport
-          amount: 0.2 // Trigger when 20% of the element is visible
+          amount: 0.2, // Trigger when 20% of the element is visible
           // TODO: Consider making the 'amount' prop configurable if different trigger points are needed for various sections.
         }}
         // Animation state when the element exits (unmounts)
@@ -82,7 +82,11 @@ const AnimatedSection = React.forwardRef<HTMLDivElement, AnimatedSectionProps>(
         // Transition settings for the animation
         // If reduced motion is preferred, set to undefined to disable transitions
         // Otherwise, define duration, easing, and apply the specified delay
-        transition={prefersReducedMotion ? undefined : { duration: 0.7, ease: "easeOut", delay: delay }}
+        transition={
+          prefersReducedMotion
+            ? undefined
+            : { duration: 0.7, ease: "easeOut", delay: delay }
+        }
         // TODO: Explore making the animation type (e.g., slide direction, fade only) configurable via props.
       >
         {/* Render the child components passed into AnimatedSection */}

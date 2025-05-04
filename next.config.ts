@@ -8,20 +8,21 @@ const nextConfig: NextConfig = {
 
   // Example common configurations (currently commented out):
 
-  // reactStrictMode: true, // Enables React Strict Mode for highlighting potential problems
+  reactStrictMode: true, // Enables React Strict Mode for highlighting potential problems
   // swcMinify: true, // Uses the SWC compiler for faster builds and minification
 
-  // images: {
-  //   // Configure domains allowed for next/image optimization
-  //   remotePatterns: [
-  //     {
-  //       protocol: 'https',
-  //       hostname: 'example.com', // Add domains for external images if needed
-  //       port: '',
-  //       pathname: '/images/**',
-  //     },
-  //   ],
-  // },
+  images: {
+    // Configure domains allowed for next/image optimization
+    remotePatterns: [
+      // Example: Uncomment and replace with your image source domains
+      // {
+      //   protocol: 'https',
+      //   hostname: 'example.com',
+      //   port: '',
+      //   pathname: '/images/**',
+      // },
+    ],
+  },
 
   // experimental: {
   //   // Enable experimental features if needed

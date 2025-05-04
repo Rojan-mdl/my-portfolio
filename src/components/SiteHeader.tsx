@@ -3,33 +3,91 @@
 import Link from "next/link";
 import Image from "next/image";
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence, useSpring } from "motion/react"; // Framer Motion components for animations and spring physics
-import { LiaTimesSolid, LiaBarsSolid } from "react-icons/lia";
-
-
-// Hamburger Icon Component
-function HamburgerIcon({ open }: { open: boolean }) {
-  return (
-    <div className="flex items-center justify-center w-8 h-8 text-gray-300 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white">
-      {open ? <LiaTimesSolid size={32} /> : <LiaBarsSolid size={32} />} {/* Toggle between hamburger and close icon */}
-    </div>
-  );
-}
+import { usePathname } from "next/navigation";
+import { motion, useSpring, type Variants } from "motion/react"; // Added Variants import
+// Removed LiaTimesSolid, LiaBarsSolid
+import MobileMenuAnimation from "./MobileMenuAnimation"; // Import the new component
 
 // Define the props interface for the SiteHeader component
 interface SiteHeaderProps {
   activeSection?: string; // ID of the currently active section (optional, mainly for homepage underline)
 }
 
-// SiteHeader component definition
-export default function SiteHeader({ activeSection }: SiteHeaderProps) { // Destructure props
+// --- Re-added MenuToggle related components and types ---
+
+// Define the props for the Path component
+interface PathProps {
+  d?: string;
+  variants: Variants;
+  transition?: { duration: number };
+  className?: string; // Allow className for styling
+  animate?: string; // Added animate prop
+}
+
+// Define the props for the MenuToggle component
+interface MenuToggleProps {
+  toggle: () => void;
+  isOpen: boolean; // Added isOpen to control the icon state
+}
+
+// SVG Path Component (for MenuToggle)
+const Path = (props: PathProps) => (
+  <motion.path
+    fill="transparent"
+    strokeWidth="3"
+    className="stroke-gray-300 dark:stroke-gray-100"
+    strokeLinecap="round"
+    {...props}
+  />
+);
+
+// Menu Toggle Button Component
+const MenuToggle = ({ toggle, isOpen }: MenuToggleProps) => (
+  <button
+    onClick={toggle}
+    aria-label="Toggle menu"
+    aria-expanded={isOpen}
+    aria-controls="mobile-menu-animation"
+    className="p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white z-50"
+  >
+    <motion.div animate={isOpen ? "open" : "closed"}>
+      <svg width="23" height="23" viewBox="0 0 23 23">
+        <Path
+          variants={{
+            closed: { d: "M 2 2.5 L 20 2.5" },
+            open: { d: "M 3 16.5 L 17 2.5" },
+          }}
+        />
+        <Path
+          d="M 2 9.423 L 20 9.423"
+          variants={{
+            closed: { opacity: 1 },
+            open: { opacity: 0 },
+          }}
+          transition={{ duration: 0.1 }}
+        />
+        <Path
+          variants={{
+            closed: { d: "M 2 16.346 L 20 16.346" },
+            open: { d: "M 3 2.5 L 17 16.346" },
+          }}
+        />
+      </svg>
+    </motion.div>
+  </button>
+);
+
+// --- SiteHeader component definition ---
+export default function SiteHeader({ activeSection }: SiteHeaderProps) {
+  // Destructure props
   // State to manage the mobile menu's open/closed status
   const [menuOpen, setMenuOpen] = useState(false);
+  // State to track client-side mounting
+  const [isClient, setIsClient] = useState(false);
   // Get the current URL pathname
   const pathname = usePathname();
   // Determine if the current page is the homepage
-  const isHomePage = pathname === '/';
+  const isHomePage = pathname === "/";
 
   // Refs for managing the underline animation elements
   const navContainerRef = useRef<HTMLDivElement>(null); // Ref for the desktop navigation container
@@ -51,20 +109,26 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) { // Dest
   // Effect to automatically close the mobile menu when resizing the window to desktop widths
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 640) { // Tailwind's 'sm' breakpoint
+      if (window.innerWidth >= 640) {
+        // Tailwind's 'sm' breakpoint
         closeMenu();
       }
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     // Cleanup: remove the event listener when the component unmounts
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []); // Empty dependency array ensures this runs only once on mount
+
+  // Effect to set isClient to true after mounting
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Effect to prevent body scrolling when the mobile menu is open
   useEffect(() => {
     const originalOverflow = document.body.style.overflow; // Store original body overflow style
     if (menuOpen) {
-      document.body.style.overflow = 'hidden'; // Disable body scroll
+      document.body.style.overflow = "hidden"; // Disable body scroll
     } else {
       document.body.style.overflow = originalOverflow; // Restore original overflow style
     }
@@ -76,7 +140,7 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) { // Dest
 
   // Callback function to handle the 'Escape' key press for closing the mobile menu
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
       closeMenu();
     }
   }, []); // useCallback ensures the function reference is stable
@@ -84,13 +148,13 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) { // Dest
   // Effect to add/remove the Escape key listener based on menu state
   useEffect(() => {
     if (menuOpen) {
-      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener("keydown", handleKeyDown);
     } else {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     }
     // Cleanup: remove the event listener when the component unmounts or menu closes
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [menuOpen, handleKeyDown]); // Rerun when menuOpen or handleKeyDown changes
 
@@ -106,8 +170,8 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) { // Dest
   useEffect(() => {
     // Guard clauses: Only run on the homepage and if the nav container ref is available
     if (!isHomePage || !navContainerRef.current || !activeSection) {
-        underlineOpacitySpring.set(0); // Ensure underline is hidden if not on homepage or no active section
-        return;
+      underlineOpacitySpring.set(0); // Ensure underline is hidden if not on homepage or no active section
+      return;
     }
 
     // Get the DOM element of the currently active navigation link
@@ -126,14 +190,18 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) { // Dest
       underlineXSpring.set(targetX);
       underlineWidthSpring.set(targetWidth);
       underlineOpacitySpring.set(1); // Make the underline visible
-
     } else {
-       // If no active link element is found (e.g., scrolled past the last section), fade out the underline
-       underlineOpacitySpring.set(0);
-       // TODO: Consider whether to reset X/Width springs here or let them stay at the last position. Current behavior is fine.
+      // If no active link element is found (e.g., scrolled past the last section), fade out the underline
+      underlineOpacitySpring.set(0);
+      // TODO: Consider whether to reset X/Width springs here or let them stay at the last position. Current behavior is fine.
     }
-
-  }, [activeSection, isHomePage, underlineXSpring, underlineWidthSpring, underlineOpacitySpring]); // Dependencies for the effect
+  }, [
+    activeSection,
+    isHomePage,
+    underlineXSpring,
+    underlineWidthSpring,
+    underlineOpacitySpring,
+  ]); // Dependencies for the effect
 
   // --- Link Classes ---
   // Base classes for desktop navigation links (underline handled by motion.div)
@@ -141,9 +209,8 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) { // Dest
     relative uppercase text-sm text-gray-300 transition duration-150 ease-in-out
     hover:text-white focus:outline-none focus:text-white
   `;
-  // Base classes for mobile navigation links (uses focus-visible for underline)
-  const mobileLinkClasses = "text-lg hover:text-gray-300 focus:outline-none focus-visible:text-white focus-visible:underline";
   // TODO: Ensure focus styles are consistent and meet accessibility contrast requirements.
+  // Removed unused mobileLinkClasses variable
 
   return (
     <>
@@ -151,10 +218,13 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) { // Dest
       <header className="fixed top-0 left-0 right-0 z-50 bg-black h-16 flex items-center border-b border-gray-800/50">
         {/* Max Width Container: Centers content and applies padding */}
         <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-full">
-
           {/* Mobile View: Logo (Aligned Left) - Hidden on sm screens and up */}
           <div className="flex-shrink-0 sm:hidden">
-            <Link href={getLinkHref('#hero')} onClick={closeMenu} aria-label="Homepage Logo">
+            <Link
+              href={getLinkHref("#hero")}
+              onClick={closeMenu}
+              aria-label="Homepage Logo"
+            >
               <Image
                 src="/image/MØ-white.png"
                 alt="Marius Øvrebø Logo"
@@ -168,30 +238,80 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) { // Dest
 
           {/* Mobile View: Hamburger Button (Aligned Right) - Hidden on sm screens and up */}
           <div className="sm:hidden">
-            <button
-              onClick={() => setMenuOpen(!menuOpen)} // Toggle menu state on click
-              aria-label="Toggle menu"
-              aria-expanded={menuOpen} // Indicate menu state to assistive technologies
-              aria-controls="mobile-menu" // Link button to the menu it controls
-              className="p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white" // Styling and focus management
-            >
-              <HamburgerIcon open={menuOpen} /> {/* Display hamburger or close icon */}
-            </button>
+            {/* Render MenuToggle only on client to use isOpen state */}
+            {isClient && (
+              <MenuToggle
+                toggle={() => setMenuOpen(!menuOpen)}
+                isOpen={menuOpen}
+              />
+            )}
           </div>
 
           {/* Desktop View Container: Hidden on mobile, flex layout, full width, relative positioning for underline */}
-          <div ref={navContainerRef} className="hidden sm:flex w-full items-center justify-between relative">
+          <div
+            ref={navContainerRef}
+            className="hidden sm:flex w-full items-center justify-between relative"
+          >
             {/* Desktop Left Navigation */}
-            <nav className="flex items-center space-x-5 lg:space-x-7" aria-label="Main desktop navigation left">
+            <nav
+              className="flex items-center space-x-5 lg:space-x-7"
+              aria-label="Main desktop navigation left"
+            >
               {/* Navigation Links: Assign refs for underline calculation, use helper for href, close menu on click */}
-              <Link ref={(el) => { linkRefs.current.set('about', el); }} href={getLinkHref('#about')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'about' ? 'page' : undefined}>About</Link>
-              <Link ref={(el) => { linkRefs.current.set('experience-education', el); }} href={getLinkHref('#experience-education')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'experience-education' ? 'page' : undefined}>Experience</Link>
-              <Link ref={(el) => { linkRefs.current.set('portfolio', el); }} href={getLinkHref('#portfolio')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'portfolio' ? 'page' : undefined}>Portfolio</Link>
+              <Link
+                ref={(el) => {
+                  linkRefs.current.set("about", el);
+                }}
+                href={getLinkHref("#about")}
+                className={desktopLinkClasses}
+                onClick={closeMenu}
+                aria-current={
+                  isHomePage && activeSection === "about" ? "page" : undefined
+                }
+              >
+                About
+              </Link>
+              <Link
+                ref={(el) => {
+                  linkRefs.current.set("experience-education", el);
+                }}
+                href={getLinkHref("#experience-education")}
+                className={desktopLinkClasses}
+                onClick={closeMenu}
+                aria-current={
+                  isHomePage && activeSection === "experience-education"
+                    ? "page"
+                    : undefined
+                }
+              >
+                Experience
+              </Link>
+              <Link
+                ref={(el) => {
+                  linkRefs.current.set("portfolio", el);
+                }}
+                href={getLinkHref("#portfolio")}
+                className={desktopLinkClasses}
+                onClick={closeMenu}
+                aria-current={
+                  isHomePage && activeSection === "portfolio"
+                    ? "page"
+                    : undefined
+                }
+              >
+                Portfolio
+              </Link>
             </nav>
 
             {/* Desktop Centered Logo */}
-            <div className="flex-shrink-0 px-4"> {/* Added padding to prevent overlap with nav links */}
-              <Link href={getLinkHref('#hero')} onClick={closeMenu} aria-label="Homepage Logo">
+            <div className="flex-shrink-0 px-4">
+              {" "}
+              {/* Added padding to prevent overlap with nav links */}
+              <Link
+                href={getLinkHref("#hero")}
+                onClick={closeMenu}
+                aria-label="Homepage Logo"
+              >
                 <Image
                   src="/image/MØ-white.png"
                   alt="Marius Øvrebø Logo"
@@ -204,11 +324,52 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) { // Dest
             </div>
 
             {/* Desktop Right Navigation */}
-            <nav className="flex items-center space-x-5 lg:space-x-7" aria-label="Main desktop navigation right">
-                {/* Navigation Links: Assign refs, use helper for href, close menu on click */}
-                <Link ref={(el) => { linkRefs.current.set('art', el); }} href={getLinkHref('#art')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'art' ? 'page' : undefined}>Art</Link>
-                <Link ref={(el) => { linkRefs.current.set('services', el); }} href={getLinkHref('#services')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'services' ? 'page' : undefined}>Services</Link>
-                <Link ref={(el) => { linkRefs.current.set('contact', el); }} href={getLinkHref('#contact')} className={desktopLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'contact' ? 'page' : undefined}>Contact</Link>
+            <nav
+              className="flex items-center space-x-5 lg:space-x-7"
+              aria-label="Main desktop navigation right"
+            >
+              {/* Navigation Links: Assign refs, use helper for href, close menu on click */}
+              <Link
+                ref={(el) => {
+                  linkRefs.current.set("art", el);
+                }}
+                href={getLinkHref("#art")}
+                className={desktopLinkClasses}
+                onClick={closeMenu}
+                aria-current={
+                  isHomePage && activeSection === "art" ? "page" : undefined
+                }
+              >
+                Art
+              </Link>
+              <Link
+                ref={(el) => {
+                  linkRefs.current.set("services", el);
+                }}
+                href={getLinkHref("#services")}
+                className={desktopLinkClasses}
+                onClick={closeMenu}
+                aria-current={
+                  isHomePage && activeSection === "services"
+                    ? "page"
+                    : undefined
+                }
+              >
+                Services
+              </Link>
+              <Link
+                ref={(el) => {
+                  linkRefs.current.set("contact", el);
+                }}
+                href={getLinkHref("#contact")}
+                className={desktopLinkClasses}
+                onClick={closeMenu}
+                aria-current={
+                  isHomePage && activeSection === "contact" ? "page" : undefined
+                }
+              >
+                Contact
+              </Link>
             </nav>
 
             {/* Animated Underline Element: Rendered only on the homepage */}
@@ -220,7 +381,7 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) { // Dest
                   x: underlineXSpring, // Apply animated X position from spring
                   width: underlineWidthSpring, // Apply animated width from spring
                   opacity: underlineOpacitySpring, // Apply animated opacity from spring
-                  top: '47px', // Position below the links (adjust as needed)
+                  top: "47px", // Position below the links (adjust as needed)
                   originX: 0, // Ensure width animation originates from the left
                 }}
                 aria-hidden="true" // Hide decorative element from screen readers
@@ -230,33 +391,22 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) { // Dest
         </div>
       </header>
 
-      {/* Mobile Menu Drawer (Overlay): Uses AnimatePresence for enter/exit animations */}
-      <AnimatePresence>
-        {menuOpen && ( // Conditionally render the mobile menu
-          <motion.div
-            id="mobile-menu" // ID for aria-controls
-            role="dialog" // ARIA role for modal dialog
-            aria-modal="true" // Indicate it's a modal
-            initial={{ opacity: 0 }} // Initial animation state (invisible)
-            animate={{ opacity: 1 }} // Animate to visible
-            exit={{ opacity: 0 }} // Animate to invisible on exit
-            transition={{ duration: 0.2, ease: "easeInOut" }} // Animation timing
-            className="sm:hidden fixed inset-0 top-16 z-40 bg-black/95 backdrop-blur-sm pt-8 overflow-y-auto" // Styling: fixed position, overlay, background, blur, padding, scroll
-          >
-            {/* Mobile Navigation Links */}
-            <nav className="flex flex-col items-center gap-y-6 px-4 pb-10" aria-label="Mobile navigation">
-               {/* Links use helper for href, close menu on click, apply mobile styles */}
-               <Link href={getLinkHref('#about')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'about' ? 'page' : undefined}>About</Link>
-               <Link href={getLinkHref('#experience-education')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'experience-education' ? 'page' : undefined}>Experience</Link>
-               <Link href={getLinkHref('#portfolio')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'portfolio' ? 'page' : undefined}>Portfolio</Link>
-               <Link href={getLinkHref('#art')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'art' ? 'page' : undefined}>Art</Link>
-               <Link href={getLinkHref('#services')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'services' ? 'page' : undefined}>Services</Link>
-               <Link href={getLinkHref('#contact')} className={mobileLinkClasses} onClick={closeMenu} aria-current={isHomePage && activeSection === 'contact' ? 'page' : undefined}>Contact</Link>
-               {/* TODO: Add social links or other relevant items to the mobile menu if desired. */}
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Mobile Menu Animation Component - Rendered outside the header for positioning */}
+      {/* Only render on the client after mounting to prevent hydration mismatch */}
+      {isClient && (
+        <div className="sm:hidden" id="mobile-menu-animation">
+          {" "}
+          {/* Added ID for aria-controls */}
+          <MobileMenuAnimation
+            isOpen={menuOpen}
+            // toggle prop removed
+            closeMenu={closeMenu}
+            getLinkHref={getLinkHref}
+            isHomePage={isHomePage}
+            activeSection={activeSection}
+          />
+        </div>
+      )}
     </>
   );
 }

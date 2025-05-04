@@ -1,17 +1,17 @@
-import type { Config } from 'tailwindcss'; // Import the Config type for Tailwind configuration
-import typography from '@tailwindcss/typography'; // Import the official Tailwind CSS typography plugin
+import type { Config } from "tailwindcss"; // Import the Config type for Tailwind configuration
+import typography from "@tailwindcss/typography"; // Import the official Tailwind CSS typography plugin
 
 // Define the Tailwind CSS configuration object
 const config: Config = {
   // Dark mode strategy: 'class' enables manual toggling via a class (e.g., <html class="dark">)
   // Other option is 'media' which follows the OS preference.
-  darkMode: 'class',
+  darkMode: "class",
 
   // Configure the paths where Tailwind should look for class names to include in the final CSS build.
   // This ensures that only used classes are generated, optimizing the file size.
   content: [
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}', // Include all JS/TS/JSX/TSX/MDX files in the app directory
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}', // Include all JS/TS/JSX/TSX/MDX files in the components directory
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}", // Include all JS/TS/JSX/TSX/MDX files in the app directory
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}", // Include all JS/TS/JSX/TSX/MDX files in the components directory
     // TODO: Add paths to any other directories containing Tailwind classes if necessary.
   ],
 
@@ -19,16 +19,30 @@ const config: Config = {
   theme: {
     // The 'extend' key allows adding new values or extending existing ones without overwriting defaults.
     extend: {
-      // Define custom color palettes or individual colors.
+      // Define custom color palettes or individual colors using CSS Variables
+      // These variables should be defined in your global CSS file (e.g., src/app/globals.css)
       colors: {
-        // Example custom dark theme colors (prefix 'dark-' is just a naming convention here)
-        'dark-bg': '#0a0a0a', // Very dark background
-        'dark-surface': '#171717', // Slightly lighter surface color
-        'dark-text-primary': '#ededed', // Primary text color for dark backgrounds
-        'dark-text-secondary': '#a1a1aa', // Secondary/muted text color
-        'dark-accent': '#3b82f6', // Accent color (e.g., for links, buttons) - this is Tailwind's blue-500
-        // TODO: Add more custom colors or adjust existing ones as needed for the design.
-        // TODO: Consider organizing colors more semantically (e.g., primary, secondary, accent) rather than just 'dark-'.
+        background: "rgb(var(--color-background) / <alpha-value>)",
+        foreground: "rgb(var(--color-foreground) / <alpha-value>)",
+        surface: "rgb(var(--color-surface) / <alpha-value>)", // For cards, panels, etc.
+        primary: {
+          DEFAULT: "rgb(var(--color-primary) / <alpha-value>)",
+          foreground: "rgb(var(--color-primary-foreground) / <alpha-value>)",
+        },
+        secondary: {
+          DEFAULT: "rgb(var(--color-secondary) / <alpha-value>)",
+          foreground: "rgb(var(--color-secondary-foreground) / <alpha-value>)",
+        },
+        accent: {
+          DEFAULT: "rgb(var(--color-accent) / <alpha-value>)",
+          foreground: "rgb(var(--color-accent-foreground) / <alpha-value>)",
+        },
+        // Keep other specific colors if needed, or map them to semantic ones
+        // 'dark-bg': '#0a0a0a', // Example: Keep or remove old ones
+        // 'dark-surface': '#171717',
+        // 'dark-text-primary': '#ededed',
+        // 'dark-text-secondary': '#a1a1aa',
+        // 'dark-accent': '#3b82f6',
       },
       // Example of extending other theme properties (currently commented out):
       // fontFamily: {

@@ -4,7 +4,7 @@ In collaboration with **Oslo Throwdown**, I created a comprehensive 3D visualiza
 
 ### Event Areas
 
-**Eleiko Main Arena:** 
+**Eleiko Main Arena:**
 The core competition area meticulously designed with athlete stations, equipment placements, and spectator seating to maximize performance and audience engagement.
 
 **Warm-up Area:** A specialized zone equipped with training and warm-up facilities, carefully arranged for athlete preparation and seamless transitions to the main competition floor.
@@ -19,8 +19,8 @@ The core competition area meticulously designed with athlete stations, equipment
 
 The animated flythrough vividly communicated the event's scale, layout, and atmosphere, serving as a powerful promotional tool for sponsors, stakeholders, and attendees. It was meticulously developed using professional software tools including:
 
-- **Blender** for detailed 3D modeling and animations  
-- **Adobe After Effects** for compositing and motion graphics  
+- **Blender** for detailed 3D modeling and animations
+- **Adobe After Effects** for compositing and motion graphics
 - **DaVinci Resolve** for color grading and final editing
 
 This approach ensured professional, visually compelling content that effectively supported promotional and operational objectives.
