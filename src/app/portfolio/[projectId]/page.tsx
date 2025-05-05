@@ -226,7 +226,9 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
           {/* Render the ProjectGallery client component, passing the images and title */}
           {/* Filter out any potentially invalid image sources before passing */}
           <ProjectGallery
-            images={project.extendedImages.filter((img) => img)}
+            images={project.extendedImages
+              .filter((img): img is string => !!img) // Ensure img is treated as string after filter
+              .map((imgSrc) => ({ src: imgSrc }))} // Map string to { src: string } object
             projectTitle={project.title}
           />
         </section>
