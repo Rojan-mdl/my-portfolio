@@ -11,7 +11,7 @@ import { MdOutlineEmail } from "react-icons/md"; // Import email icon
 export default function ContactSection() {
   // Define contact information and social media URLs as constants
   const email = "marius.frilans@gmail.com";
-  const linkedInUrl = "https://www.linkedin.com/in/marius-Øvrebø-604235187";
+  const linkedInUrl = "https://www.linkedin.com/in/marius-øvrebø";
   const gitHubUrl = "https://github.com/Rojan-mdl";
   const instagramUrl = "https://www.instagram.com/rojan3d/";
 
