@@ -1,8 +1,7 @@
-"use client"; // Directive for Next.js to ensure this component runs on the client-side
+"use client";
 
 import type { Project } from "@/types"; // Import the Project type definition
 import { useState, useEffect, useRef } from "react"; // Import React hooks for state, side effects, and refs
-import { useScroll, useMotionValueEvent } from "motion/react"; // Import Framer Motion hooks for scroll tracking
 
 import SiteHeader from "@/components/SiteHeader"; // Import the main site header component
 import AnimatedSection from "@/components/AnimatedSection"; // Import the wrapper component for section animations
@@ -14,27 +13,34 @@ import ServicesSection from "@/components/ServicesSection"; // Import the servic
 import ContactSection from "@/components/ContactSection"; // Import the contact section component
 import ArtSection from "@/components/ArtSection"; // Import the art section component
 
+// Interface for the expected API response structure
+interface ProjectsApiResponse {
+  items: Project[];
+}
+
 // Client-side asynchronous function to fetch project data from the internal API endpoint
-async function fetchProjects(): Promise<Project[]> {
+async function fetchProjects(): Promise<Project[] | null> { // Return null on error
   try {
-    // Make a GET request to the '/api/projects' endpoint
     const response = await fetch("/api/projects");
-    // Check if the response was successful (status code 200-299)
     if (!response.ok) {
-      // Throw an error if the response status indicates failure
-      throw new Error(`HTTP error! status: ${response.status}`);
+      // Throw an error with status and potentially message from API
+      const errorData = await response.json().catch(() => ({})); // Try to get error message
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorData?.message || "Unknown error"}`
+      );
     }
-    // Parse the JSON response body
-    const projectsData = await response.json();
-    // Return the 'items' array from the data, or the data itself if 'items' doesn't exist, or an empty array as a fallback
-    // TODO: Standardize the API response format for consistency (e.g., always return { items: [...] }).
-    return projectsData.items || projectsData || [];
+    // Explicitly expect the { items: [...] } structure
+    const projectsData: ProjectsApiResponse = await response.json();
+    // Basic validation on the client side as well
+    if (!projectsData || !Array.isArray(projectsData.items)) {
+        console.error("Invalid projects data format received from API:", projectsData);
+        throw new Error("Invalid project data format received.");
+    }
+    return projectsData.items; // Return only the items array
   } catch (error) {
-    // Log any errors that occur during the fetch process
     console.error("Error fetching projects via API:", error);
-    // TODO: Implement user-facing error handling (e.g., display a message) instead of just logging.
-    // TODO: Consider adding a loading state indicator while projects are being fetched.
-    return []; // Return an empty array in case of an error
+    // Return null to indicate an error occurred during fetch
+    return null;
   }
 }
 
@@ -44,6 +50,8 @@ export default function HomePage() {
   const [projects, setProjects] = useState<Project[]>([]);
   // State to track the ID of the currently active section in view, used for header navigation highlighting
   const [activeSection, setActiveSection] = useState<string>("hero"); // Default to 'hero' section on initial load
+  const [isLoadingProjects, setIsLoadingProjects] = useState<boolean>(true); // Start in loading state
+  const [projectFetchError, setProjectFetchError] = useState<string | null>(null); // State for fetch error
 
   // Ref to hold an array of the actual DOM elements for each major section (currently unused, but potentially useful)
   const sectionsRef = useRef<HTMLElement[]>([]);
@@ -59,34 +67,27 @@ export default function HomePage() {
   const servicesRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
 
-  // Hook from Framer Motion to track the overall scroll progress of the page (0 to 1)
-  const { scrollYProgress } = useScroll();
-
-  // Effect hook that listens for changes in scrollYProgress
-  // TODO: Replace this threshold-based logic with a more reliable method like Intersection Observer.
-  // This current implementation is inaccurate, especially with varying section heights and screen sizes.
-  // It attempts to set the activeSection based on scroll percentage thresholds.
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    // Example thresholds (highly dependent on content length and viewport)
-    let currentSection = "hero"; // Default assumption
-    if (latest >= 1.0) currentSection = "contact";
-    else if (latest >= 0.9) currentSection = "services";
-    else if (latest >= 0.8) currentSection = "art";
-    else if (latest >= 0.6) currentSection = "portfolio";
-    else if (latest >= 0.35) currentSection = "experience-education";
-    else if (latest >= 0.2) currentSection = "about";
-
-    // Update state only if the determined section is different from the current active one
-    if (currentSection !== activeSection) {
-      setActiveSection(currentSection);
-      // console.log("Page scroll: ", latest, "Active Section:", currentSection); // Debugging log
-    }
-  });
-
   // Effect hook that runs once when the component mounts
   useEffect(() => {
-    // Fetch the project data and update the state
-    fetchProjects().then(setProjects);
+    // Fetch project data and handle loading/error states
+    const loadProjects = async () => {
+      setProjectFetchError(null); // Reset error state
+      setIsLoadingProjects(true); // Set loading state
+      const fetchedProjects = await fetchProjects();
+      if (fetchedProjects === null) {
+        // Handle fetch error
+        setProjectFetchError(
+          "Failed to load projects. Please try refreshing the page."
+        );
+        setProjects([]); // Clear projects on error
+      } else {
+        // Handle successful fetch
+        setProjects(fetchedProjects);
+      }
+      setIsLoadingProjects(false); // Set loading state to false
+    };
+
+    loadProjects();
 
     // Populate the sectionsRef array with the actual DOM elements from the refs
     // Filter out any null values (if a ref hasn't been attached yet) and assert the type.
@@ -101,6 +102,62 @@ export default function HomePage() {
       contactRef.current,
     ].filter(Boolean) as HTMLDivElement[];
   }, []); // Empty dependency array ensures this runs only on mount
+
+  // Effect hook for Intersection Observer to track active section
+  useEffect(() => {
+    const sectionElements = [
+      { id: "hero", ref: heroRef.current },
+      { id: "about", ref: aboutRef.current },
+      { id: "experience-education", ref: experienceRef.current },
+      { id: "portfolio", ref: portfolioRef.current },
+      { id: "art", ref: artRef.current },
+      { id: "services", ref: servicesRef.current },
+      { id: "contact", ref: contactRef.current },
+    ].filter((section) => section.ref); // Filter out sections whose refs might not be ready
+
+    if (sectionElements.length === 0) {
+      return; // Don't proceed if no refs are available yet
+    }
+
+    const observerOptions = {
+      root: null, // Use the viewport as the root
+      rootMargin: "0px",
+      // Threshold: array of thresholds or a single number.
+      // A threshold of 0.5 means the callback triggers when 50% of the element is visible.
+      // Adjust this value based on desired behavior. A lower value makes sections active sooner.
+      // Using multiple thresholds can be complex; start simple.
+      threshold: 0.4, // Example: Section becomes active when 40% is visible
+    };
+
+    const observerCallback: IntersectionObserverCallback = (entries) => {
+      entries.forEach((entry) => {
+        // Find the corresponding section data using the target element
+        const targetSection = sectionElements.find(s => s.ref === entry.target);
+        if (targetSection && entry.isIntersecting) {
+          // console.log(`${targetSection.id} is intersecting`); // Debugging
+          // Set the intersecting section as active.
+          // If multiple are intersecting due to threshold/viewport size, the last one processed might win.
+          // More complex logic could track the entry with the highest intersectionRatio.
+          setActiveSection(targetSection.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    // Observe each section element
+    sectionElements.forEach((section) => {
+      if (section.ref) { // Double check ref existence
+        observer.observe(section.ref);
+      }
+    });
+
+    // Cleanup function: disconnect the observer when the component unmounts
+    return () => {
+      observer.disconnect();
+    };
+    // Rerun this effect if the refs somehow change, though unlikely with static sections
+  }, [/* Dependency array could include states if sections were dynamic */]);
 
   // Render the component structure
   return (
@@ -123,8 +180,14 @@ export default function HomePage() {
         <ExperienceEducationSection />
       </AnimatedSection>
       <AnimatedSection id="portfolio" ref={portfolioRef}>
-        {/* Pass the fetched projects data to the PortfolioSection */}
-        <PortfolioSection projects={projects} />
+        {/* Display loading or error state for projects */}
+        {isLoadingProjects && <p className="text-center py-8">Loading projects...</p>}
+        {projectFetchError && !isLoadingProjects && (
+          <p className="text-center py-8 text-red-500">{projectFetchError}</p>
+        )}
+        {!isLoadingProjects && !projectFetchError && (
+          <PortfolioSection projects={projects} />
+        )}
       </AnimatedSection>
       <AnimatedSection id="art" ref={artRef}>
         <ArtSection />

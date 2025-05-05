@@ -1,6 +1,6 @@
 "use client"; // Directive for Next.js client components (needed for hooks and dynamic import)
 
-import React, { useState, useEffect } from "react"; // Import React and hooks
+import React, { useState } from "react"; // Import React and useState hook
 import Image from "next/image"; // Import Next.js Image component
 import dynamic from "next/dynamic"; // Import dynamic for code splitting the lightbox
 // Import lightbox plugins (can be kept static as they are smaller)
@@ -9,32 +9,17 @@ import Zoom from "yet-another-react-lightbox/plugins/zoom";
 // Import lightbox styles
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
+import usePrefersReducedMotion from "@/hooks/usePrefersReducedMotion"; // Import the shared hook
+import { BsArrowsFullscreen } from "react-icons/bs"; // Import icon for overlay
 
 // Dynamically import the main Lightbox component to reduce initial bundle size.
 const Lightbox = dynamic(() => import("yet-another-react-lightbox"));
 
 // Define the expected props for the ProjectGallery component
 interface ProjectGalleryProps {
-  images: string[]; // An array of image source URLs for the gallery
+  images: Array<{ src: string; alt?: string }>; // Update prop type for optional alt text
   projectTitle: string; // The title of the project, used for alt text generation
 }
-
-// TODO: Extract this hook into a shared utility file (e.g., src/hooks/usePrefersReducedMotion.ts)
-// to avoid duplication across components.
-// Custom hook to detect user's preference for reduced motion
-const usePrefersReducedMotion = () => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  useEffect(() => {
-    // Safety check for server-side rendering
-    if (typeof window === "undefined") return;
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setPrefersReducedMotion(mediaQuery.matches);
-    const handleChange = () => setPrefersReducedMotion(mediaQuery.matches);
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
-  return prefersReducedMotion;
-};
 
 // ProjectGallery component definition
 export default function ProjectGallery({
@@ -51,23 +36,29 @@ export default function ProjectGallery({
   // Prepare the 'slides' array for the lightbox
   // First, filter out any potentially invalid image sources (empty strings, null, undefined)
   const validImages = images.filter(
-    (src) => typeof src === "string" && src.trim() !== ""
+    (img) => img && typeof img.src === "string" && img.src.trim() !== ""
   );
   // Map the valid image URLs to the format expected by the lightbox ({ src, alt })
-  const slides = validImages.map((src) => ({
-    src: src,
-    // Generate generic alt text based on the project title
-    // TODO: Consider passing more descriptive alt text for each image if available.
-    alt: `${projectTitle} - gallery image`,
+  const slides = validImages.map((img) => ({
+    src: img.src,
+    // Use provided alt text if available, otherwise generate a default.
+    // Note: Update projects.json to include alt text in the extendedImages array for this to work.
+    alt: img.alt || `${projectTitle} - gallery image`,
   }));
 
   // Consistent focus style for the trigger button
   const focusVisibleShadow = "focus-visible:shadow-[0_0_10px_2px_#ffffff]";
 
   // Determine the source for the main trigger thumbnail (the first valid image)
-  const triggerImageSrc = validImages.length > 0 ? validImages[0] : null;
+  const triggerImage = validImages.length > 0 ? validImages[0] : null;
+  const triggerImageSrc = triggerImage?.src;
+  const triggerImageAlt = triggerImage?.alt || `Thumbnail for ${projectTitle} gallery`; // Use specific alt if available
   // Generate descriptive alt/aria-label text for the trigger button
   const triggerAltText = `${projectTitle} - view gallery (${validImages.length} image${validImages.length !== 1 ? "s" : ""})`;
+
+  // Simple base64 encoded transparent pixel for placeholder
+  // Replace with a proper low-quality image placeholder (LQIP) generation method if desired
+  const placeholderBlur = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
   return (
     <>
@@ -88,14 +79,15 @@ export default function ProjectGallery({
           {/* Display the first image as the clickable thumbnail */}
           <Image
             src={triggerImageSrc}
-            alt={`Thumbnail for ${projectTitle} gallery`} // Alt text for the thumbnail image
+            alt={triggerImageAlt} // Use specific or generated alt text
             fill // Fill the container
             style={{ objectFit: "cover" }} // Cover the container area
             sizes="(max-width: 640px) 100vw, 50vw" // Responsive sizes hint (adjust based on actual layout)
             // Hover effect: Slight inner image scale (disabled if reduced motion preferred)
             className={`${prefersReducedMotion ? "" : "transition duration-300 group-hover:scale-105"}`}
             loading="lazy" // Lazy load the thumbnail
-            // TODO: Consider adding placeholder blur effect.
+            placeholder="blur" // Enable blur placeholder
+            blurDataURL={placeholderBlur} // Provide base64 placeholder
           />
           {/* Overlay shown on hover/focus to indicate clickability and gallery size */}
           {/* Styling: Absolute positioning, dark overlay, initially hidden, fades in on hover/focus, flex centering, text style */}
@@ -103,17 +95,17 @@ export default function ProjectGallery({
           <div
             className={`absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 group-focus:opacity-100 flex flex-col items-center justify-center text-white p-4 ${prefersReducedMotion ? "" : "transition-opacity"}`}
           >
+            {/* Icon added to overlay */}
+            <BsArrowsFullscreen className="w-6 h-6 mb-1" aria-hidden="true" />
             {/* Text indicating the action and number of images */}
             <span className="text-sm font-semibold">
               View gallery ({slides.length})
             </span>
-            {/* TODO: Consider adding an icon (e.g., expand icon) to the overlay. */}
           </div>
         </button>
       ) : (
         // Fallback content if no valid images are provided
-        <p className="text-gray-400 italic">No gallery images available.</p>
-        // TODO: Style this fallback message appropriately.
+        <p className="text-center text-gray-400 italic py-4">No gallery images available.</p>
       )}
 
       {/* Lightbox Component */}
@@ -127,7 +119,8 @@ export default function ProjectGallery({
           slides={slides} // Array of slides to display
           // Enable plugins for thumbnails and zoom functionality
           plugins={[Thumbnails, Zoom]}
-          // TODO: Explore further customization options for the lightbox appearance and behavior.
+          // Note: Lightbox appearance/behavior can be customized further via props.
+          // See docs: https://yet-another-react-lightbox.com/documentation
         />
       )}
     </>

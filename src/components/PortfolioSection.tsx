@@ -1,40 +1,15 @@
 "use client"; // Directive for Next.js client components, necessary for using hooks (useState, useEffect)
 
-import React, { useState, useEffect } from "react"; // Import React and hooks
+import React from "react"; // Import React (useState, useEffect no longer needed here)
 import Image from "next/image"; // Import Next.js Image component for optimized images
 import Link from "next/link"; // Import Next.js Link component for client-side navigation
 import type { Project } from "@/types"; // Import the Project type definition
+import usePrefersReducedMotion from "@/hooks/usePrefersReducedMotion"; // Import the shared hook
 
 // Define the expected props for the PortfolioSection component
 interface PortfolioSectionProps {
   projects: Project[]; // An array of Project objects, defined in '@/types'
 }
-
-// TODO: Extract this hook into a shared utility file (e.g., src/hooks/usePrefersReducedMotion.ts)
-// to avoid duplication across components (AnimatedSection, AboutSection, PortfolioSection, etc.).
-// Custom hook to detect user's preference for reduced motion
-const usePrefersReducedMotion = () => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  useEffect(() => {
-    // Safety check: Ensure window object is available (runs only on client-side)
-    if (typeof window === "undefined") return;
-
-    // Create media query to check the OS/browser setting
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    // Set initial state
-    setPrefersReducedMotion(mediaQuery.matches);
-
-    // Handler to update state on change
-    const handleChange = () => {
-      setPrefersReducedMotion(mediaQuery.matches);
-    };
-
-    // Add listener with cleanup
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []); // Empty dependency array ensures this runs only once on mount
-  return prefersReducedMotion;
-};
 
 // PortfolioSection component definition
 // Takes an array of 'projects' as a prop
@@ -43,7 +18,8 @@ export default function PortfolioSection({ projects }: PortfolioSectionProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
 
   // Loading/Empty State: Handle the case where projects haven't loaded or are empty
-  // TODO: Implement a more distinct loading state (e.g., skeleton loaders) while projects are being fetched in the parent component (HomePage).
+  // Note: Loading state (showing "Loading projects...") is handled in the parent (HomePage).
+  // This section handles the state where projects array is empty or null after fetching.
   if (!projects || projects.length === 0) {
     return (
       // Section container
@@ -63,7 +39,6 @@ export default function PortfolioSection({ projects }: PortfolioSectionProps) {
           </h2>
           {/* Message indicating no projects */}
           <p className="text-center">No projects to display at this time.</p>
-          {/* TODO: Consider adding a link or suggestion for what the user can do next if no projects are available. */}
         </div>
       </section>
     );
@@ -110,7 +85,6 @@ export default function PortfolioSection({ projects }: PortfolioSectionProps) {
                   // Hover effect: Zoom image slightly on hover (disabled if reduced motion is preferred)
                   className={`group-hover:scale-110 ${prefersReducedMotion ? "" : "transition-transform duration-300"}`}
                   loading="lazy" // Lazy load images below the fold
-                  // TODO: Consider adding placeholder blur effect (requires generating blurDataURL).
                 />
               </div>
 
@@ -131,14 +105,13 @@ export default function PortfolioSection({ projects }: PortfolioSectionProps) {
                 </p>
                 {/* "View Project" Call to Action */}
                 {/* TODO: Make this text more descriptive or visually distinct if needed. */}
-                <span className="mt-2 text-xs text-blue-300">
+                <span className="mt-2 text-xs font-medium text-blue-300 group-hover:text-blue-200">
                   View Project &rarr;
                 </span>
               </div>
             </Link>
           ))}
         </div>
-        {/* TODO: Consider adding pagination or a "Load More" button if the number of projects becomes large. */}
       </div>{" "}
       {/* End max-w-6xl container */}
     </section>

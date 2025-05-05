@@ -135,7 +135,6 @@ export default function ExperienceEducationSection() {
                 }}
               >
                 {/* --- SATS Experience Item --- */}
-                {/* --- SATS Experience Item --- */}
                 <div className="flex flex-col sm:flex-row sm:space-x-4">
                   {/* Logo */}
                   <div className="flex-shrink-0 mb-3 sm:mb-0 mt-4">
@@ -316,7 +315,6 @@ export default function ExperienceEducationSection() {
                     </div>
                   </div>
                 </div>
-                {/* TODO: Add more experience items if applicable. */}
               </motion.div>
             )}
 
@@ -338,7 +336,6 @@ export default function ExperienceEducationSection() {
                   ease: "easeInOut", // Smoother easing
                 }}
               >
-                {/* --- Kristiania Education Item --- */}
                 {/* --- Kristiania Education Item --- */}
                 <div className="flex flex-col sm:flex-row sm:space-x-4">
                   {/* Logo with Link */}
@@ -578,7 +575,6 @@ export default function ExperienceEducationSection() {
                     </div>
                   </div>
                 </div>
-                {/* TODO: Add more education items if applicable. */}
               </motion.div>
             )}
           </AnimatePresence>

@@ -1,42 +1,8 @@
 "use client"; // Directive for Next.js client components
 
-import React, { useState, useEffect } from "react"; // Import React hooks
+import React from "react"; // Import React (useEffect no longer needed here)
 import { motion } from "motion/react"; // Import motion component from Framer Motion
-
-// Custom hook to detect if the user prefers reduced motion (accessibility setting)
-const usePrefersReducedMotion = () => {
-  // State to store the preference, defaults to false on the server
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-
-  // Effect runs only on the client after hydration
-  useEffect(() => {
-    // Create a media query to check the user's OS/browser setting
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    // Set the initial state based on the media query result
-    setPrefersReducedMotion(mediaQuery.matches);
-
-    // Define a handler function to update state when the setting changes
-    const handleChange = () => {
-      setPrefersReducedMotion(mediaQuery.matches);
-    };
-
-    // Add a listener for changes to the media query
-    // Includes fallback for older browsers that use addListener/removeListener
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener("change", handleChange);
-      // Cleanup function to remove the listener when the component unmounts
-      return () => mediaQuery.removeEventListener("change", handleChange);
-    } else {
-      mediaQuery.addListener(handleChange);
-      // Cleanup function for older browsers
-      return () => mediaQuery.removeListener(handleChange);
-    }
-    // TODO: Evaluate if the addListener/removeListener fallback is still necessary based on target browser support.
-  }, []); // Empty dependency array ensures this effect runs only once on mount
-
-  // Return the current preference state
-  return prefersReducedMotion;
-};
+import usePrefersReducedMotion from "@/hooks/usePrefersReducedMotion"; // Import shared hook
 
 // Define the props interface for the AnimatedSection component
 interface AnimatedSectionProps {

@@ -1,9 +1,10 @@
 "use client"; // Directive for Next.js client components
 
-import React, { useState, useEffect } from "react"; // Import React hooks
+import React, { useState } from "react"; // Import React hooks (removed useEffect)
 // Removed Image import
 // Import motion components for internal animations (expand/collapse, button icon, CV link)
 import { motion, AnimatePresence } from "motion/react";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion"; // Import the extracted hook
 import {
   SiFigma,
   SiTypescript,
@@ -15,24 +16,7 @@ import {
 } from "react-icons/si";
 import { FaJava } from "react-icons/fa";
 import { TbBrandCSharp } from "react-icons/tb";
-
-// TODO: Extract this hook into a shared utility file (e.g., src/hooks/usePrefersReducedMotion.ts)
-// to avoid duplication across components (AnimatedSection, AboutSection, etc.).
-// Custom hook to detect user's preference for reduced motion
-const usePrefersReducedMotionInternal = () => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setPrefersReducedMotion(mediaQuery.matches);
-    const handleChange = () => setPrefersReducedMotion(mediaQuery.matches);
-    // Using addEventListener with cleanup for modern browsers
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-    // Note: Fallback for older browsers (addListener/removeListener) was removed for brevity,
-    // re-evaluate if needed based on target browser support.
-  }, []);
-  return prefersReducedMotion;
-};
+import SkillIcon from "./SkillIcon"; // Import the new SkillIcon component
 
 // AboutSection component definition
 export default function AboutSection() {
@@ -43,7 +27,7 @@ export default function AboutSection() {
   const focusVisibleShadow = "focus-visible:shadow-[0_0_10px_2px_#ffffff]"; // White glow on focus
 
   // Check for reduced motion preference specifically for the internal animations within this component
-  const prefersReducedMotion = usePrefersReducedMotionInternal();
+  const prefersReducedMotion = usePrefersReducedMotion(); // Use the imported hook
 
   return (
     // Section container for the "About Me" content
@@ -95,7 +79,8 @@ export default function AboutSection() {
                   ? undefined
                   : { duration: 0.5, ease: "easeInOut" }
               } // Increased duration
-              // TODO: Consider adding aria-live="polite" to announce content changes to screen readers, though AnimatePresence might handle focus management adequately.
+              // Note: aria-live="polite" was considered but omitted as AnimatePresence often handles
+              // focus management adequately for expand/collapse sections, preventing redundant announcements.
             >
               {/* Additional paragraph shown when expanded */}
               <p className="mb-4 text-base sm:text-lg">
@@ -113,64 +98,17 @@ export default function AboutSection() {
               {/* Container for skill icons and labels */}
               <div className="flex flex-wrap gap-3 sm:gap-4 mb-6">
                 {/* Individual skill item */}
-                {/* TODO: Consider creating a reusable SkillIcon component to reduce repetition. */}
-                {/* TODO: Ensure all icons have appropriate alt text and consider adding tooltips for clarity if needed. */}
-                <div className="flex items-center space-x-2">
-                  <SiFigma size={32} aria-label="Figma" />{" "}
-                  {/* Using size 32 for consistency with sm:w-8/h-8 */}
-                  <span className="text-sm sm:text-base hidden md:inline">
-                    Figma
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <SiTypescript size={32} aria-label="TypeScript" />
-                  <span className="text-sm sm:text-base hidden md:inline">
-                    Typescript
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <SiJavascript size={32} aria-label="JavaScript" />
-                  <span className="text-sm sm:text-base hidden md:inline">
-                    Javascript
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <FaJava size={32} aria-label="Java" />
-                  <span className="text-sm sm:text-base hidden md:inline">
-                    Java
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <TbBrandCSharp size={32} aria-label="C#" />
-                  <span className="text-sm sm:text-base hidden md:inline">
-                    C#
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <SiNextdotjs size={32} aria-label="Next.js" />
-                  <span className="text-sm sm:text-base hidden md:inline">
-                    Next.js
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <SiReact size={32} aria-label="React" />
-                  <span className="text-sm sm:text-base hidden md:inline">
-                    React
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <SiBlender size={32} aria-label="Blender" />
-                  <span className="text-sm sm:text-base hidden md:inline">
-                    Blender
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <SiUnrealengine size={32} aria-label="Unreal Engine" />
-                  <span className="text-sm sm:text-base hidden md:inline">
-                    Unreal Engine
-                  </span>
-                </div>
-                {/* TODO: Add more relevant skills/tools if applicable. */}
+                {/* Replaced repetitive divs with SkillIcon component */}
+                {/* Note: Icons use aria-label for accessibility as labels are hidden on small screens. Tooltips could be added for enhancement. */}
+                <SkillIcon icon={SiFigma} label="Figma" />
+                <SkillIcon icon={SiTypescript} label="Typescript" />
+                <SkillIcon icon={SiJavascript} label="Javascript" />
+                <SkillIcon icon={FaJava} label="Java" />
+                <SkillIcon icon={TbBrandCSharp} label="C#" />
+                <SkillIcon icon={SiNextdotjs} label="Next.js" />
+                <SkillIcon icon={SiReact} label="React" />
+                <SkillIcon icon={SiBlender} label="Blender" />
+                <SkillIcon icon={SiUnrealengine} label="Unreal Engine" />
               </div>
             </motion.div>
           )}

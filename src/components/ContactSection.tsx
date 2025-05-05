@@ -10,7 +10,6 @@ import { MdOutlineEmail } from "react-icons/md"; // Import email icon
 // ContactSection component definition
 export default function ContactSection() {
   // Define contact information and social media URLs as constants
-  // TODO: Consider moving these to environment variables or a configuration file for easier updates.
   const email = "marius.frilans@gmail.com";
   const linkedInUrl = "https://www.linkedin.com/in/marius-Øvrebø-604235187";
   const gitHubUrl = "https://github.com/Rojan-mdl";
@@ -19,7 +18,6 @@ export default function ContactSection() {
   // Define consistent Tailwind CSS classes for styling the contact links
   const linkClasses =
     "inline-flex items-center gap-2 text-blue-400 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded px-1 py-0.5 transition";
-  // TODO: Verify text color (`text-blue-400`) provides sufficient contrast against the background.
 
   // Define the size for the icons used in the links
   const iconSize = 20;
@@ -44,7 +42,6 @@ export default function ContactSection() {
         <p className="mb-8 text-lg text-gray-300">
           Feel free to reach out! You can contact me via email or connect with
           me online.
-          {/* TODO: Consider adding a contact form as an alternative method. */}
         </p>
 
         {/* Container for contact links */}
@@ -131,7 +128,6 @@ export default function ContactSection() {
               <span className="sr-only"> (opens in new tab)</span>
             </span>
           </a>
-          {/* TODO: Add other relevant social/contact links if desired. */}
         </div>
       </div>{" "}
       {/* End max-w-4xl container */}

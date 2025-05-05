@@ -25,7 +25,8 @@
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
     "three": "^0.174.0",
-    "yet-another-react-lightbox": "^3.22.0"
+    "yet-another-react-lightbox": "^3.22.0",
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

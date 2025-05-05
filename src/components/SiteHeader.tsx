@@ -209,7 +209,6 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) {
     relative uppercase text-sm text-gray-300 transition duration-150 ease-in-out
     hover:text-white focus:outline-none focus:text-white
   `;
-  // TODO: Ensure focus styles are consistent and meet accessibility contrast requirements.
   // Removed unused mobileLinkClasses variable
 
   return (

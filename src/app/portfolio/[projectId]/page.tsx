@@ -25,7 +25,6 @@ const getYouTubeId = (url: string): string | null => {
   const match = url.match(regExp);
   // Check if a match was found and the captured group (video ID) is 11 characters long
   return match && match[2].length === 11 ? match[2] : null;
-  // TODO: Consider adding support for YouTube Shorts URLs if needed.
 };
 
 // Define the expected props structure for the page component
@@ -50,13 +49,31 @@ async function getProjectData(projectId: string): Promise<Project | null> {
     const project = projects.find((p) => p.id === projectId);
     // Return the found project or null if not found
     return project || null;
-    // TODO: Implement caching for this data fetching if the JSON file is large or read frequently.
-  } catch (error) {
+    // Caching Note: Reading from the local filesystem like this might benefit from OS-level caching,
+    // but for more explicit control, especially in serverless environments or for larger/frequently
+    // accessed data, consider using Next.js's `unstable_cache` or restructuring to use `fetch`
+    // with revalidation if the data were served from an internal API route.
+  } catch (error) { // Catch potentially non-Error types
     // Log errors during file reading or parsing
     console.error("Error reading projects data:", error);
-    // Return null to indicate failure
-    return null;
-    // TODO: Implement more specific error handling (e.g., distinguish file not found vs. parse error).
+    // Log specific error details if available
+    if (error instanceof Error) {
+      // Check for specific properties if it's an Error object
+      const nodeError = error as NodeJS.ErrnoException; // Type assertion for properties like code
+      if (nodeError.code === 'ENOENT') {
+        console.error(`Error: Projects data file not found at ${path.join(process.cwd(), "data", "projects.json")}`);
+      } else if (error instanceof SyntaxError) {
+        // SyntaxError is a standard Error subtype
+        console.error("Error: Failed to parse projects.json. Check for JSON syntax errors.");
+      } else {
+        // Log generic error message
+        console.error("An unexpected error occurred while getting project data:", error.message);
+      }
+    } else {
+      // Handle cases where the thrown object might not be an Error
+      console.error("An unexpected non-error object was thrown:", error);
+    }
+    return null; // Return null to indicate failure
   }
 }
 
@@ -75,7 +92,6 @@ export async function generateMetadata({
     return {
       title: "Project Not Found",
       description: "The requested project could not be found.",
-      // TODO: Consider adding a specific Open Graph image for "Not Found" pages.
     };
   }
 
@@ -89,9 +105,7 @@ export async function generateMetadata({
       description: project.brief, // OG description
       // Use the main project image for the OG image, if available
       images: project.image ? [project.image] : [],
-      // TODO: Add other relevant OG tags like 'type', 'url', 'site_name'.
     },
-    // TODO: Add other metadata fields like 'keywords' if desired.
   };
 }
 
@@ -148,8 +162,7 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
         error
       );
       // Set fallback content to display to the user
-      markdownContent = "Error loading project details.";
-      // TODO: Provide a more user-friendly error message or UI state.
+      markdownContent = "*Oops! We couldn't load the project details at this time. Please try again later.*";
     }
   } else {
     // Warn if the detailPath field is missing in the project data
@@ -175,7 +188,7 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
               src={project.image}
               // Alt text: Describes the image in the context of the project
               // TODO: Allow providing specific alt text per image in projects.json if the main image needs a more detailed description than just "Main image for [Project Title]".
-              alt={`Main image for ${project.title}`}
+              alt={project.imageAlt || `Main image for ${project.title}`}
               fill // Fill the container
               style={{ objectFit: "cover" }} // Cover the container area
               priority // Prioritize loading this image as it's likely LCP (Largest Contentful Paint)
@@ -197,7 +210,7 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
           {markdownContent}
         </ReactMarkdown>
-        {/* TODO: Customize ReactMarkdown rendering further if specific HTML elements need different components or styling (e.g., custom link or image components). */}
+        {/* Note: ReactMarkdown can be customized further using the 'components' prop if specific HTML elements need different rendering (e.g., custom link or image components). */}
       </div>
 
       {/* Extended Images Gallery Section (if images exist) */}
@@ -241,7 +254,13 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
                 {/* Provide the video source */}
                 <source src={videoSrc} type="video/mp4" />
                 {/* TODO: Provide sources for other video formats (e.g., WebM, Ogg) for better browser compatibility. */}
-                {/* TODO: Add <track> elements for captions (WCAG 1.2.2) and potentially audio descriptions (WCAG 1.2.5) for accessibility. */}
+                {/* Example: Add other video formats for broader compatibility (requires data update) */}
+                {/* <source src={videoSrc.replace('.mp4', '.webm')} type="video/webm" /> */}
+
+                {/* TODO: Add <track> elements for captions/subtitles (WCAG 1.2.2). Requires .vtt file paths in project data. */}
+                {/* Example: <track label="English" kind="subtitles" srcLang="en" src="/path/to/captions.vtt" default /> */}
+
+                {/* TODO: Consider adding audio descriptions track if necessary (WCAG 1.2.5). */}
                 {/* Fallback text if the browser doesn't support the video tag */}
                 Your browser does not support the video tag.
               </video>

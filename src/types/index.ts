@@ -30,6 +30,7 @@ export interface Project {
   brief: string;
   detailPath: string; // Using the separate markdown file path
   image: string; // Main thumbnail image
+  imageAlt?: string; // Optional specific alt text for the main image
   extendedImages?: string[]; // Keep if you display these outside the lightbox
   extendedVideos?: string[]; // Keep if you display these outside the lightbox
   toolIcons?: { src: string; label: string }[];
