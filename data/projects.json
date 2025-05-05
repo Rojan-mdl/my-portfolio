@@ -2,18 +2,11 @@
   {
     "id": "1",
     "title": "Unity Arena",
-    "brief": "Visualization of different capacity layouts for Unity Arena.",
+    "brief": "Multiple visualization projects for Unity Arena, including rebranding, layout concepts, and visitor experience enhancements.",
     "detailPath": "/data/markdown/unity-arena.md",
     "image": "/image/project01/picture01.png",
     "imageAlt": "Overhead view of Unity Arena concert layout",
-    "extendedImages": [
-      "/image/project01/box01.png",
-      "/image/project01/box02.png",
-      "/image/project01/bowl01.png",
-      "/image/project01/bowl02.png",
-      "/image/project01/full01.png",
-      "/image/project01/full02.png"
-    ],
+    "extendedImages": [],
     "extendedVideos": [],
     "toolIcons": [
       { "src": "/icons/blender.svg", "label": "Blender" },
@@ -23,34 +16,72 @@
         "label": "Adobe After Effects"
       }
     ],
-    "lightboxSlides": [
+    "lightboxSlides": [],
+    "youtubeVideoUrl": "",
+    "subProjects": [
       {
-        "type": "image",
-        "src": "/image/project01/picture01.png",
-        "alt": "Unity Arena Main Visual"
+        "subId": "1a",
+        "title": "Rebranding Transition",
+        "brief": "Visual assets and animations for the Unity Arena rebranding.",
+        "detailPath": "/data/markdown/unity-arena-rebranding.md",
+        "image": "/image/project01/sub-project01/unity-arena-logo.png",
+        "imageAlt": "Unity Arena rebranding visual",
+        "extendedImages": [],
+        "extendedVideos": ["/image/project01/sub-project01/logo-animation.mp4"],
+        "lightboxSlides": [
+          { "type": "image", "src": "/image/project01/sub-project01/flake.png", "alt": "Flake Animation Still" },
+          { "type": "image", "src": "/image/project01/sub-project01/metaball.png", "alt": "Metaball Animation Still" }
+        ],
+        "youtubeVideoUrl": ""
       },
       {
-        "type": "image",
-        "src": "/image/project01/box01.png",
-        "alt": "Box Layout 1"
+        "subId": "1b",
+        "title": "Black Box Concept Videos",
+        "brief": "Concept videos exploring the black box setup.",
+        "detailPath": "/data/markdown/unity-arena-black-box.md",
+        "image": "/image/project01/sub-project02/BB04.png",
+        "imageAlt": "Concept video visualization for Unity Arena Black Box",
+        "extendedImages": [],
+        "lightboxSlides": [
+          { "type": "image", "src": "/image/project01/sub-project02/BB01.png", "alt": "Black Box Concept 1" },
+          { "type": "image", "src": "/image/project01/sub-project02/BB02.png", "alt": "Black Box Concept 2" },
+          { "type": "image", "src": "/image/project01/sub-project02/BB03.png", "alt": "Black Box Concept 3" },
+          { "type": "image", "src": "/image/project01/sub-project02/BB04.png", "alt": "Black Box Concept 4" },
+          { "type": "image", "src": "/image/project01/sub-project02/BB05.png", "alt": "Black Box Concept 5" }
+        ],
+        "youtubeVideoUrl": "https://youtu.be/Q8GmGq6gKjo"
       },
       {
-        "type": "image",
-        "src": "/image/project01/box02.png",
-        "alt": "Box Layout 2"
+        "subId": "1c",
+        "title": "Seating Charts and Layouts",
+        "brief": "Detailed visualizations of various seating configurations and event layouts.",
+        "detailPath": "/data/markdown/unity-arena-seating.md",
+        "image": "/image/project01/sub-project03/bowl01.png",
+        "imageAlt": "Unity Arena seating chart visualization",
+        "extendedImages": [],
+        "lightboxSlides": [
+          { "type": "image", "src": "/image/project01/sub-project03/bowl01.png", "alt": "Bowl Layout 1" },
+          { "type": "image", "src": "/image/project01/sub-project03/bowl02.png", "alt": "Bowl Layout 2" },
+          { "type": "image", "src": "/image/project01/sub-project03/box01.png", "alt": "Box Layout 1" },
+          { "type": "image", "src": "/image/project01/sub-project03/box02.png", "alt": "Box Layout 2" },
+          { "type": "image", "src": "/image/project01/sub-project03/full01.png", "alt": "Full Layout 1" },
+          { "type": "image", "src": "/image/project01/sub-project03/full02.png", "alt": "Full Layout 2" }
+        ],
+        "youtubeVideoUrl": ""
       },
       {
-        "type": "image",
-        "src": "/image/project01/bowl01.png",
-        "alt": "Bowl Layout 1"
-      },
-      {
-        "type": "image",
-        "src": "/image/project01/full01.png",
-        "alt": "Full Layout 1"
+        "subId": "1d",
+        "title": "Visitor Experience Enhancement",
+        "brief": "Concepts and visualizations to enhance the visitor experience.",
+        "detailPath": "/data/markdown/unity-arena-visitor-exp.md",
+        "image": "/image/project01/sub-project04/fornebu.png",
+        "imageAlt": "Visualization for enhanced visitor experience at Unity Arena",
+        "extendedImages": [],
+        "lightboxSlides": [
+        ],
+        "youtubeVideoUrl": "https://youtube.com/shorts/Ehv4awVL_Hw"
       }
-    ],
-    "youtubeVideoUrl": "https://youtu.be/Q8GmGq6gKjo"
+    ]
   },
   {
     "id": "2",
@@ -70,7 +101,9 @@
       { "src": "/icons/motion.png", "label": "Motion" },
       { "src": "/icons/vercel.svg", "label": "Vercel" }
     ],
-    "lightboxSlides": []
+    "lightboxSlides": [],
+    "youtubeVideoUrl": "",
+    "subProjects": []
   },
   {
     "id": "3",
@@ -95,29 +128,31 @@
       {
         "type": "image",
         "src": "/image/project03/image01.png",
-        "alt": "Unity Arena Main Visual"
+        "alt": "Oslo Throwdown Layout 1"
       },
       {
         "type": "image",
         "src": "/image/project03/image02.png",
-        "alt": "Unity Arena Main Visual"
+        "alt": "Oslo Throwdown Layout 2"
       },
       {
         "type": "image",
         "src": "/image/project03/image03.png",
-        "alt": "Unity Arena Main Visual"
+        "alt": "Oslo Throwdown Layout 3"
       },
       {
         "type": "image",
         "src": "/image/project03/image04.png",
-        "alt": "Unity Arena Main Visual"
+        "alt": "Oslo Throwdown Layout 4"
       },
       {
         "type": "image",
         "src": "/image/project03/image05.png",
-        "alt": "Unity Arena Main Visual"
+        "alt": "Oslo Throwdown Layout 5"
       }
-    ]
+    ],
+    "youtubeVideoUrl": "https://youtube.com/shorts/aOjUKtR0_sE",
+    "subProjects": []
   },
   {
     "id": "4",
@@ -128,6 +163,9 @@
     "imageAlt": "To be announced placeholder image",
     "extendedImages": [],
     "extendedVideos": [],
-    "toolIcons": []
+    "toolIcons": [],
+    "lightboxSlides": [],
+    "youtubeVideoUrl": "",
+    "subProjects": []
   }
 ]

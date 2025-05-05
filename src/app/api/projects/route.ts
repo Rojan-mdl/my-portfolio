@@ -29,6 +29,20 @@ const LightboxSlideSchema = z.union([
   LightboxVideoSlideSchema,
 ]);
 
+// Define Zod schema for SubProject
+const SubProjectSchema = z.object({
+  subId: z.string(),
+  title: z.string(),
+  brief: z.string(),
+  detailPath: z.string().optional(),
+  image: z.string(),
+  imageAlt: z.string().optional(),
+  extendedImages: z.array(z.string()).optional(),
+  extendedVideos: z.array(z.string()).optional(),
+  lightboxSlides: z.array(LightboxSlideSchema).optional(),
+  youtubeVideoUrl: z.string().optional(),
+});
+
 // Define the main Zod schema for a Project (mirroring types/index.ts)
 const ProjectSchema = z.object({
   id: z.string(),
@@ -42,6 +56,7 @@ const ProjectSchema = z.object({
   toolIcons: z.array(z.object({ src: z.string(), label: z.string() })).optional(),
   lightboxSlides: z.array(LightboxSlideSchema).optional(),
   youtubeVideoUrl: z.string().optional(),
+  subProjects: z.array(SubProjectSchema).optional(), // Added optional subProjects
 });
 
 // Define the schema for the array of projects
@@ -99,7 +114,7 @@ const getCachedProjects = unstable_cache(
     // Return the validated data (explicitly typed as Project[])
     return validationResult.data as Project[]; // Cast needed as Zod infers structure
   },
-  ['projects-data'], // Cache key segments
+  ['projects-data-v2'], // Cache key segments - CHANGED to invalidate cache
   {
     revalidate: 3600, // Cache for 1 hour (adjust as needed)
     // TODO: Consider adding tags for more granular cache invalidation if needed: tags: ['projects']

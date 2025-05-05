@@ -4,7 +4,7 @@ import { Metadata } from "next"; // Import Metadata type for page metadata gener
 import Link from "next/link"; // Import Next.js Link component for navigation
 import Image from "next/image"; // Import Next.js Image component for optimized images
 import { notFound } from "next/navigation"; // Import Next.js function to trigger a 404 page
-import type { Project } from "@/types"; // Import the Project type definition
+import type { Project } from "@/types"; // Import only Project type definition
 import ToolIcon from "@/components/ToolIcon"; // Import the reusable ToolIcon component
 import ReactMarkdown from "react-markdown"; // Import component to render Markdown content
 import remarkGfm from "remark-gfm"; // Import remark plugin for GitHub Flavored Markdown support (tables, strikethrough, etc.)
@@ -15,13 +15,13 @@ import ProjectGallery from "@/components/ProjectGallery"; // Import the gallery 
 
 // Helper function to extract YouTube Video ID from various URL formats
 // Returns the 11-character video ID or null if not found/invalid.
-const getYouTubeId = (url: string): string | null => {
+const getYouTubeId = (url: string | undefined | null): string | null => { // Allow undefined/null
   // Return null immediately if the URL is falsy
   if (!url) return null;
   // Regular expression to match common YouTube URL patterns
-  // Covers youtu.be, /v/, /u/\w/, /embed/, watch?v=, watch?&v= formats
+  // Covers youtu.be, /v/, /u/\w/, /embed/, /shorts/, watch?v=, watch?&v= formats
   const regExp =
-    /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   const match = url.match(regExp);
   // Check if a match was found and the captured group (video ID) is 11 characters long
   return match && match[2].length === 11 ? match[2] : null;
@@ -32,7 +32,7 @@ const getYouTubeId = (url: string): string | null => {
 // Note: The type `Promise<{ projectId: string; }>` might be overly specific;
 // often ` { params: { projectId: string } }` is sufficient unless dealing with complex async param resolution.
 interface Props {
-  params: Promise<{ projectId: string }>; // Expects params as a Promise resolving to an object with projectId
+  params: Promise<{ projectId: string }>; // Revert Props definition to expect a Promise
 }
 
 // Server-side helper function to fetch data for a single project by its ID
@@ -80,10 +80,10 @@ async function getProjectData(projectId: string): Promise<Project | null> {
 // Function to generate page metadata (title, description, open graph tags) dynamically
 // This runs on the server during the request or at build time.
 export async function generateMetadata({
-  params: paramsPromise,
+  params: paramsPromise, // Rename to indicate it's a promise
 }: Props): Promise<Metadata> {
   // Resolve the promise to get the projectId
-  const { projectId } = await paramsPromise;
+  const { projectId } = await paramsPromise; // Await the promise before accessing projectId
   // Fetch the specific project data using the helper function
   const project = await getProjectData(projectId);
 
@@ -135,9 +135,9 @@ export async function generateStaticParams() {
 
 // The main Page Component for individual project pages
 // This is an async server component.
-export default async function ProjectPage({ params: paramsPromise }: Props) {
+export default async function ProjectPage({ params: paramsPromise }: Props) { // Rename to indicate it's a promise
   // Resolve the promise to get the projectId from the route parameters
-  const { projectId } = await paramsPromise;
+  const { projectId } = await paramsPromise; // Await the promise before accessing projectId
   // Fetch the data for the specific project
   const project = await getProjectData(projectId);
 
@@ -173,6 +173,9 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
     markdownContent = "Project details are not available.";
   }
 
+  // Check if there are sub-projects
+  const hasSubProjects = project.subProjects && project.subProjects.length > 0;
+
   // Render the project page content
   return (
     // Main container with padding top/bottom, max width, centered, horizontal padding, text color
@@ -180,14 +183,12 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
       {/* Project Title */}
       <h1 className="text-3xl sm:text-4xl font-bold mb-4">{project.title}</h1>
 
-      {/* Main Project Image (if available) */}
+      {/* Main Project Image (if available and no sub-projects, or as an intro) */}
       {
-        project.image ? (
+        project.image && (
           <div className="mb-6 relative w-full aspect-[16/9] overflow-hidden rounded-lg shadow-lg">
             <Image
               src={project.image}
-              // Alt text: Describes the image in the context of the project
-              // TODO: Allow providing specific alt text per image in projects.json if the main image needs a more detailed description than just "Main image for [Project Title]".
               alt={project.imageAlt || `Main image for ${project.title}`}
               fill // Fill the container
               style={{ objectFit: "cover" }} // Cover the container area
@@ -195,7 +196,7 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
               sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 66vw" // Responsive sizes hint
             />
           </div>
-        ) : null /* Render nothing if no main image */
+        )
       }
 
       {/* Brief Project Description */}
@@ -213,110 +214,212 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
         {/* Note: ReactMarkdown can be customized further using the 'components' prop if specific HTML elements need different rendering (e.g., custom link or image components). */}
       </div>
 
-      {/* Extended Images Gallery Section (if images exist) */}
-      {project.extendedImages && project.extendedImages.length > 0 && (
-        <section className="mb-10" aria-labelledby="gallery-heading">
-          {/* Gallery Section Heading */}
-          <h2
-            id="gallery-heading"
-            className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2"
+
+      {/* === SUB-PROJECTS SECTION === */}
+      {hasSubProjects && project.subProjects && (
+        <section className="mt-10 space-y-12">
+           <h2
+            className="text-2xl font-bold mb-6 border-b border-gray-700 pb-2"
           >
-            Gallery
+            Project Breakdown
           </h2>
-          {/* Render the ProjectGallery client component, passing the images and title */}
-          {/* Filter out any potentially invalid image sources before passing */}
-          <ProjectGallery
-            images={project.extendedImages
-              .filter((img): img is string => !!img) // Ensure img is treated as string after filter
-              .map((imgSrc) => ({ src: imgSrc }))} // Map string to { src: string } object
-            projectTitle={project.title}
-          />
+          {/* Use Promise.all to handle async operations within map */}
+          {await Promise.all(project.subProjects.map(async (subProject, index) => {
+             const subVideoId = getYouTubeId(subProject.youtubeVideoUrl);
+
+             // Fetch markdown content for the sub-project if detailPath exists
+             let subProjectMarkdownContent = "";
+             if (subProject.detailPath) {
+               try {
+                 const markdownFilePath = path.join(process.cwd(), subProject.detailPath);
+                 subProjectMarkdownContent = await fs.readFile(markdownFilePath, "utf8");
+               } catch (error) {
+                 console.error(
+                   `Error reading markdown file for sub-project ${subProject.title} at ${subProject.detailPath}:`,
+                   error
+                 );
+                 subProjectMarkdownContent = "*Details could not be loaded.*"; // Fallback content
+               }
+             }
+
+             return (
+                <div key={subProject.subId || index} className="border-t border-gray-800 pt-8">
+                   <h3 className="text-xl sm:text-2xl font-semibold mb-3">{subProject.title}</h3>
+                   {subProject.image && (
+                     <div className="mb-4 relative w-full aspect-[16/9] overflow-hidden rounded-md shadow-md">
+                       <Image
+                         src={subProject.image}
+                         alt={subProject.imageAlt || `Image for ${subProject.title}`}
+                         fill
+                         style={{ objectFit: "cover" }}
+                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 66vw"
+                       />
+                     </div>
+                   )}
+                   {/* Render markdown content if available, otherwise the brief */}
+                   {subProjectMarkdownContent ? (
+                      <div className="markdown-content max-w-none mb-4 text-gray-200">
+                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                           {subProjectMarkdownContent}
+                         </ReactMarkdown>
+                       </div>
+                   ) : (
+                     <p className="text-md text-gray-300 mb-4 italic">{subProject.brief}</p>
+                   )}
+
+                   {/* Sub-Project Gallery using lightboxSlides */} 
+                   {subProject.lightboxSlides && subProject.lightboxSlides.length > 0 && (
+                     <div className="mb-6">
+                       <h4 className="text-xl font-semibold mb-3 text-gray-300">Gallery</h4>
+                       <ProjectGallery
+                         // Filter for image types and map to the expected format if needed
+                         // Assuming ProjectGallery can handle { src: string, alt?: string }
+                         images={subProject.lightboxSlides.filter(slide => slide.type === 'image')}
+                         projectTitle={subProject.title}
+                       />
+                     </div>
+                   )}
+
+                   {/* Sub-Project Videos */}
+                   {subProject.extendedVideos && subProject.extendedVideos.length > 0 && (
+                     <div className="mb-6">
+                       <h4 className="text-xl font-semibold mb-3 text-gray-300">Videos</h4>
+                       {subProject.extendedVideos.map((videoSrc, videoIndex) => (
+                         <div
+                           key={videoIndex}
+                           className="mb-4 aspect-video bg-black rounded overflow-hidden shadow-md"
+                         >
+                           <video controls className="w-full h-full" preload="metadata">
+                             <source src={videoSrc} type="video/mp4" />
+                             {/* Consider adding other source types like webm if available */}
+                             Your browser does not support the video tag.
+                           </video>
+                         </div>
+                       ))}
+                     </div>
+                   )}
+
+                   {/* Sub-Project YouTube Video */}
+                    {subVideoId && (
+                      <div className="mb-6">
+                         <h4 className="text-xl font-semibold mb-3 text-gray-300">Video</h4>
+                         <div className="aspect-video w-full bg-black rounded overflow-hidden shadow-lg">
+                           <iframe
+                             className="w-full h-full"
+                             src={`https://www.youtube.com/embed/${subVideoId}`}
+                             title={`${subProject.title} Video`}
+                             frameBorder="0"
+                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                             allowFullScreen
+                           ></iframe>
+                         </div>
+                      </div>
+                    )}
+                </div>
+             )
+          }))}
         </section>
       )}
 
-      {/* Extended Videos Section (if videos exist) */}
-      {project.extendedVideos && project.extendedVideos.length > 0 && (
-        <section className="mb-10" aria-labelledby="videos-heading">
-          {/* Videos Section Heading */}
-          <h2
-            id="videos-heading"
-            className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2"
-          >
-            Videos
-          </h2>
-          {/* Map through the video source URLs */}
-          {project.extendedVideos.map((videoSrc, index) => (
-            // Container for each video player
-            <div
-              key={index}
-              className="mb-4 aspect-video bg-black rounded overflow-hidden"
-            >
-              {/* HTML5 video element */}
-              <video controls className="w-full h-full" preload="metadata">
-                {/* Provide the video source */}
-                <source src={videoSrc} type="video/mp4" />
-                {/* TODO: Provide sources for other video formats (e.g., WebM, Ogg) for better browser compatibility. */}
-                {/* Example: Add other video formats for broader compatibility (requires data update) */}
-                {/* <source src={videoSrc.replace('.mp4', '.webm')} type="video/webm" /> */}
+      {/* === LEGACY SECTIONS (Only show if NO sub-projects) === */}
+      {!hasSubProjects && (
+        <>
+          {/* Extended Images Gallery Section (if images exist) */}
+          {project.extendedImages && project.extendedImages.length > 0 && (
+            <section className="mb-10" aria-labelledby="gallery-heading">
+              {/* Gallery Section Heading */}
+              <h2
+                id="gallery-heading"
+                className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2"
+              >
+                Gallery
+              </h2>
+              {/* Render the ProjectGallery client component, passing the images and title */}
+              {/* Filter out any potentially invalid image sources before passing */}
+              <ProjectGallery
+                images={project.extendedImages
+                  .filter((img): img is string => !!img) // Ensure img is treated as string after filter
+                  .map((imgSrc) => ({ src: imgSrc }))} // Map string to { src: string } object
+                projectTitle={project.title}
+              />
+            </section>
+          )}
 
-                {/* TODO: Add <track> elements for captions/subtitles (WCAG 1.2.2). Requires .vtt file paths in project data. */}
-                {/* Example: <track label="English" kind="subtitles" srcLang="en" src="/path/to/captions.vtt" default /> */}
+          {/* Extended Videos Section (if videos exist) */}
+          {project.extendedVideos && project.extendedVideos.length > 0 && (
+            <section className="mb-10" aria-labelledby="videos-heading">
+              {/* Videos Section Heading */}
+              <h2
+                id="videos-heading"
+                className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2"
+              >
+                Videos
+              </h2>
+              {/* Map through the video source URLs */}
+              {project.extendedVideos.map((videoSrc, index) => (
+                // Container for each video player
+                <div
+                  key={index}
+                  className="mb-4 aspect-video bg-black rounded overflow-hidden"
+                >
+                  {/* HTML5 video element */}
+                  <video controls className="w-full h-full" preload="metadata">
+                    {/* Provide the video source */}
+                    <source src={videoSrc} type="video/mp4" />
+                    {/* TODO: Provide sources for other video formats (e.g., WebM, Ogg) for better browser compatibility. */}
+                    {/* Example: Add other video formats for broader compatibility (requires data update) */}
+                    {/* <source src={videoSrc.replace('.mp4', '.webm')} type="video/webm" /> */}
 
-                {/* TODO: Consider adding audio descriptions track if necessary (WCAG 1.2.5). */}
-                {/* Fallback text if the browser doesn't support the video tag */}
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          ))}
-        </section>
+                    {/* TODO: Add <track> elements for captions/subtitles (WCAG 1.2.2). Requires .vtt file paths in project data. */}
+                    {/* Example: <track label="English" kind="subtitles" srcLang="en" src="/path/to/captions.vtt" default /> */}
+
+                    {/* TODO: Consider adding audio descriptions track if necessary (WCAG 1.2.5). */}
+                    {/* Fallback text if the browser doesn't support the video tag */}
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              ))}
+            </section>
+          )}
+
+           {/* Embedded YouTube Video Section (if URL is valid) */}
+          {(() => {
+            if (!project.youtubeVideoUrl) return null;
+            const videoId = getYouTubeId(project.youtubeVideoUrl);
+            if (!videoId) {
+              console.warn(
+                `Invalid YouTube URL format for project ${projectId}: ${project.youtubeVideoUrl}`
+              );
+              return null;
+            }
+            return (
+              <section className="mb-10" aria-labelledby="youtube-video-heading">
+                <h2
+                  id="youtube-video-heading"
+                  className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2"
+                >
+                  Video
+                </h2>
+                <div className="aspect-video w-full bg-black rounded overflow-hidden shadow-lg">
+                  <iframe
+                    className="w-full h-full"
+                    src={`https://www.youtube.com/embed/${videoId}`}
+                    title={`${project.title} Video`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              </section>
+            );
+          })()}
+        </>
       )}
 
-      {/* Embedded YouTube Video Section (if URL is valid) */}
-      {/* Immediately-invoked function expression (IIFE) to conditionally render the section */}
-      {(() => {
-        // Check if the YouTube video URL exists in the project data
-        if (!project.youtubeVideoUrl) return null; // Render nothing if no URL
 
-        // Attempt to extract the YouTube video ID using the helper function
-        const videoId = getYouTubeId(project.youtubeVideoUrl);
-        // Render nothing if a valid ID couldn't be extracted
-        if (!videoId) {
-          console.warn(
-            `Invalid YouTube URL format for project ${projectId}: ${project.youtubeVideoUrl}`
-          ); // Log a warning
-          return null;
-        }
-
-        // If a valid ID is found, render the YouTube embed section
-        return (
-          <section className="mb-10" aria-labelledby="youtube-video-heading">
-            {/* YouTube Video Section Heading */}
-            <h2
-              id="youtube-video-heading"
-              className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2"
-            >
-              Video
-            </h2>
-            {/* Responsive container for the iframe (maintains 16:9 aspect ratio) */}
-            <div className="aspect-video w-full bg-black rounded overflow-hidden shadow-lg">
-              {/* YouTube iframe embed */}
-              <iframe
-                className="w-full h-full" // Make iframe fill the container
-                src={`https://www.youtube.com/embed/${videoId}`} // YouTube embed URL
-                title={`${project.title} Video`} // Accessible title for the iframe
-                frameBorder="0" // Remove default border
-                // Permissions policy for embedded features
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen // Allow fullscreen mode
-              ></iframe>
-            </div>
-          </section>
-        );
-      })()}
-
-      {/* Tools Used Section (if tools exist) */}
+      {/* Tools Used Section (Applies to the whole project) */}
       {project.toolIcons && project.toolIcons.length > 0 && (
-        <section aria-labelledby="tools-heading">
+        <section aria-labelledby="tools-heading" className="mt-10">
           {/* Tools Section Heading */}
           <h2
             id="tools-heading"
@@ -345,7 +448,7 @@ export default async function ProjectPage({ params: paramsPromise }: Props) {
 
       {/* Back Link */}
       {/* Container for the "Back to All Projects" link */}
-      <div className="mt-12 pt-8 text-center">
+      <div className="mt-12 pt-8 text-center border-t border-gray-800">
         {/* Link back to the main portfolio section on the homepage */}
         <Link
           href="/#portfolio"

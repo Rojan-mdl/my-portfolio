@@ -23,6 +23,20 @@ interface LightboxVideoSlide extends LightboxSlideBase {
 // Union type representing any possible lightbox slide
 export type LightboxSlide = LightboxImageSlide | LightboxVideoSlide;
 
+// Interface for individual sub-projects nested within a main project
+export interface SubProject {
+  subId: string; // Unique identifier within the parent project (e.g., "1a", "1b")
+  title: string;
+  brief: string;
+  detailPath?: string; // Added optional detail path for sub-project markdown
+  image: string;
+  imageAlt?: string;
+  extendedImages?: string[];
+  extendedVideos?: string[]; // Added optional extended videos array
+  lightboxSlides?: LightboxSlide[];
+  youtubeVideoUrl?: string;
+}
+
 // Update the main Project interface
 export interface Project {
   id: string;
@@ -40,4 +54,7 @@ export interface Project {
 
   // Optional URL for a standalone YouTube video to embed
   youtubeVideoUrl?: string;
+
+  // Optional array for sub-projects
+  subProjects?: SubProject[];
 }

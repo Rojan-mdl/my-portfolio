@@ -1,0 +1,2 @@
+
+Most recently, I developed a concise, engaging video that illustrates the optimal walking route from Lysaker station to Unity Arena. Utilizing Google Earth scanned data combined with animated pedestrian models, this video enhances visitor accessibility, ensuring attendees have a seamless and enjoyable experience. 
