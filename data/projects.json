@@ -7,12 +7,12 @@
     "image": "/image/project01/picture01.png",
     "imageAlt": "Overhead view of Unity Arena concert layout",
     "extendedImages": [
-      { "src": "/image/project01/box01.png", "alt": "Unity Arena box layout wide shot" },
-      { "src": "/image/project01/box02.png", "alt": "Unity Arena box layout close up" },
-      { "src": "/image/project01/bowl01.png", "alt": "Unity Arena bowl layout wide shot" },
-      { "src": "/image/project01/bowl02.png", "alt": "Unity Arena bowl layout close up" },
-      { "src": "/image/project01/full01.png", "alt": "Unity Arena full layout wide shot" },
-      { "src": "/image/project01/full02.png", "alt": "Unity Arena full layout close up" }
+      "/image/project01/box01.png",
+      "/image/project01/box02.png",
+      "/image/project01/bowl01.png",
+      "/image/project01/bowl02.png",
+      "/image/project01/full01.png",
+      "/image/project01/full02.png"
     ],
     "extendedVideos": [],
     "toolIcons": [
@@ -80,11 +80,11 @@
     "image": "/image/project03/hero.png",
     "imageAlt": "Overhead visualization of Oslo Throwdown 2024 layout",
     "extendedImages": [
-      { "src": "/image/project03/image01.png", "alt": "Oslo Throwdown layout angle 1" },
-      { "src": "/image/project03/image02.png", "alt": "Oslo Throwdown layout angle 2" },
-      { "src": "/image/project03/image03.png", "alt": "Oslo Throwdown layout angle 3" },
-      { "src": "/image/project03/image04.png", "alt": "Oslo Throwdown layout angle 4" },
-      { "src": "/image/project03/image05.png", "alt": "Oslo Throwdown layout angle 5" }
+      "/image/project03/image01.png",
+      "/image/project03/image02.png",
+      "/image/project03/image03.png",
+      "/image/project03/image04.png",
+      "/image/project03/image05.png"
     ],
     "extendedVideos": [],
     "toolIcons": [
