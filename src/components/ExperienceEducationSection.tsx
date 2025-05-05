@@ -466,7 +466,7 @@ export default function ExperienceEducationSection() {
                     <h3 className="text-xl font-semibold">
                       Noroff — Gamedesign
                     </h3>
-                    <p className="text-gray-400">Aug 2019 - Jul 2020</p>
+                    <p className="text-gray-400">Sep 2019 - Jul 2020</p>
                     <ul className="list-disc list-outside pl-5 mt-2 text-gray-300 space-y-1">
                       <li>
                         Developed creative and interactive game content and
@@ -530,7 +530,7 @@ export default function ExperienceEducationSection() {
                     <h3 className="text-xl font-semibold">
                       Noroff — 3D Design & Animation
                     </h3>
-                    <p className="text-gray-400">Jan 2018 - Jun 2019</p>
+                    <p className="text-gray-400">Sep 2018 - Jul 2019</p>
                     <ul className="list-disc list-outside pl-5 mt-2 text-gray-300 space-y-1">
                       <li>
                         Prepared for a career in games, animation, visual

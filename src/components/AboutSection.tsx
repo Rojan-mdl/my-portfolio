@@ -1,6 +1,6 @@
 "use client"; // Directive for Next.js client components
 
-import React, { useState } from "react"; // Import React hooks (removed useEffect)
+import React, { useState, useEffect, useRef } from "react"; // Import React hooks (removed useEffect)
 // Removed Image import
 // Import motion components for internal animations (expand/collapse, button icon, CV link)
 import { motion, AnimatePresence } from "motion/react";
@@ -16,18 +16,44 @@ import {
 } from "react-icons/si";
 import { FaJava } from "react-icons/fa";
 import { TbBrandCSharp } from "react-icons/tb";
+import { IoChevronDown } from "react-icons/io5"; // Import the Chevron icon
 import SkillIcon from "./SkillIcon"; // Import the new SkillIcon component
 
 // AboutSection component definition
 export default function AboutSection() {
   // State to manage whether the additional about text and skills are visible
   const [aboutExpanded, setAboutExpanded] = useState(false);
+  // State to manage whether the CV language options are visible
+  const [showCvOptions, setShowCvOptions] = useState(false);
+  // Ref for the CV options container to detect outside clicks
+  const cvOptionsRef = useRef<HTMLDivElement>(null);
 
   // Consistent focus style for interactive elements
   const focusVisibleShadow = "focus-visible:shadow-[0_0_10px_2px_#ffffff]"; // White glow on focus
 
   // Check for reduced motion preference specifically for the internal animations within this component
   const prefersReducedMotion = usePrefersReducedMotion(); // Use the imported hook
+
+  // Effect to handle clicks outside the CV options
+  useEffect(() => {
+    // Only add listener if options are shown
+    if (!showCvOptions) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      // Check if the click is outside the referenced div
+      if (cvOptionsRef.current && !cvOptionsRef.current.contains(event.target as Node)) {
+        setShowCvOptions(false); // Hide options if click is outside
+      }
+    };
+
+    // Add event listener
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup function to remove listener on unmount or when options hide
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showCvOptions, setShowCvOptions]); // Add setShowCvOptions to dependency array
 
   return (
     // Section container for the "About Me" content
@@ -118,16 +144,23 @@ export default function AboutSection() {
         <div className="mt-4 flex items-center justify-between">
           {/* Read More / Show Less Button */}
           <button
-            onClick={() => setAboutExpanded(!aboutExpanded)} // Toggle the expanded state
+            onClick={() => {
+              const nextExpandedState = !aboutExpanded;
+              setAboutExpanded(nextExpandedState);
+              // Reset CV options visibility when closing the section
+              if (!nextExpandedState) {
+                setShowCvOptions(false);
+              }
+            }}
             aria-expanded={aboutExpanded} // Indicate state to assistive technologies
             // Styling: Flex alignment, background, padding, text size/color, font weight, rounded corners, transition, hover/focus states
             className={`inline-flex items-center bg-[#450086] px-4 py-2 text-xs sm:text-sm text-white font-semibold rounded transition hover:bg-[#360066] focus:outline-none ${focusVisibleShadow}`}
           >
             {/* Button text changes based on state */}
             {aboutExpanded ? "Show less" : "Read more"}
-            {/* Animated Chevron Icon */}
-            <motion.svg
-              className="ml-1.5 h-3.5 w-3.5 sm:ml-2 sm:h-4 sm:w-4" // Sizing and margin
+            {/* Animated Chevron Icon using react-icons */}
+            <motion.span
+              className="ml-1.5 h-3.5 w-3.5 sm:ml-2 sm:h-4 sm:w-4 inline-block" // Added inline-block
               initial={false} // No initial animation needed for the icon itself
               // Animate rotation based on expanded state - disabled if reduced motion preferred
               animate={
@@ -137,27 +170,18 @@ export default function AboutSection() {
               }
               // Transition for the rotation - disabled if reduced motion preferred
               transition={prefersReducedMotion ? undefined : { duration: 0.3 }}
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
               aria-hidden="true" // Hide decorative icon from screen readers
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </motion.svg>
+              <IoChevronDown />
+            </motion.span>
           </button>
 
-          {/* Download CV Link (Conditionally Rendered & Animated) */}
-          <AnimatePresence>
-            {/* Only render the link when the section is expanded */}
+          {/* Download CV Button / Language Options Container */}
+          <AnimatePresence mode="wait">
+            {/* Only render when the section is expanded */}
             {aboutExpanded && (
-              // motion.div handles the fade-in/out animation of the link
               <motion.div
+                key={showCvOptions ? "cvOptions" : "cvButton"} // Add key for AnimatePresence to distinguish elements
                 // Initial animation state (off-screen right, faded out) - disabled if reduced motion preferred
                 initial={
                   prefersReducedMotion ? undefined : { opacity: 0, x: 10 }
@@ -172,19 +196,43 @@ export default function AboutSection() {
                 transition={
                   prefersReducedMotion ? undefined : { duration: 0.3 }
                 }
+                className="flex items-center space-x-2" // Use flex for layout
+                ref={cvOptionsRef} // Attach the ref to the container
               >
-                {/* Actual link element, styled like a button */}
-                <a
-                  href="/resume.pdf" // Path to the CV file in the public directory
-                  target="_blank" // Open in a new tab
-                  rel="noopener noreferrer" // Security best practice for target="_blank"
-                  // Styling: Matches the "Read more" button style
-                  className={`inline-block bg-[#450086] px-4 py-2 text-xs sm:text-sm text-white font-semibold rounded transition hover:bg-[#360066] focus:outline-none ${focusVisibleShadow}`}
-                >
-                  Download CV
-                  {/* Screen reader only text to announce the link opens in a new tab */}
-                  <span className="sr-only"> (opens in new tab)</span>
-                </a>
+                {!showCvOptions ? (
+                  // Initial "Download CV" button
+                  <button
+                    onClick={() => setShowCvOptions(true)} // Show options on click
+                    // Styling: Matches the other button style
+                    className={`inline-block bg-[#450086] px-4 py-2 text-xs sm:text-sm text-white font-semibold rounded transition hover:bg-[#360066] focus:outline-none ${focusVisibleShadow}`}
+                  >
+                    Download CV
+                  </button>
+                ) : (
+                  // Language specific CV links
+                  <>
+                    <a
+                      href="/resume_en.pdf" // Path to the English CV
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      // Styling: Matches button style
+                      className={`inline-block bg-[#450086] px-3 py-2 text-xs sm:text-sm text-white font-semibold rounded transition hover:bg-[#360066] focus:outline-none ${focusVisibleShadow}`}
+                    >
+                      English CV
+                      <span className="sr-only"> (opens in new tab)</span>
+                    </a>
+                    <a
+                      href="/resume_no.pdf" // Path to the Norwegian CV
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      // Styling: Matches button style
+                      className={`inline-block bg-[#450086] px-3 py-2 text-xs sm:text-sm text-white font-semibold rounded transition hover:bg-[#360066] focus:outline-none ${focusVisibleShadow}`}
+                    >
+                      Norwegian CV
+                      <span className="sr-only"> (opens in new tab)</span>
+                    </a>
+                  </>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
