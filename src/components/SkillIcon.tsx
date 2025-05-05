@@ -1,9 +1,10 @@
 import React from "react";
+import type { IconType } from "react-icons"; // Import IconType
 
 // Define the props interface for the SkillIcon component
 interface SkillIconProps {
   // Icon component (e.g., SiFigma)
-  icon: React.ElementType;
+  icon: IconType; // Use IconType for better type safety
   // Text label for the skill
   label: string;
   // Size for the icon (optional, defaults to 32)
