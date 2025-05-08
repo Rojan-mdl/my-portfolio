@@ -130,7 +130,7 @@ export default function AboutSection() {
         </AnimatePresence>
 
         {/* Container for the action buttons below the text */}
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-4 flex flex-col sm:flex-row items-center sm:justify-between gap-3 sm:gap-0">
           {/* Show more / Show less Button */}
           <button
             onClick={() => {
@@ -197,14 +197,15 @@ export default function AboutSection() {
                   </button>
                 ) : (
                   // Language specific CV links
-                  <>
+                  <div className="flex items-center space-x-2">
                     <a
                       href="/resume_en.pdf" // English CV
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`inline-block bg-[#450086] px-3 py-2 text-xs sm:text-sm text-white font-semibold rounded transition hover:bg-[#360066] focus:outline-none ${focusVisibleShadow}`}
                     >
-                      English CV
+                      <span className="hidden sm:inline">English CV</span>
+                      <span className="inline sm:hidden">English CV</span>
                       <span className="sr-only"> (opens in new tab)</span>
                     </a>
                     <a
@@ -213,10 +214,11 @@ export default function AboutSection() {
                       rel="noopener noreferrer"
                       className={`inline-block bg-[#450086] px-3 py-2 text-xs sm:text-sm text-white font-semibold rounded transition hover:bg-[#360066] focus:outline-none ${focusVisibleShadow}`}
                     >
-                      Norwegian CV
+                      <span className="hidden sm:inline">Norwegian CV</span>
+                      <span className="inline sm:hidden">Norwegian CV</span>
                       <span className="sr-only"> (opens in new tab)</span>
                     </a>
-                  </>
+                  </div>
                 )}
               </motion.div>
             )}
