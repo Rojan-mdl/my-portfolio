@@ -1,6 +1,6 @@
 import PortfolioSection from "@/components/portfolio/PortfolioSection";
 import type { Project } from "@/types";
-import { getCachedProjects } from "@/app/api/projects/route"; // Import the function
+import { getCachedProjects } from "@/lib/data/projects"; // Import the function from the new location
 
 // Server-side asynchronous function to fetch project data
 async function fetchProjectsServer(): Promise<Project[] | null> {
