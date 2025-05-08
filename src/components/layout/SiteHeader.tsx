@@ -5,7 +5,7 @@ import Image from "next/image";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { motion, useSpring, type Variants } from "motion/react";
-import MobileMenuAnimation from "./MobileMenuAnimation";
+import MobileMenuAnimation from "../ui/MobileMenuAnimation";
 
 // Define the props interface for the SiteHeader component
 interface SiteHeaderProps {

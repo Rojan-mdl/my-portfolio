@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import ToolIcon from "./ToolIcon";
+import ToolIcon from "@/components/ui/ToolIcon";
 import { motion, AnimatePresence } from "motion/react";
 
 

@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Montserrat } from "next/font/google";
-import SiteHeader from "@/components/SiteHeader";
+import SiteHeader from "@/components/layout/SiteHeader";
 import React from "react";
 import { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";

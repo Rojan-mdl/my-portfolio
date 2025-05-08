@@ -4,16 +4,17 @@ import path from "path";
 
 // Next.js imports
 import { Metadata } from "next";
-import Link from "next/link";
+// import Link from "next/link"; // Link is no longer used
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
 // Local imports
 import type { Project } from "@/types";
-import ToolIcon from "@/components/ToolIcon";
+import ToolIcon from "@/components/ui/ToolIcon";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import ProjectGallery from "@/components/ProjectGallery";
+import ProjectGallery from "@/components/portfolio/ProjectGallery";
+import StickyScrollButton from "@/components/layout/StickyScrollButton";
 
 
 // Helper function to extract YouTube Video ID from various URL formats
@@ -171,258 +172,249 @@ export default async function ProjectPage({ params: paramsPromise }: Props) { //
 
   return (
     // Main project container
-    <main className="pt-24 pb-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-gray-100">
-      {/* Project title */}
-      <h1 className="text-3xl sm:text-4xl font-bold mb-4">{project.title}</h1>
+    <>
+      <main className="pt-24 pb-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-gray-100">
+        {/* Project title */}
+        <h1 className="text-3xl sm:text-4xl font-bold mb-4">{project.title}</h1>
 
-      {/* Main project image (if available and no sub-projects, or as an intro) */}
-      {
-        project.image && (
-          <div className="mb-6 relative w-full aspect-[16/9] overflow-hidden rounded-lg shadow-lg">
-            <Image
-              src={project.image}
-              alt={project.imageAlt || `Main image for ${project.title}`}
-              fill
-              style={{ objectFit: "cover" }}
-              priority // Prioritize loading this image as it's LCP (Large Cock Penis)
-              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 66vw"
-            />
-          </div>
-        )
-      }
-
-      {/* Brief project description */}
-      <p className="text-lg text-gray-300 mb-6 italic">{project.brief}</p>
-
-      {/* Detailed project information (Rendered from Markdown) */}
-      {/* Apply custom styling via 'markdown-content' class (globals.css) */}
-      <div className="markdown-content max-w-none mb-8 text-gray-200">
-        {/* Use ReactMarkdown component to parse and render the markdown string */}
-        {/* Enable remarkGfm plugin */}
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-          {markdownContent}
-        </ReactMarkdown>
-      </div>
-
-
-      {/* SUB-PROJECTS SECTION */}
-      {hasSubProjects && project.subProjects && (
-        <section className="mt-10 space-y-12">
-          {/* Promise.all to handle async operations within map */}
-          {await Promise.all(project.subProjects.map(async (subProject, index) => {
-             const subVideoId = getYouTubeId(subProject.youtubeVideoUrl);
-
-             // Fetch markdown content for the sub-project if detailPath exists
-             let subProjectMarkdownContent = "";
-             if (subProject.detailPath) {
-               try {
-                 const markdownFilePath = path.join(process.cwd(), subProject.detailPath);
-                 subProjectMarkdownContent = await fs.readFile(markdownFilePath, "utf8");
-               } catch (error) {
-                 console.error(
-                   `Error reading markdown file for sub-project ${subProject.title} at ${subProject.detailPath}:`,
-                   error
-                 );
-                 subProjectMarkdownContent = "*Details could not be loaded.*"; // Fallback
-               }
-             }
-
-             return (
-                <div key={subProject.subId || index} className="border-t border-gray-800 pt-8">
-                   <h3 className="text-xl sm:text-2xl font-semibold mb-3">{subProject.title}</h3>
-                   {subProject.image && (
-                     <div className="mb-4 relative w-full aspect-[16/9] overflow-hidden rounded-md shadow-md">
-                       <Image
-                         src={subProject.image}
-                         alt={subProject.imageAlt || `Image for ${subProject.title}`}
-                         fill
-                         style={{ objectFit: "cover" }}
-                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 66vw"
-                       />
-                     </div>
-                   )}
-                   {/* Render markdown content if available, otherwise the brief */}
-                   {subProjectMarkdownContent ? (
-                      <div className="markdown-content max-w-none mb-4 text-gray-200">
-                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                           {subProjectMarkdownContent}
-                         </ReactMarkdown>
-                       </div>
-                   ) : (
-                     <p className="text-md text-gray-300 mb-4 italic">{subProject.brief}</p>
-                   )}
-
-                   {/* Sub-Project Gallery using lightboxSlides */} 
-                   {subProject.lightboxSlides && subProject.lightboxSlides.length > 0 && (
-                     <div className="mb-6">
-                       <h4 className="text-xl font-semibold mb-3 text-gray-300">Gallery</h4>
-                       <ProjectGallery
-                         images={subProject.lightboxSlides.filter(slide => slide.type === 'image')}
-                         projectTitle={subProject.title}
-                       />
-                     </div>
-                   )}
-
-                   {/* Sub-Project Videos */}
-                   {subProject.extendedVideos && subProject.extendedVideos.length > 0 && (
-                     <div className="mb-6">
-                       <h4 className="text-xl font-semibold mb-3 text-gray-300">Videos</h4>
-                       {subProject.extendedVideos.map((videoSrc, videoIndex) => (
-                         <div
-                           key={videoIndex}
-                           className="mb-4 aspect-video bg-black rounded overflow-hidden shadow-md"
-                         >
-                           <video controls className="w-full h-full" preload="metadata">
-                             <source src={videoSrc} type="video/mp4" />
-                             Your browser does not support the video tag.
-                           </video>
-                         </div>
-                       ))}
-                     </div>
-                   )}
-
-                   {/* Sub-Project YouTube Video */}
-                    {subVideoId && (
-                      <div className="mb-6">
-                         <h4 className="text-xl font-semibold mb-3 text-gray-300">Video</h4>
-                         <div className="aspect-video w-full bg-black rounded overflow-hidden shadow-lg">
-                           <iframe
-                             className="w-full h-full"
-                             src={`https://www.youtube.com/embed/${subVideoId}`}
-                             title={`${subProject.title} Video`}
-                             frameBorder="0"
-                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                             allowFullScreen
-                           ></iframe>
-                         </div>
-                      </div>
-                    )}
-                </div>
-             )
-          }))}
-        </section>
-      )}
-
-      {/* NO SUB PROJECTS (Only show if NO sub-projects) */}
-      {!hasSubProjects && (
-        <>
-          {/* Extended images gallery */}
-          {project.extendedImages && project.extendedImages.length > 0 && (
-            <section className="mb-10" aria-labelledby="gallery-heading">
-              <h2
-                id="gallery-heading"
-                className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2"
-              >
-                Gallery
-              </h2>
-              {/* Render the ProjectGallery client component, passing the images and title */}
-              <ProjectGallery
-                images={project.extendedImages
-                  .filter((img): img is string => !!img) // Ensure img is treated as string after filter
-                  .map((imgSrc) => ({ src: imgSrc }))} // Map string to { src: string } object
-                projectTitle={project.title}
+        {/* Main project image (if available and no sub-projects, or as an intro) */}
+        {
+          project.image && (
+            <div className="mb-6 relative w-full aspect-[16/9] overflow-hidden rounded-lg shadow-lg">
+              <Image
+                src={project.image}
+                alt={project.imageAlt || `Main image for ${project.title}`}
+                fill
+                style={{ objectFit: "cover" }}
+                priority // Prioritize loading this image as it's LCP (Large Cock Penis)
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 66vw"
               />
-            </section>
-          )}
+            </div>
+          )
+        }
 
-          {/* Extended videos */}
-          {project.extendedVideos && project.extendedVideos.length > 0 && (
-            <section className="mb-10" aria-labelledby="videos-heading">
-              <h2
-                id="videos-heading"
-                className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2"
-              >
-                Videos
-              </h2>
-              {/* Map through the video source URLs */}
-              {project.extendedVideos.map((videoSrc, index) => (
-                // Container for each video player
-                <div
-                  key={index}
-                  className="mb-4 aspect-video bg-black rounded overflow-hidden"
-                >
-                  <video controls className="w-full h-full" preload="metadata">
-                    <source src={videoSrc} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-              ))}
-            </section>
-          )}
+        {/* Brief project description */}
+        <p className="text-lg text-gray-300 mb-6 italic">{project.brief}</p>
 
-           {/* Embedded YouTube video */}
-          {(() => {
-            if (!project.youtubeVideoUrl) return null;
-            const videoId = getYouTubeId(project.youtubeVideoUrl);
-            if (!videoId) {
-              console.warn(
-                `Invalid YouTube URL format for project ${projectId}: ${project.youtubeVideoUrl}`
-              );
-              return null;
-            }
-            return (
-              <section className="mb-10" aria-labelledby="youtube-video-heading">
+        {/* Detailed project information (Rendered from Markdown) */}
+        {/* Apply custom styling via 'markdown-content' class (globals.css) */}
+        <div className="markdown-content max-w-none mb-8 text-gray-200">
+          {/* Use ReactMarkdown component to parse and render the markdown string */}
+          {/* Enable remarkGfm plugin */}
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {markdownContent}
+          </ReactMarkdown>
+        </div>
+
+
+        {/* SUB-PROJECTS SECTION */}
+        {hasSubProjects && project.subProjects && (
+          <section className="mt-10 space-y-12">
+            {/* Promise.all to handle async operations within map */}
+            {await Promise.all(project.subProjects.map(async (subProject, index) => {
+               const subVideoId = getYouTubeId(subProject.youtubeVideoUrl);
+
+               // Fetch markdown content for the sub-project if detailPath exists
+               let subProjectMarkdownContent = "";
+               if (subProject.detailPath) {
+                 try {
+                   const markdownFilePath = path.join(process.cwd(), subProject.detailPath);
+                   subProjectMarkdownContent = await fs.readFile(markdownFilePath, "utf8");
+                 } catch (error) {
+                   console.error(
+                     `Error reading markdown file for sub-project ${subProject.title} at ${subProject.detailPath}:`,
+                     error
+                   );
+                   subProjectMarkdownContent = "*Details could not be loaded.*"; // Fallback
+                 }
+               }
+
+               return (
+                  <div key={subProject.subId || index} className="border-t border-gray-800 pt-8">
+                     <h3 className="text-xl sm:text-2xl font-semibold mb-3">{subProject.title}</h3>
+                     {subProject.image && (
+                       <div className="mb-4 relative w-full aspect-[16/9] overflow-hidden rounded-md shadow-md">
+                         <Image
+                           src={subProject.image}
+                           alt={subProject.imageAlt || `Image for ${subProject.title}`}
+                           fill
+                           style={{ objectFit: "cover" }}
+                           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 66vw"
+                         />
+                       </div>
+                     )}
+                     {/* Render markdown content if available, otherwise the brief */}
+                     {subProjectMarkdownContent ? (
+                        <div className="markdown-content max-w-none mb-4 text-gray-200">
+                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                             {subProjectMarkdownContent}
+                           </ReactMarkdown>
+                         </div>
+                     ) : (
+                       <p className="text-md text-gray-300 mb-4 italic">{subProject.brief}</p>
+                     )}
+
+                     {/* Sub-Project Gallery using lightboxSlides */} 
+                     {subProject.lightboxSlides && subProject.lightboxSlides.length > 0 && (
+                       <div className="mb-6">
+                         <h4 className="text-xl font-semibold mb-3 text-gray-300">Gallery</h4>
+                         <ProjectGallery
+                           images={subProject.lightboxSlides.filter(slide => slide.type === 'image')}
+                           projectTitle={subProject.title}
+                         />
+                       </div>
+                     )}
+
+                     {/* Sub-Project Videos */}
+                     {subProject.extendedVideos && subProject.extendedVideos.length > 0 && (
+                       <div className="mb-6">
+                         <h4 className="text-xl font-semibold mb-3 text-gray-300">Videos</h4>
+                         {subProject.extendedVideos.map((videoSrc, videoIndex) => (
+                           <div
+                             key={videoIndex}
+                             className="mb-4 aspect-video bg-black rounded overflow-hidden shadow-md"
+                           >
+                             <video controls className="w-full h-full" preload="metadata">
+                               <source src={videoSrc} type="video/mp4" />
+                               Your browser does not support the video tag.
+                             </video>
+                           </div>
+                         ))}
+                       </div>
+                     )}
+
+                     {/* Sub-Project YouTube Video */}
+                      {subVideoId && (
+                        <div className="mb-6">
+                           <h4 className="text-xl font-semibold mb-3 text-gray-300">Video</h4>
+                           <div className="aspect-video w-full bg-black rounded overflow-hidden shadow-lg">
+                             <iframe
+                               className="w-full h-full"
+                               src={`https://www.youtube.com/embed/${subVideoId}`}
+                               title={`${subProject.title} Video`}
+                               frameBorder="0"
+                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                               allowFullScreen
+                             ></iframe>
+                           </div>
+                        </div>
+                      )}
+                  </div>
+               )
+            }))}
+          </section>
+        )}
+
+        {/* NO SUB PROJECTS (Only show if NO sub-projects) */}
+        {!hasSubProjects && (
+          <>
+            {/* Extended images gallery */}
+            {project.extendedImages && project.extendedImages.length > 0 && (
+              <section className="mb-10" aria-labelledby="gallery-heading">
                 <h2
-                  id="youtube-video-heading"
+                  id="gallery-heading"
                   className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2"
                 >
-                  Video
+                  Gallery
                 </h2>
-                <div className="aspect-video w-full bg-black rounded overflow-hidden shadow-lg">
-                  <iframe
-                    className="w-full h-full"
-                    src={`https://www.youtube.com/embed/${videoId}`}
-                    title={`${project.title} Video`}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-              </section>
-            );
-          })()}
-        </>
-      )}
-
-
-      {/* Tools used */}
-      {project.toolIcons && project.toolIcons.length > 0 && (
-        <section aria-labelledby="tools-heading" className="mt-10">
-          <h2
-            id="tools-heading"
-            className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2"
-          >
-            Tools used
-          </h2>
-          {/* Flex container for tool icons */}
-          <div className="flex flex-wrap gap-4">
-            {project.toolIcons.map((tool, index) =>
-              // Render ToolIcon using iconName prop. ToolIcon handles mapping and fallbacks.
-              tool.label ? (
-                <ToolIcon
-                  key={`${tool.label}-${index}`}
-                  iconName={tool.label}
-                  alt={tool.label}
-                  label={tool.label}
-                  size={32}
+                {/* Render the ProjectGallery client component, passing the images and title */}
+                <ProjectGallery
+                  images={project.extendedImages
+                    .filter((img): img is string => !!img) // Ensure img is treated as string after filter
+                    .map((imgSrc) => ({ src: imgSrc }))} // Map string to { src: string } object
+                  projectTitle={project.title}
                 />
-              ) : null
+              </section>
             )}
-          </div>
-        </section>
-      )}
 
-      {/* Back link */}
-      {/* Container for the "Back to All Projects" link */}
-      <div className="mt-12 pt-8 text-center border-t border-gray-800">
-        {/* Link back to the main portfolio section on the homepage */}
-        <Link
-          href="/#portfolio"
-          className="text-blue-400 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-400 rounded px-2 py-1"
-        >
-          &larr; Back to All Projects
-        </Link>
-      </div>
-    </main>
+            {/* Extended videos */}
+            {project.extendedVideos && project.extendedVideos.length > 0 && (
+              <section className="mb-10" aria-labelledby="videos-heading">
+                <h2
+                  id="videos-heading"
+                  className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2"
+                >
+                  Videos
+                </h2>
+                {/* Map through the video source URLs */}
+                {project.extendedVideos.map((videoSrc, index) => (
+                  // Container for each video player
+                  <div
+                    key={index}
+                    className="mb-4 aspect-video bg-black rounded overflow-hidden"
+                  >
+                    <video controls className="w-full h-full" preload="metadata">
+                      <source src={videoSrc} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                ))}
+              </section>
+            )}
+
+             {/* Embedded YouTube video */}
+            {(() => {
+              if (!project.youtubeVideoUrl) return null;
+              const videoId = getYouTubeId(project.youtubeVideoUrl);
+              if (!videoId) {
+                console.warn(
+                  `Invalid YouTube URL format for project ${projectId}: ${project.youtubeVideoUrl}`
+                );
+                return null;
+              }
+              return (
+                <section className="mb-10" aria-labelledby="youtube-video-heading">
+                  <h2
+                    id="youtube-video-heading"
+                    className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2"
+                  >
+                    Video
+                  </h2>
+                  <div className="aspect-video w-full bg-black rounded overflow-hidden shadow-lg">
+                    <iframe
+                      className="w-full h-full"
+                      src={`https://www.youtube.com/embed/${videoId}`}
+                      title={`${project.title} Video`}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                </section>
+              );
+            })()}
+          </>
+        )}
+
+
+        {/* Tools used */}
+        {project.toolIcons && project.toolIcons.length > 0 && (
+          <section aria-labelledby="tools-heading" className="mt-10">
+            <h2
+              id="tools-heading"
+              className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2"
+            >
+              Tools used
+            </h2>
+            {/* Flex container for tool icons */}
+            <div className="flex flex-wrap gap-4">
+              {project.toolIcons.map((tool, index) =>
+                // Render ToolIcon using iconName prop. ToolIcon handles mapping and fallbacks.
+                tool.label ? (
+                  <ToolIcon
+                    key={`${tool.label}-${index}`}
+                    iconName={tool.label}
+                    alt={tool.label}
+                    label={tool.label}
+                    size={32}
+                  />
+                ) : null
+              )}
+            </div>
+          </section>
+        )}
+      </main>
+      <StickyScrollButton />
+    </>
   );
 }

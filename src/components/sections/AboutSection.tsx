@@ -17,7 +17,7 @@ import {
 } from "react-icons/si";
 import { TbBrandCSharp } from "react-icons/tb";
 import { IoChevronDown } from "react-icons/io5";
-import SkillIcon from "./SkillIcon";
+import SkillIcon from "@/components/ui/SkillIcon";
 
 // AboutSection component definition
 export default function AboutSection() {
