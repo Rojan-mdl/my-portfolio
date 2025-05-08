@@ -1,28 +1,15 @@
 import PortfolioSection from "@/components/portfolio/PortfolioSection";
 import type { Project } from "@/types";
-
-// Interface for the expected API response structure
-interface ProjectsApiResponse {
-  items: Project[];
-}
+import { getCachedProjects } from "@/app/api/projects/route"; // Import the function
 
 // Server-side asynchronous function to fetch project data
 async function fetchProjectsServer(): Promise<Project[] | null> {
   try {
-    const response = await fetch(process.env.NEXT_PUBLIC_SITE_URL + "/api/projects", { cache: 'no-store' }); // Ensure fresh data
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error(`HTTP error! status: ${response.status}, message: ${errorData?.message || "Unknown error"}`);
-      return null; // Or throw error to be caught by error.js
-    }
-    const projectsData: ProjectsApiResponse = await response.json();
-    if (!projectsData || !Array.isArray(projectsData.items)) {
-      console.error("Invalid projects data format received from API:", projectsData);
-      return null; // Or throw error
-    }
-    return projectsData.items;
+    // Directly call the cached data fetching function
+    const projects = await getCachedProjects();
+    return projects;
   } catch (error) {
-    console.error("Error fetching projects in PortfolioLoader:", error);
+    console.error("Error directly fetching projects data in PortfolioLoader:", error);
     return null; // Or throw error
   }
 }

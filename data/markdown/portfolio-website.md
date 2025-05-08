@@ -58,6 +58,7 @@ The project follows a standard Next.js App Router structure:
 - **Skills/Tools showcase:** Uses icons (`ToolIcon.tsx`) to visually represent proficiency in various technologies and tools listed in `public/icons/`.
 - **Responsive design:** Due to the use of Tailwind CSS.
 
-## Deployment
+## Deployment/Repo
 
-Deployed on [Vercel](https://vercel.com/).
+- Deployed on [Vercel](https://vercel.com/)
+- GitHub [repo](https://github.com/Rojan-mdl/my-portfolio)

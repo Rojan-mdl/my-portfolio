@@ -69,11 +69,10 @@ const ProjectSchema = z.object({
 // Define the schema for the array of projects
 const ProjectsSchema = z.array(ProjectSchema);
 
-// Cached Data Fetching Function
-// Use unstable_cache to cache the result of reading and parsing the JSON file.
-// The cache key 'projects-data' ensures this specific data is cached.
-// 'revalidate' option determines how often (in seconds) the cache should be refreshed.
-const getCachedProjects = unstable_cache(
+// Cached data fetching function
+// Use Next.js unstable_cache for caching project data to reduce redundant reads/parses.
+// This function fetches, parses, and validates project data from projects.json.
+export const getCachedProjects = unstable_cache(
   async (): Promise<Project[]> => {
     console.log("Fetching projects data (cache miss or revalidation)...");
     const jsonDirectory = path.join(process.cwd(), "data");
