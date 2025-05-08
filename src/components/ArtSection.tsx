@@ -1,9 +1,9 @@
-"use client"; // Directive for Next.js client components
+"use client";
 
-import React, { useState, useRef } from "react"; // Import React and hooks
-import Image from "next/image"; // Import Next.js Image component
-import dynamic from "next/dynamic"; // Import dynamic for code splitting
-import type { Slide } from "yet-another-react-lightbox"; // Import Slide type for lightbox
+import React, { useState, useRef } from "react";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+import type { Slide } from "yet-another-react-lightbox";
 import {
   motion,
   useScroll,
@@ -11,36 +11,38 @@ import {
   useMotionValueEvent,
   animate,
   MotionValue,
-} from "motion/react"; // Import motion components and hooks
-// Import lightbox plugins
+} from "motion/react";
+
+// Lightbox plugins
 import Video from "yet-another-react-lightbox/plugins/video";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
-// Import lightbox styles
+
+// Lightbox styles
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 
-// Dynamically import the Lightbox component
+// Lightbox component
 const Lightbox = dynamic(() => import("yet-another-react-lightbox"));
 
-// Define the structure for individual art pieces in the gallery
+// Structure for individual art pieces
 type ArtPiece = {
-  type: "image" | "video"; // Specifies if the piece is an image or video
-  src?: string; // Source URL (required for images, optional for videos if using 'sources')
-  alt: string; // Alt text for accessibility
-  sources?: { src: string; type: string }[]; // Array of sources for video (e.g., different formats)
-  poster?: string; // Poster image URL for videos
-  width?: number; // Intrinsic width for lightbox sizing (especially for videos)
-  height?: number; // Intrinsic height for lightbox sizing
+  type: "image" | "video";
+  src?: string;
+  alt: string;
+  sources?: { src: string; type: string }[];
+  poster?: string;
+  width?: number;
+  height?: number;
 };
 
 // Constants for the mask gradient
 const left = `0%`;
 const right = `100%`;
-const leftInset = `15%`; // Adjust inset percentage as needed
-const rightInset = `85%`; // Adjust inset percentage as needed
+const leftInset = `15%`;
+const rightInset = `85%`;
 const transparent = `#0000`;
-const opaque = `#000f`; // Use black with full opacity for the mask
+const opaque = `#000f`;
 
 // Hook to generate the dynamic mask gradient based on scroll progress
 function useScrollOverflowMask(scrollXProgress: MotionValue<number>) {
@@ -64,7 +66,7 @@ function useScrollOverflowMask(scrollXProgress: MotionValue<number>) {
       scrollXProgress.getPrevious() === 0 ||
       scrollXProgress.getPrevious() === 1
     ) {
-      // Ensure smooth transition when scrolling away from edges
+      // Smooth transition when scrolling away from edges
       animate(
         maskImage,
         `linear-gradient(90deg, ${transparent}, ${opaque} ${leftInset}, ${opaque} ${rightInset}, ${transparent})`
@@ -100,11 +102,11 @@ export default function ArtSection() {
     },
     {
       type: "video",
-      sources: [{ src: "/video/Black-hole.mp4", type: "video/mp4" }], // Video source(s)
-      poster: "/art/black-hole.png", // Poster image for the video
-      alt: "Black hole in the palm of a hand.", // Alt text describes the poster/concept
+      sources: [{ src: "/video/Black-hole.mp4", type: "video/mp4" }],
+      poster: "/art/black-hole.png",
+      alt: "Black hole in the palm of a hand.",
       width: 1920,
-      height: 1080, // Dimensions for lightbox video player
+      height: 1080,
     },
     {
       type: "image",
@@ -131,7 +133,6 @@ export default function ArtSection() {
       src: "/art/playing-board.png",
       alt: "A hexagonal board-playing world with water, forest, rocks, houses and boats.",
     },
-    // Add more art pieces as needed.
   ];
 
   // Prepare the 'slides' array for the Lightbox component
@@ -148,25 +149,22 @@ export default function ArtSection() {
         // Structure for video slides
         return {
           type: "video",
-          sources: piece.sources || [], // Ensure sources is an array
+          sources: piece.sources || [],
           poster: piece.poster,
           width: piece.width,
           height: piece.height,
-          // Alt text could potentially be used for titles/descriptions in lightbox plugins if needed
-          // title: piece.alt,
         };
       } else {
         // Structure for image slides
         return {
           type: "image",
-          src: piece.src!, // Use non-null assertion as filter should guarantee src exists for images
+          src: piece.src!,
           alt: piece.alt,
-          // Add srcSet if needed
         };
       }
     });
 
-  // Consistent focus style
+  // Focus style
   const focusVisibleShadow = "focus-visible:shadow-[0_0_10px_2px_#ffffff]";
 
   return (
@@ -176,24 +174,20 @@ export default function ArtSection() {
         className="py-16 my-26 text-gray-100 overflow-hidden"
         aria-labelledby="art-heading"
       >
-        {/* Container - Adjusted padding for horizontal scroll */}
         <div className="max-w-6xl mx-auto px-0 sm:px-4">
           {" "}
-          {/* Remove horizontal padding on smallest screens */}
-          {/* Section Heading */}
           <h2
             id="art-heading"
             className="text-3xl font-bold mb-8 text-center px-4 sm:px-0"
           >
             {" "}
-            {/* Add padding back here */}
             Art
           </h2>
           {/* Horizontal Scrolling Container */}
           <motion.ul
             ref={scrollRef}
             style={{ maskImage }} // Apply the dynamic mask
-            className="horizontal-scrollbar flex list-none h-[400px] overflow-x-scroll py-5 px-4 sm:px-0 gap-5" // Further increased height
+            className="horizontal-scrollbar flex list-none h-[400px] overflow-x-scroll py-5 px-4 sm:px-0 gap-5"
           >
             {/* Map through artPieces to create clickable list items */}
             {artPieces.map((piece, idx) => {
@@ -203,7 +197,6 @@ export default function ArtSection() {
               return thumbnailSrc ? (
                 <li key={idx} className="flex-shrink-0 w-[350px] h-full">
                   {" "}
-                  {/* Further increased width */}
                   <button
                     onClick={() => {
                       const slideIndex = slides.findIndex(
@@ -225,8 +218,8 @@ export default function ArtSection() {
                       alt={piece.alt}
                       fill
                       style={{ objectFit: "cover" }}
-                      sizes="450px" // Updated size to match new li width
-                      className="transition duration-300 group-hover:scale-105" // Keep subtle hover scale on image
+                      sizes="450px"
+                      className="transition duration-300 group-hover:scale-105" // Subtle hover scale on image
                       loading="lazy"
                     />
                   </button>

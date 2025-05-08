@@ -2,7 +2,7 @@
 
 /* Define CSS Variables for theming */
 :root {
-  /* Light Theme Defaults */
+  /* Light theme defaults */
   --color-background: 255 255 255; /* white */
   --color-foreground: 10 10 10; /* near black */
   --color-surface: 245 245 245; /* light grey */
@@ -15,13 +15,13 @@
 }
 
 .dark {
-  /* Dark Theme Overrides (using your previous colors) */
+  /* Dark theme overrides */
   --color-background: 10 10 10; /* #0a0a0a */
   --color-foreground: 237 237 237; /* #ededed */
   --color-surface: 23 23 23; /* #171717 */
   --color-primary: 59 130 246; /* #3b82f6 - blue-500 */
   --color-primary-foreground: 255 255 255; /* white */
-  --color-secondary: 161 161 170; /* #a1a1aa - your dark-text-secondary */
+  --color-secondary: 161 161 170; /* #a1a1aa */
   --color-secondary-foreground: 10 10 10; /* near black */
   --color-accent: 59 130 246; /* #3b82f6 - blue-500 */
   --color-accent-foreground: 255 255 255; /* white */
@@ -29,17 +29,14 @@
 
 @layer base {
   body {
-    /* @apply bg-background text-foreground; */ /* Replaced @apply with direct CSS */
     background-color: rgb(var(--color-background));
     color: rgb(var(--color-foreground));
   }
 }
 
-/* You might need to remove or update other base styles if they conflict */
 
 /* Global styles */
 :focus-visible {
-  /* Apply the visible shadow only when focus originates from keyboard */
   outline: none;
   box-shadow: 0 0 10px 2px #ffffff !important;
 }
@@ -63,27 +60,23 @@ html {
 /* Manual Markdown Styling using Tailwind v4 @layer components approach */
 @layer components {
   .markdown-content h1 {
-    /* For # Heading */
-    font-size: var(--text-3xl); /* Example: Adjust variable name if needed */
+    font-size: var(--text-3xl);
     font-weight: var(--font-bold);
-    margin-top: 2rem; /* Example: Use theme() or direct values if vars aren't available */
+    margin-top: 2rem;
     margin-bottom: 1rem;
   }
 
   .markdown-content h2 {
-    /* For ## Heading */
-    /* Restored original intended styles */
     font-size: var(--text-2xl);
     font-weight: var(--font-semibold);
     margin-top: 1.5rem;
     margin-bottom: 0.75rem;
     border-bottom-width: 1px;
-    border-color: var(--color-gray-700); /* Adjust color variable if needed */
+    border-color: var(--color-gray-700);
     padding-bottom: 0.25rem;
   }
 
   .markdown-content h3 {
-    /* For ### Heading */
     font-size: var(--text-xl);
     font-weight: var(--font-semibold);
     margin-top: 1.25rem;
@@ -91,13 +84,11 @@ html {
   }
 
   .markdown-content p {
-    /* For paragraphs */
     margin-bottom: 1rem;
     line-height: var(--leading-relaxed);
   }
 
   .markdown-content ul {
-    /* For unordered lists */
     list-style-type: disc;
     list-style-position: inside;
     margin-bottom: 1rem;
@@ -108,7 +99,6 @@ html {
   }
 
   .markdown-content ol {
-    /* For ordered lists */
     list-style-type: decimal;
     list-style-position: inside;
     margin-bottom: 1rem;
@@ -120,33 +110,33 @@ html {
 
   .markdown-content a {
     /* For links */
-    color: var(--color-blue-400); /* Adjust color variable if needed */
+    color: var(--color-blue-400);
     text-decoration-line: underline;
   }
   .markdown-content a:hover {
-    text-decoration-thickness: 2px; /* Optional: Thicker underline on hover */
+    text-decoration-thickness: 2px;
   }
-  /* Add focus styles if needed, matching global focus */
+  
   .markdown-content a:focus-visible {
     outline: none;
-    box-shadow: 0 0 10px 2px #ffffff !important; /* Match global focus */
-    border-radius: 0.125rem; /* Slight rounding for focus */
+    box-shadow: 0 0 10px 2px #ffffff !important;
+    border-radius: 0.125rem;
   }
 
   .markdown-content code {
     /* For inline code */
-    background-color: var(--color-surface); /* Use theme color */
+    background-color: var(--color-surface);
     font-size: 0.875rem; /* text-sm */
-    padding: 0.125rem 0.375rem; /* Equivalent to px-1.5 py-0.5 */
-    border-radius: 0.25rem; /* rounded */
+    padding: 0.125rem 0.375rem; /* Same as px-1.5 py-0.5 */
+    border-radius: 0.25rem;
     font-family: var(--font-mono);
   }
 
   .markdown-content pre {
     /* For code blocks */
-    background-color: var(--color-surface); /* Use theme color */
+    background-color: var(--color-surface);
     padding: 1rem; /* p-4 */
-    border-radius: 0.25rem; /* rounded */
+    border-radius: 0.25rem;
     overflow-x: auto;
     margin-bottom: 1rem;
   }
@@ -156,16 +146,16 @@ html {
     background-color: transparent;
     padding: 0;
     border-radius: 0;
-    font-size: inherit; /* Inherit from pre */
+    font-size: inherit;
   }
 
   .markdown-content blockquote {
     /* For blockquotes */
     border-left-width: 4px;
-    border-color: var(--color-gray-600); /* Adjust color variable if needed */
+    border-color: var(--color-gray-600);
     padding-left: 1rem;
     font-style: italic;
-    color: var(--color-secondary); /* Use theme color */
+    color: var(--color-secondary);
     margin-top: 1rem;
     margin-bottom: 1rem;
   }
@@ -180,26 +170,24 @@ html {
     font-style: italic;
   }
 
-  /* Add more rules as needed for tables, etc. */
 }
 
-/* Custom Scrollbar for Art Section */
+/* Custom scrollbar for Art Section */
 .horizontal-scrollbar::-webkit-scrollbar {
-  height: 5px; /* Adjust height as needed */
+  height: 5px;
 }
 
 .horizontal-scrollbar::-webkit-scrollbar-track {
-  background: #2d2d2d; /* Dark grey track */
+  background: #2d2d2d;
   border-radius: 10px;
 }
 
 .horizontal-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #555555; /* Lighter grey thumb */
+  background-color: #555555;
   border-radius: 10px;
-  border: 1px solid #2d2d2d; /* Optional: border matching track */
+  border: 1px solid #2d2d2d;
 }
 
-/* Optional: Hover effect for the thumb */
 .horizontal-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #777777;
 }

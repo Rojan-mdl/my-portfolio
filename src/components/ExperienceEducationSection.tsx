@@ -1,16 +1,11 @@
-"use client"; // Directive for Next.js client components
+"use client";
 
-"use client"; // Directive for Next.js client components
+import React, { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import ToolIcon from "./ToolIcon";
+import { motion, AnimatePresence } from "motion/react";
 
-import React, { useState } from "react"; // Import React and useState hook
-import Image from "next/image"; // Import Next.js Image component
-import Link from "next/link"; // Import Next.js Link component for navigation
-import ToolIcon from "./ToolIcon"; // Import the reusable ToolIcon component
-import { motion, AnimatePresence } from "motion/react"; // Import motion components
-// Removed react-icons imports as ToolIcon now handles the mapping internally
-// Removed duplicate Image import
-
-// Note: usePrefersReducedMotion hook was removed, assuming animations are handled by parent or not needed here.
 
 // ExperienceEducationSection component definition
 // Define animation variants for a gentler sliding/fading effect
@@ -46,21 +41,18 @@ export default function ExperienceEducationSection() {
     setActiveTab([newIndex, newName]);
   };
 
-  // Consistent focus style variables for accessibility and visual feedback
+  // Focus style variables for accessibility
   const focusVisibleRing =
-    "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:ring-[#450086]"; // Ring style for tab buttons
-  const focusVisibleShadow = "focus-visible:shadow-[0_0_3px_1px_#ffffff]"; // Shadow style for links (e.g., school logos)
+    "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:ring-[#450086]";
+  const focusVisibleShadow = "focus-visible:shadow-[0_0_3px_1px_#ffffff]";
 
   return (
     // Section container for Experience & Education
-    // id="experience-education" is handled by the parent AnimatedSection wrapper in page.tsx
     <section
       className="py-16 my-26 text-gray-100"
       aria-labelledby="exp-edu-heading"
     >
-      {/* Container to constrain width and add padding */}
       <div className="max-w-6xl mx-auto px-4">
-        {/* Section Heading */}
         <h2
           id="exp-edu-heading"
           className="text-3xl font-bold mb-8 text-center"
@@ -78,15 +70,14 @@ export default function ExperienceEducationSection() {
           {/* Experience Tab Button */}
           <button
             role="tab" // ARIA role for a tab button
-            aria-selected={activeTabName === "experience"} // Indicates if this tab is currently selected
-            aria-controls="experience-panel" // Links this button to the corresponding tab panel
-            id="experience-tab" // Unique ID for the tab button
-            onClick={() => handleTabChange(0, "experience")} // Use handler with index 0
-            // Styling: Padding, rounded corners, font weight, transition, focus styles, conditional background/text color based on active state
+            aria-selected={activeTabName === "experience"} // Indicates selection
+            aria-controls="experience-panel" // Links to the experience panel
+            id="experience-tab"
+            onClick={() => handleTabChange(0, "experience")}
             className={`px-4 py-2 rounded font-semibold transition focus:outline-none ${focusVisibleRing} ${
               activeTabName === "experience"
-                ? "bg-[#450086] text-white" // Active tab style
-                : "bg-gray-700 text-gray-300 hover:bg-gray-600" // Inactive tab style
+                ? "bg-[#450086] text-white" // Active tab
+                : "bg-gray-700 text-gray-300 hover:bg-gray-600" // Inactive tab
             }`}
           >
             Experience
@@ -94,15 +85,14 @@ export default function ExperienceEducationSection() {
           {/* Education Tab Button */}
           <button
             role="tab" // ARIA role
-            aria-selected={activeTabName === "education"} // Indicates selection state
+            aria-selected={activeTabName === "education"} // Indicates selection
             aria-controls="education-panel" // Links to the education panel
-            id="education-tab" // Unique ID
-            onClick={() => handleTabChange(1, "education")} // Use handler with index 1
-            // Styling: Similar to the experience tab button
+            id="education-tab"
+            onClick={() => handleTabChange(1, "education")}
             className={`px-4 py-2 rounded font-semibold transition focus:outline-none ${focusVisibleRing} ${
               activeTabName === "education"
-                ? "bg-[#450086] text-white" // Active style
-                : "bg-gray-700 text-gray-300 hover:bg-gray-600" // Inactive style
+                ? "bg-[#450086] text-white" // Active tab
+                : "bg-gray-700 text-gray-300 hover:bg-gray-600" // Inactive tab
             }`}
           >
             Education
@@ -110,31 +100,28 @@ export default function ExperienceEducationSection() {
         </div>
 
         {/* Tab Content Container with AnimatePresence for transitions */}
-        {/* Added overflow-hidden to clip exiting content */}
         <div className="relative overflow-hidden h-[1200px] sm:h-[650px]">
           {" "}
-          {/* Reinstated height, adjust as needed */}
-          {/* Use custom direction state */}
           <AnimatePresence initial={false} custom={direction} mode="wait">
             {/* Experience Panel - Conditionally rendered */}
             {activeTabName === "experience" && (
               <motion.div
-                key="experience" // Unique key for AnimatePresence
-                custom={direction} // Pass direction to variants
-                variants={variants} // Use defined variants
+                key="experience"
+                custom={direction}
+                variants={variants}
                 role="tabpanel"
                 id="experience-panel"
                 aria-labelledby="experience-tab"
-                className="space-y-8 absolute w-full" // Added absolute positioning and full width
+                className="space-y-8 absolute w-full"
                 initial="enter"
                 animate="center"
                 exit="exit"
                 transition={{
-                  duration: 0.5, // Slower duration
-                  ease: "easeInOut", // Smoother easing
+                  duration: 0.5,
+                  ease: "easeInOut",
                 }}
               >
-                {/* --- SATS Experience Item --- */}
+                {/* SATS Experience */}
                 <div className="flex flex-col sm:flex-row sm:space-x-4">
                   {/* Logo */}
                   <div className="flex-shrink-0 mb-3 sm:mb-0 mt-4">
@@ -163,13 +150,11 @@ export default function ExperienceEducationSection() {
                         senior guidance, gaining valuable project management
                         experience.
                       </li>
-                      {/* TODO: Add more specific achievements or responsibilities if possible. */}
                     </ul>
-                    {/* Tools Used */}
+                    {/* Tools used */}
                     <div className="mt-2">
                       <p className="text-sm font-semibold">Tools:</p>
                       <div className="mt-1 flex flex-wrap gap-2">
-                        {/* Reusable ToolIcon components using iconName prop */}
                         <ToolIcon
                           iconName="Figma"
                           alt="Figma"
@@ -200,7 +185,12 @@ export default function ExperienceEducationSection() {
                           label="JavaScript"
                           size={24}
                         />
-                        <ToolIcon iconName="C#" alt="C#" label="C#" size={24} />
+                        <ToolIcon 
+                          iconName="C#" 
+                          alt="C#" 
+                          label="C#" 
+                          size={24} 
+                        />
                         <ToolIcon
                           iconName="Jira"
                           alt="Jira"
@@ -223,7 +213,7 @@ export default function ExperienceEducationSection() {
                     </div>
                   </div>
                 </div>
-                {/* --- Unity Arena Experience Item --- */}
+                {/* Unity Arena Experience */}
                 <div className="flex flex-col sm:flex-row sm:space-x-4">
                   {/* Logo */}
                   <div className="flex-shrink-0 mb-3 sm:mb-0 mt-2">
@@ -247,9 +237,8 @@ export default function ExperienceEducationSection() {
                     <ul className="list-disc list-outside pl-5 mt-2 text-gray-300 space-y-1">
                       <li>Created high-end videos for concept visualization</li>
                       <li>Provided 3D assets for websites & promotions</li>
-                      {/* TODO: Link to specific examples or portfolio pieces if available. */}
                     </ul>
-                    {/* Tools Used */}
+                    {/* Tools used */}
                     <div className="mt-2">
                       <p className="text-sm font-semibold">Tools:</p>
                       <div className="mt-1 flex flex-wrap gap-2">
@@ -260,9 +249,9 @@ export default function ExperienceEducationSection() {
                           size={24}
                         />
                         <ToolIcon
-                          iconName="After Effects"
-                          alt="After Effects"
-                          label="After Effects"
+                          iconName="Adobe After Effects"
+                          alt="Adobe After Effects"
+                          label="Adobe After Effects"
                           size={24}
                         />
                         <ToolIcon
@@ -275,7 +264,7 @@ export default function ExperienceEducationSection() {
                     </div>
                   </div>
                 </div>
-                {/* --- PlayStation Experience Item --- */}
+                {/* PlayStation Experience */}
                 <div className="flex flex-col sm:flex-row sm:space-x-4">
                   {/* Logo */}
                   <div className="flex-shrink-0 mb-3 sm:mb-0">
@@ -299,9 +288,8 @@ export default function ExperienceEducationSection() {
                     <ul className="list-disc list-outside pl-5 mt-2 text-gray-300 space-y-1">
                       <li>Created 3D entertainment assets & videos</li>
                       <li>Undisclosed project details</li>
-                      {/* TODO: If any details become public, update this section. */}
                     </ul>
-                    {/* Tools Used */}
+                    {/* Tools used */}
                     <div className="mt-2">
                       <p className="text-sm font-semibold">Tools:</p>
                       <div className="mt-1 flex flex-wrap gap-2">
@@ -321,30 +309,29 @@ export default function ExperienceEducationSection() {
             {/* Education Panel - Conditionally rendered */}
             {activeTabName === "education" && (
               <motion.div
-                key="education" // Unique key for AnimatePresence
-                custom={direction} // Pass direction to variants
-                variants={variants} // Use defined variants
+                key="education"
+                custom={direction}
+                variants={variants}
                 role="tabpanel"
                 id="education-panel"
                 aria-labelledby="education-tab"
-                className="space-y-8 absolute w-full" // Added absolute positioning and full width
+                className="space-y-8 absolute w-full"
                 initial="enter"
                 animate="center"
                 exit="exit"
                 transition={{
-                  duration: 0.5, // Slower duration
-                  ease: "easeInOut", // Smoother easing
+                  duration: 0.5,
+                  ease: "easeInOut",
                 }}
               >
-                {/* --- Kristiania Education Item --- */}
+                {/* Kristiania Education */}
                 <div className="flex flex-col sm:flex-row sm:space-x-4">
                   {/* Logo with Link */}
                   <div className="flex-shrink-0 mb-3 sm:mb-0">
                     <Link
-                      href="https://www.kristiania.no/studier/bachelor/informasjonsteknologi-interaksjonsdesign/" // Link to the program page
-                      target="_blank" // Open in new tab
-                      rel="noopener noreferrer" // Security measure for target="_blank"
-                      // Styling: Inline block, rounded corners, focus style
+                      href="https://www.kristiania.no/studier/bachelor/informasjonsteknologi-interaksjonsdesign/"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className={`inline-block rounded focus:outline-none ${focusVisibleShadow}`}
                     >
                       <Image
@@ -355,7 +342,7 @@ export default function ExperienceEducationSection() {
                         className="rounded"
                         loading="lazy"
                       />
-                      {/* Screen reader text for link behavior */}
+                      {/* Screen reader text for link */}
                       <span className="sr-only">
                         {" "}
                         (opens Kristiania website in new tab)
@@ -364,7 +351,6 @@ export default function ExperienceEducationSection() {
                   </div>
                   {/* Details */}
                   <div className="flex-grow">
-                    {/* Using ' for the apostrophe */}
                     <h3 className="text-xl font-semibold">
                       Kristiania — Bachelor&apos;s in Interactive Design
                     </h3>
@@ -378,9 +364,8 @@ export default function ExperienceEducationSection() {
                         Engaged in project-based learning, including a design
                         project and a bachelor project with industry partners.
                       </li>
-                      {/* TODO: Mention specific achievements or key projects if desired. */}
                     </ul>
-                    {/* Tools Used */}
+                    {/* Tools used */}
                     <div className="mt-2">
                       <p className="text-sm font-semibold">Tools:</p>
                       <div className="mt-1 flex flex-wrap gap-2">
@@ -397,22 +382,27 @@ export default function ExperienceEducationSection() {
                           size={24}
                         />
                         <ToolIcon
-                          iconName="Typescript"
-                          alt="Typescript"
-                          label="Typescript"
+                          iconName="TypeScript"
+                          alt="TypeScript"
+                          label="TypeScript"
                           size={24}
                         />
                         <ToolIcon
-                          iconName="Javascript"
-                          alt="Javascript"
-                          label="Javascript"
+                          iconName="JavaScript"
+                          alt="JavaScript"
+                          label="JavaScript"
                           size={24}
                         />
-                        <ToolIcon iconName="C#" alt="C#" label="C#" size={24} />
+                        <ToolIcon 
+                          iconName="C#" 
+                          alt="C#" 
+                          label="C#" 
+                          size={24} 
+                        />
                         <ToolIcon
-                          iconName="Java"
-                          alt="Java"
-                          label="Java"
+                          iconName="Python"
+                          alt="Python"
+                          label="Python"
                           size={24}
                         />
                         <ToolIcon
@@ -437,12 +427,12 @@ export default function ExperienceEducationSection() {
                     </div>
                   </div>
                 </div>
-                {/* --- Noroff: Gamedesign Item --- */}
+                {/* Noroff: Gamedesign */}
                 <div className="flex flex-col sm:flex-row sm:space-x-4">
                   {/* Logo with Link */}
                   <div className="flex-shrink-0 mb-3 sm:mb-0">
                     <Link
-                      href="https://www.noroff.no/studier/fagskole/3d-design-spillteknologi-interaktiv" // Link to program page
+                      href="https://www.noroff.no/studier/fagskole/3d-design-spillteknologi-interaktiv"
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`inline-block rounded focus:outline-none ${focusVisibleShadow}`}
@@ -455,6 +445,7 @@ export default function ExperienceEducationSection() {
                         className="rounded"
                         loading="lazy"
                       />
+                      {/* Screen reader text for link */}
                       <span className="sr-only">
                         {" "}
                         (opens Noroff website in new tab)
@@ -481,7 +472,7 @@ export default function ExperienceEducationSection() {
                         architecture, and art.
                       </li>
                     </ul>
-                    {/* Tools Used */}
+                    {/* Tools used */}
                     <div className="mt-2">
                       <p className="text-sm font-semibold">Tools:</p>
                       <div className="mt-1 flex flex-wrap gap-2">
@@ -501,12 +492,12 @@ export default function ExperienceEducationSection() {
                     </div>
                   </div>
                 </div>
-                {/* --- Noroff: 3D Design and Animation Item --- */}
+                {/* Noroff: 3D Design and Animation */}
                 <div className="flex flex-col sm:flex-row sm:space-x-4">
                   {/* Logo with Link */}
                   <div className="flex-shrink-0 mb-3 sm:mb-0">
                     <Link
-                      href="https://www.noroff.no/studier/fagskole/3d-design-spillteknologi-interaktiv" // Link to program page
+                      href="https://www.noroff.no/studier/fagskole/3d-design-spillteknologi-interaktiv"
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`inline-block rounded focus:outline-none ${focusVisibleShadow}`}
@@ -519,6 +510,7 @@ export default function ExperienceEducationSection() {
                         className="rounded"
                         loading="lazy"
                       />
+                      {/* Screen reader text for link */}
                       <span className="sr-only">
                         {" "}
                         (opens Noroff website in new tab)
@@ -541,18 +533,16 @@ export default function ExperienceEducationSection() {
                         lighting, rendering, etc.).
                       </li>
                     </ul>
-                    {/* Tools Used */}
+                    {/* Tools used */}
                     <div className="mt-2">
                       <p className="text-sm font-semibold">Tools:</p>
                       <div className="mt-1 flex flex-wrap gap-2">
-                        {/* Use ToolIcon for all, including those that will fallback to Image */}
                         <ToolIcon
-                          iconName="3ds Max"
-                          alt="3ds Max"
-                          label="3ds Max"
+                          iconName="Maya"
+                          alt="Maya"
+                          label="Maya"
                           size={24}
                         />{" "}
-                        {/* Using "3ds Max" label */}
                         <ToolIcon
                           iconName="Nuke"
                           alt="Nuke"
@@ -580,7 +570,6 @@ export default function ExperienceEducationSection() {
           </AnimatePresence>
         </div>
       </div>{" "}
-      {/* End max-w-6xl container */}
     </section>
   );
 }

@@ -3,12 +3,12 @@
 import * as motion from "motion/react-client";
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import React from "react"; // Import React
+import React from "react";
 
 // Define the props for the main animation component
 interface MobileMenuAnimationProps {
   isOpen: boolean;
-  closeMenu: () => void; // Function to close the menu (e.g., on link click)
+  closeMenu: () => void; // Function to close the menu (on link click)
   getLinkHref: (sectionId: string) => string; // Function to get correct link href
   isHomePage: boolean;
   activeSection?: string;
@@ -21,6 +21,7 @@ interface NavigationProps {
   isHomePage: boolean;
   activeSection?: string;
 }
+
 
 // Utility hook for measuring dimensions
 const useDimensions = (ref: React.RefObject<HTMLDivElement | null>) => {
@@ -42,8 +43,8 @@ const useDimensions = (ref: React.RefObject<HTMLDivElement | null>) => {
   return dimensions.current;
 };
 
-// --- Animation Variants ---
 
+// Animation Variants 
 const navVariants = {
   open: {
     transition: { staggerChildren: 0.07, delayChildren: 0.2 },
@@ -70,10 +71,10 @@ const itemVariants = {
   },
 };
 
+
 // Right-sided bubble origin
 const sidebarVariants = {
   open: (height = 1000) => ({
-    // Adjust 260px 40px based on the actual hamburger button position relative to the sidebar
     clipPath: `circle(${height * 2 + 200}px at 260px 40px)`,
     transition: {
       type: "spring",
@@ -82,7 +83,7 @@ const sidebarVariants = {
     },
   }),
   closed: {
-    clipPath: "circle(0px at 260px 40px)", // Make radius 0px to hide when closed
+    clipPath: "circle(0px at 260px 40px)", // Radius 0px to hide when closed
     transition: {
       delay: 0.2,
       type: "spring",
@@ -92,22 +93,20 @@ const sidebarVariants = {
   },
 };
 
-// --- Components ---
 
+// Components
 const Navigation = ({
   closeMenu,
   getLinkHref,
   isHomePage,
   activeSection,
 }: NavigationProps) => {
-  // Base classes for mobile navigation links (adjust as needed)
   const mobileLinkClasses =
     "block py-2 text-lg text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white focus:outline-none focus-visible:text-black dark:focus-visible:text-white focus-visible:underline";
 
   return (
     <motion.ul
       variants={navVariants}
-      // Apply Tailwind classes for list styling and positioning
       className="list-none p-6 m-0 absolute top-20 right-0 w-[230px]" // Positioned top-right within the sidebar
     >
       {[
@@ -143,7 +142,8 @@ const Navigation = ({
   );
 };
 
-// --- Main Animation Component ---
+
+// Main Animation Component
 export default function MobileMenuAnimation({
   isOpen,
   closeMenu,
@@ -175,7 +175,6 @@ export default function MobileMenuAnimation({
         isHomePage={isHomePage}
         activeSection={activeSection}
       />
-      {/* Menu Toggle Button is rendered in SiteHeader */}
     </motion.nav>
   );
 }

@@ -1,17 +1,18 @@
 "use client";
 
-import type { Project } from "@/types"; // Import the Project type definition
-import { useState, useEffect, useRef } from "react"; // Import React hooks for state, side effects, and refs
+import type { Project } from "@/types";
+import { useState, useEffect, useRef } from "react";
 
-import SiteHeader from "@/components/SiteHeader"; // Import the main site header component
-import AnimatedSection from "@/components/AnimatedSection"; // Import the wrapper component for section animations
-import HeroSection from "@/components/HeroSection"; // Import the hero section component
-import AboutSection from "@/components/AboutSection"; // Import the about section component
-import ExperienceEducationSection from "@/components/ExperienceEducationSection"; // Import the experience/education section component
-import PortfolioSection from "@/components/PortfolioSection"; // Import the portfolio section component
-import ServicesSection from "@/components/ServicesSection"; // Import the services section component
-import ContactSection from "@/components/ContactSection"; // Import the contact section component
-import ArtSection from "@/components/ArtSection"; // Import the art section component
+// Components
+import SiteHeader from "@/components/SiteHeader";
+import AnimatedSection from "@/components/AnimatedSection";
+import HeroSection from "@/components/HeroSection";
+import AboutSection from "@/components/AboutSection";
+import ExperienceEducationSection from "@/components/ExperienceEducationSection";
+import PortfolioSection from "@/components/PortfolioSection";
+import ServicesSection from "@/components/ServicesSection";
+import ContactSection from "@/components/ContactSection";
+import ArtSection from "@/components/ArtSection";
 
 // Interface for the expected API response structure
 interface ProjectsApiResponse {
@@ -19,12 +20,12 @@ interface ProjectsApiResponse {
 }
 
 // Client-side asynchronous function to fetch project data from the internal API endpoint
-async function fetchProjects(): Promise<Project[] | null> { // Return null on error
+async function fetchProjects(): Promise<Project[] | null> {
   try {
     const response = await fetch("/api/projects");
     if (!response.ok) {
       // Throw an error with status and potentially message from API
-      const errorData = await response.json().catch(() => ({})); // Try to get error message
+      const errorData = await response.json().catch(() => ({}));
       throw new Error(
         `HTTP error! status: ${response.status}, message: ${errorData?.message || "Unknown error"}`
       );
@@ -39,7 +40,6 @@ async function fetchProjects(): Promise<Project[] | null> { // Return null on er
     return projectsData.items; // Return only the items array
   } catch (error) {
     console.error("Error fetching projects via API:", error);
-    // Return null to indicate an error occurred during fetch
     return null;
   }
 }
@@ -58,7 +58,6 @@ export default function HomePage() {
 
   // Refs for each individual section component's container element
   // These are passed to AnimatedSection to potentially trigger animations or for scroll tracking.
-  // Typed as HTMLDivElement because AnimatedSection likely forwards the ref to a div.
   const heroRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
   const experienceRef = useRef<HTMLDivElement>(null);
@@ -81,7 +80,7 @@ export default function HomePage() {
         );
         setProjects([]); // Clear projects on error
       } else {
-        // Handle successful fetch
+        // Successful fetch
         setProjects(fetchedProjects);
       }
       setIsLoadingProjects(false); // Set loading state to false
@@ -91,7 +90,7 @@ export default function HomePage() {
 
     // Populate the sectionsRef array with the actual DOM elements from the refs
     // Filter out any null values (if a ref hasn't been attached yet) and assert the type.
-    // Note: This array isn't actively used elsewhere currently.
+    // This is a bit redundant since we are already using refs, but it can be useful for debugging or future enhancements.
     sectionsRef.current = [
       heroRef.current,
       aboutRef.current,
@@ -124,9 +123,8 @@ export default function HomePage() {
       rootMargin: "0px",
       // Threshold: array of thresholds or a single number.
       // A threshold of 0.5 means the callback triggers when 50% of the element is visible.
-      // Adjust this value based on desired behavior. A lower value makes sections active sooner.
-      // Using multiple thresholds can be complex; start simple.
-      threshold: 0.4, // Example: Section becomes active when 40% is visible
+      // A lower value makes sections active sooner.
+      threshold: 0.4, // Section becomes active when 40% is visible
     };
 
     const observerCallback: IntersectionObserverCallback = (entries) => {
@@ -137,7 +135,6 @@ export default function HomePage() {
           // console.log(`${targetSection.id} is intersecting`); // Debugging
           // Set the intersecting section as active.
           // If multiple are intersecting due to threshold/viewport size, the last one processed might win.
-          // More complex logic could track the entry with the highest intersectionRatio.
           setActiveSection(targetSection.id);
         }
       });
@@ -156,8 +153,8 @@ export default function HomePage() {
     return () => {
       observer.disconnect();
     };
-    // Rerun this effect if the refs somehow change, though unlikely with static sections
-  }, [/* Dependency array could include states if sections were dynamic */]);
+  },
+);
 
   // Render the component structure
   return (
@@ -167,7 +164,6 @@ export default function HomePage() {
 
       {/* Render each section wrapped in the AnimatedSection component */}
       {/* Pass the section ID, the corresponding ref, and potentially a delay */}
-      {/* TODO: Review if HeroSection needs the AnimatedSection wrapper or handles its own entry animation. */}
       <AnimatedSection id="hero" ref={heroRef} delay={0}>
         {" "}
         {/* No entry delay for the hero section */}
@@ -180,7 +176,6 @@ export default function HomePage() {
         <ExperienceEducationSection />
       </AnimatedSection>
       <AnimatedSection id="portfolio" ref={portfolioRef}>
-        {/* Display loading or error state for projects */}
         {isLoadingProjects && <p className="text-center py-8">Loading projects...</p>}
         {projectFetchError && !isLoadingProjects && (
           <p className="text-center py-8 text-red-500">{projectFetchError}</p>

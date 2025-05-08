@@ -1,14 +1,13 @@
-"use client"; // Directive for Next.js client components
+"use client";
 
-import React, { useState, useEffect, useRef } from "react"; // Import React and useState hook
-import { motion, AnimatePresence } from "motion/react"; // Uncommented for animation
-import usePrefersReducedMotion from "@/hooks/usePrefersReducedMotion"; // Import the shared hook
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import usePrefersReducedMotion from "@/hooks/usePrefersReducedMotion";
 
 // ServicesSection component definition
 export default function ServicesSection() {
-  // State to track which service card is currently expanded (null means none are expanded)
+  // State to track which service card is currently expanded
   const [expandedService, setExpandedService] = useState<number | null>(null);
-  // Check for user's reduced motion preference
   const prefersReducedMotion = usePrefersReducedMotion();
   const gridRef = useRef<HTMLDivElement>(null); // Ref for the grid container
 
@@ -18,7 +17,7 @@ export default function ServicesSection() {
   const toggleService = (index: number) =>
     setExpandedService(expandedService === index ? null : index);
 
-  // Placeholder data for the services offered
+  // Placeholder data
   const services = [
     {
       title: "Web Development",
@@ -38,13 +37,13 @@ export default function ServicesSection() {
       longDesc:
         "Focusing on user interaction and experience design, prototyping with Figma, and implementing interactive elements that delight users.",
     },
-    // TODO: Add or modify services as needed.
+    // TODO: Make this shit cooler of something
   ];
 
   // Animation variants for the description paragraph
   const descriptionVariants = {
     collapsed: { opacity: 0, height: 0, marginTop: 0, marginBottom: 0 },
-    expanded: { opacity: 1, height: "auto", marginTop: "0.5rem", marginBottom: "0.5rem" }, // Adjust margin as needed
+    expanded: { opacity: 1, height: "auto", marginTop: "0.5rem", marginBottom: "0.5rem" },
   };
 
   // Effect to handle clicks outside the grid container to collapse the expanded service
@@ -63,7 +62,7 @@ export default function ServicesSection() {
       }
     };
 
-    // Add event listener on mousedown (fires before click and potentially blur)
+    // Add event listener on mousedown
     document.addEventListener("mousedown", handleClickOutside);
 
     // Cleanup function to remove the event listener
@@ -74,12 +73,10 @@ export default function ServicesSection() {
 
   return (
     // Section container for Services
-    // id="services" is handled by the parent AnimatedSection wrapper in page.tsx
     <section
       className="py-16 my-26 text-gray-100"
       aria-labelledby="services-heading"
     >
-      {/* Responsive container */}
       <div className="max-w-6xl mx-auto px-4">
         {/* Section Heading */}
         <h2
@@ -88,25 +85,22 @@ export default function ServicesSection() {
         >
           Services
         </h2>
-        {/* Grid layout for service cards - Attach the ref here */}
+        {/* Grid layout for service cards */}
         <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Map through the services data to render each service card */}
           {services.map((service, index) => {
             // Determine if the current card is the one that's expanded
             const isExpanded = expandedService === index;
             return (
-              // Use a div container for layout and apply button semantics/styling to an inner element if needed, or keep button if layout allows
               // Keeping button for simplicity here, ensure layout inside works
               <button
                 key={index} // Unique key for React list rendering
                 onClick={() => toggleService(index)} // Call toggle function on click
                 aria-expanded={isExpanded} // Indicate expansion state to assistive technologies
-                // Styling: Background, rounded corners, padding, text alignment, cursor, focus style
-                // Hover effect: Slight scale increase (disabled if reduced motion preferred)
+                // Hover effect
                 className={`bg-[#0A0A0A] rounded-lg p-6 text-left cursor-pointer focus:outline-none focus-visible:shadow-[0_0_10px_2px_#ffffff] overflow-hidden ${prefersReducedMotion ? "" : "transition duration-200 ease-in-out hover:scale-[1.03]"}`}
-                // TODO: Manually check contrast between text and #0A0A0A background.
               >
-                {/* Inner container to ensure top alignment (though likely default behavior) */}
+                {/* Inner container to ensure top alignment */}
                 <div className="flex flex-col h-full">
                   {/* Service Title */}
                   <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
@@ -124,8 +118,8 @@ export default function ServicesSection() {
                     <AnimatePresence initial={false}>
                       {isExpanded && (
                         <motion.p
-                          key="longDesc" // Add key for AnimatePresence
-                          className="text-gray-400 mt-2" // Add margin top
+                          key="longDesc"
+                          className="text-gray-400 mt-2"
                           variants={prefersReducedMotion ? undefined : descriptionVariants}
                           initial="collapsed"
                           animate="expanded"
@@ -145,7 +139,6 @@ export default function ServicesSection() {
           })}
         </div>
       </div>{" "}
-      {/* End max-w-6xl container */}
     </section>
   );
 }

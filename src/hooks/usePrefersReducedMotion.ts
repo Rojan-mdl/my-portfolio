@@ -1,4 +1,4 @@
-"use client"; // Ensure this runs client-side
+"use client";
 
 import { useState, useEffect } from "react";
 
@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
  * @returns {boolean} True if the user prefers reduced motion, false otherwise.
  */
 export const usePrefersReducedMotion = (): boolean => {
-  // Assume no preference initially, or default to false if window is undefined (SSR)
+  // Assume no preference initially, or default to false if window is undefined
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -31,10 +31,9 @@ export const usePrefersReducedMotion = (): boolean => {
         mediaQuery.removeEventListener("change", handleChange);
       };
     }
-  }, []); // Empty dependency array ensures this effect runs only once on mount
+  }, []);
 
   return prefersReducedMotion;
 };
 
-// Default export (optional, provides flexibility in how it's imported)
 export default usePrefersReducedMotion; 

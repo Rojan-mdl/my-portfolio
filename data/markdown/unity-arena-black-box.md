@@ -7,6 +7,4 @@ The latest Black Box video featured comprehensive 3D visualizations demonstratin
 
 - **Bowl Configuration:** A primary stage, standing and seated areas, and a dedicated **"Fan Zone"** for food vendors and merchandise.
 - **Box Configuration:** A more intimate setup ideal for medium-sized events.
-- **Center Stage Configuration:** A central stage providing audience access from all sides, ideal for dynamic, high-engagement performances.
-
-These visuals effectively communicate the arena's versatility and capacity to accommodate diverse event types. 
+- **Full Stage Configuration:** A setup removing next to all mortar walls, utilizing 90% of the entire Arena.

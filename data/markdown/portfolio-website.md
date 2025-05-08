@@ -38,20 +38,21 @@ The project follows a standard Next.js App Router structure:
   - `markdown/`: Holds Markdown files for detailed project descriptions (e.g., `portfolio-website.md`, `oslo-throwdown.md`, `unity-arena.md`).
 - **`public/`**: Stores static assets accessible directly via URL.
   - `art/`: Images showcasing artistic work.
-  - `icons/`: SVG and image icons representing skills, tools, social links, etc.
+  - `icons/`: SVG and image icons libraries didn't cover.
   - `image/`: General images, including project-specific visuals organized by project ID (e.g., `project01/`, `project02/`, `project03/`).
   - `video/`: Video assets (e.g., `Black-hole.mp4`).
-  - `resume.pdf`: A downloadable resume file.
+  - `resume_en.pdf`: A downloadable English resume file.
+  - `resume_no.pdf`: A downloadable Norwegian resume file.
 - **Configuration files:** Root directory contains configuration for Next.js (`next.config.ts`), TypeScript (`tsconfig.json`), Tailwind CSS (`tailwind.config.ts`), PostCSS (`postcss.config.mjs`), ESLint (`eslint.config.mjs`), and Git (`.gitignore`).
 
 ## Key features & content
 
 - **Homepage:** Includes a Hero section, introduction, and links/previews of other sections, often featuring animations (`AnimatedSection.tsx`).
 - **About section:** Information about me.
+- **Experience & Education section:** Details professional and academic background, next to relevant Experience.
 - **Portfolio section:** Displays a collection of projects, fetching data via the Next.js API route. Clicking a project navigates to a dedicated project page (`/portfolio/[projectId]`).
 - **Individual project pages:** Detailed view of specific projects, using data fetched via the API route (`projects.json`) and corresponding Markdown files. Includes image galleries (`ProjectGallery.tsx`).
 - **Art section:** Showcases visual/artistic creations.
-- **Experience & Education section:** Details professional and academic background.
 - **Services section:** Outlines offered services.
 - **Contact section:** Provides ways to get in touch.
 - **Skills/Tools showcase:** Uses icons (`ToolIcon.tsx`) to visually represent proficiency in various technologies and tools listed in `public/icons/`.

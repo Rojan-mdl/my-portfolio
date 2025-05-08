@@ -1,2 +1,2 @@
 
-I created detailed seating charts customized for various event setups. These charts improved event organization, ticketing processes, and client interactions by clearly and accurately depicting seating arrangements. 
+I created detailed seating charts customized for various event setups. These charts improved event organization, ticketing processes, and client interactions by clearly and accurately depicting seating arrangements. The images can be seen on their website today.

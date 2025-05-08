@@ -28,11 +28,11 @@ export interface SubProject {
   subId: string; // Unique identifier within the parent project (e.g., "1a", "1b")
   title: string;
   brief: string;
-  detailPath?: string; // Added optional detail path for sub-project markdown
+  detailPath?: string; // Detail path for sub-project markdown
   image: string;
   imageAlt?: string;
   extendedImages?: string[];
-  extendedVideos?: string[]; // Added optional extended videos array
+  extendedVideos?: string[];
   lightboxSlides?: LightboxSlide[];
   youtubeVideoUrl?: string;
 }
@@ -44,17 +44,17 @@ export interface Project {
   brief: string;
   detailPath: string; // Using the separate markdown file path
   image: string; // Main thumbnail image
-  imageAlt?: string; // Optional specific alt text for the main image
-  extendedImages?: string[]; // Keep if you display these outside the lightbox
-  extendedVideos?: string[]; // Keep if you display these outside the lightbox
+  imageAlt?: string; // Specific alt text for the main image
+  extendedImages?: string[];
+  extendedVideos?: string[];
   toolIcons?: { src: string; label: string }[];
 
   // Array specifically for lightbox content
   lightboxSlides?: LightboxSlide[];
 
-  // Optional URL for a standalone YouTube video to embed
+  // URL for a standalone YouTube video to embed
   youtubeVideoUrl?: string;
 
-  // Optional array for sub-projects
+  // Array for sub-projects
   subProjects?: SubProject[];
 }

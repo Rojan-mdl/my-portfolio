@@ -71,11 +71,11 @@
       },
       {
         "subId": "1d",
-        "title": "Visitor Experience Enhancement",
-        "brief": "Concepts and visualizations to enhance the visitor experience.",
+        "title": "Visitor Guideed Tour",
+        "brief": "Animated video showing the optimal path from Lysaker station to Unity Arena.",
         "detailPath": "/data/markdown/unity-arena-visitor-exp.md",
         "image": "/image/project01/sub-project04/fornebu.png",
-        "imageAlt": "Visualization for enhanced visitor experience at Unity Arena",
+        "imageAlt": "Visualization for the path from Lysaker station to Unity Arena",
         "extendedImages": [],
         "lightboxSlides": [
         ],

@@ -1,23 +1,23 @@
 import React from "react";
-import type { IconType } from "react-icons"; // Import IconType
+import type { IconType } from "react-icons";
 
 // Define the props interface for the SkillIcon component
 interface SkillIconProps {
   // Icon component (e.g., SiFigma)
-  icon: IconType; // Use IconType for better type safety
+  icon: IconType;
   // Text label for the skill
   label: string;
-  // Size for the icon (optional, defaults to 32)
+  // Size for the icon (defaults to 32)
   size?: number;
-  // Additional class names for the container div (optional)
+  // Additional class names for the container div
   className?: string;
 }
 
 // Reusable component to display a skill icon and its label
 const SkillIcon: React.FC<SkillIconProps> = ({
-  icon: IconComponent, // Rename prop to avoid conflict with local variable
+  icon: IconComponent,
   label,
-  size = 32, // Default size if not provided
+  size = 32, // Default size
   className = "", // Default to empty string
 }) => {
   return (

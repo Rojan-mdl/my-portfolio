@@ -4,30 +4,28 @@ import Link from "next/link";
 import Image from "next/image";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { motion, useSpring, type Variants } from "motion/react"; // Added Variants import
-// Removed LiaTimesSolid, LiaBarsSolid
-import MobileMenuAnimation from "./MobileMenuAnimation"; // Import the new component
+import { motion, useSpring, type Variants } from "motion/react";
+import MobileMenuAnimation from "./MobileMenuAnimation";
 
 // Define the props interface for the SiteHeader component
 interface SiteHeaderProps {
-  activeSection?: string; // ID of the currently active section (optional, mainly for homepage underline)
+  activeSection?: string; // ID of the currently active section (mainly for navigation underline)
 }
 
-// --- Re-added MenuToggle related components and types ---
 
 // Define the props for the Path component
 interface PathProps {
   d?: string;
   variants: Variants;
   transition?: { duration: number };
-  className?: string; // Allow className for styling
-  animate?: string; // Added animate prop
+  className?: string; // className for styling
+  animate?: string;
 }
 
 // Define the props for the MenuToggle component
 interface MenuToggleProps {
   toggle: () => void;
-  isOpen: boolean; // Added isOpen to control the icon state
+  isOpen: boolean; // isOpen to control the icon state
 }
 
 // SVG Path Component (for MenuToggle)
@@ -77,7 +75,7 @@ const MenuToggle = ({ toggle, isOpen }: MenuToggleProps) => (
   </button>
 );
 
-// --- SiteHeader component definition ---
+// SiteHeader component definition
 export default function SiteHeader({ activeSection }: SiteHeaderProps) {
   // Destructure props
   // State to manage the mobile menu's open/closed status
@@ -95,12 +93,9 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) {
   const linkRefs = useRef<Map<string, HTMLAnchorElement | null>>(new Map()); // Map to store refs of individual navigation links
 
   // Helper function to generate the correct href for navigation links
-  // Ensures links point correctly whether on the homepage or a subpage
   const getLinkHref = (sectionId: string) => {
-    // If not on the homepage (e.g., a project page), prepend '/' to link back to the homepage section
-    // Otherwise (on homepage), use the hash directly for same-page scrolling
+    // If not on the homepage, prepend '/' to link back to the homepage section
     return !isHomePage ? `/${sectionId}` : sectionId;
-    // TODO: Consider refining this logic if deep linking to sections on other pages becomes necessary.
   };
 
   // Helper function to close the mobile menu
@@ -136,14 +131,14 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) {
     return () => {
       document.body.style.overflow = originalOverflow;
     };
-  }, [menuOpen]); // Rerun this effect whenever menuOpen state changes
+  }, [menuOpen]);
 
   // Callback function to handle the 'Escape' key press for closing the mobile menu
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     if (event.key === "Escape") {
       closeMenu();
     }
-  }, []); // useCallback ensures the function reference is stable
+  }, []);
 
   // Effect to add/remove the Escape key listener based on menu state
   useEffect(() => {
@@ -156,15 +151,15 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [menuOpen, handleKeyDown]); // Rerun when menuOpen or handleKeyDown changes
+  }, [menuOpen, handleKeyDown]);
 
-  // --- Underline Animation Logic ---
+  // Underline Animation
   // Configuration for the spring animation physics
   const springOptions = { stiffness: 300, damping: 30, restDelta: 0.001 };
   // Create spring animations for underline position (x), width, and opacity
   const underlineXSpring = useSpring(0, springOptions);
   const underlineWidthSpring = useSpring(0, springOptions);
-  const underlineOpacitySpring = useSpring(0, { duration: 0.2 }); // Use a simpler duration-based spring for opacity fade
+  const underlineOpacitySpring = useSpring(0, { duration: 0.2 });
 
   // Effect to update the underline position and visibility based on the active section
   useEffect(() => {
@@ -191,9 +186,8 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) {
       underlineWidthSpring.set(targetWidth);
       underlineOpacitySpring.set(1); // Make the underline visible
     } else {
-      // If no active link element is found (e.g., scrolled past the last section), fade out the underline
+      // If no active link element is found, fade out the underline
       underlineOpacitySpring.set(0);
-      // TODO: Consider whether to reset X/Width springs here or let them stay at the last position. Current behavior is fine.
     }
   }, [
     activeSection,
@@ -203,19 +197,17 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) {
     underlineOpacitySpring,
   ]); // Dependencies for the effect
 
-  // --- Link Classes ---
-  // Base classes for desktop navigation links (underline handled by motion.div)
+  // Link Classes
+  // Base classes for desktop navigation links
   const desktopLinkClasses = `
     relative uppercase text-sm text-gray-300 transition duration-150 ease-in-out
     hover:text-white focus:outline-none focus:text-white
   `;
-  // Removed unused mobileLinkClasses variable
 
   return (
     <>
-      {/* Header Element: Fixed position, full width, background, border */}
+      {/* Header Element */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-black h-16 flex items-center border-b border-gray-800/50">
-        {/* Max Width Container: Centers content and applies padding */}
         <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-full">
           {/* Mobile View: Logo (Aligned Left) - Hidden on sm screens and up */}
           <div className="flex-shrink-0 sm:hidden">
@@ -229,8 +221,8 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) {
                 alt="Marius Øvrebø Logo"
                 width={60}
                 height={60}
-                className="h-auto" // Maintain aspect ratio
-                priority // Prioritize loading this image (likely LCP)
+                className="h-auto"
+                priority
               />
             </Link>
           </div>
@@ -246,7 +238,7 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) {
             )}
           </div>
 
-          {/* Desktop View Container: Hidden on mobile, flex layout, full width, relative positioning for underline */}
+          {/* Desktop View Container */}
           <div
             ref={navContainerRef}
             className="hidden sm:flex w-full items-center justify-between relative"
@@ -305,7 +297,6 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) {
             {/* Desktop Centered Logo */}
             <div className="flex-shrink-0 px-4">
               {" "}
-              {/* Added padding to prevent overlap with nav links */}
               <Link
                 href={getLinkHref("#hero")}
                 onClick={closeMenu}
@@ -314,7 +305,7 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) {
                 <Image
                   src="/image/MØ-white.png"
                   alt="Marius Øvrebø Logo"
-                  width={80} // Larger logo for desktop
+                  width={80}
                   height={80}
                   className="h-auto"
                   priority
@@ -375,12 +366,12 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) {
             {isHomePage && (
               <motion.div
                 ref={underlineRef} // Assign ref
-                className="absolute h-0.5 bg-white" // Styling: absolute positioning, height, background color
+                className="absolute h-0.5 bg-white"
                 style={{
                   x: underlineXSpring, // Apply animated X position from spring
                   width: underlineWidthSpring, // Apply animated width from spring
                   opacity: underlineOpacitySpring, // Apply animated opacity from spring
-                  top: "47px", // Position below the links (adjust as needed)
+                  top: "47px", // Position below the links
                   originX: 0, // Ensure width animation originates from the left
                 }}
                 aria-hidden="true" // Hide decorative element from screen readers
@@ -395,10 +386,9 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) {
       {isClient && (
         <div className="sm:hidden" id="mobile-menu-animation">
           {" "}
-          {/* Added ID for aria-controls */}
+          {/* ID for aria-controls */}
           <MobileMenuAnimation
             isOpen={menuOpen}
-            // toggle prop removed
             closeMenu={closeMenu}
             getLinkHref={getLinkHref}
             isHomePage={isHomePage}

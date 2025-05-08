@@ -1,4 +1,4 @@
-import type { NextConfig } from "next"; // Import the NextConfig type for type safety
+import type { NextConfig } from "next";
 
 // Define the Next.js configuration object
 const nextConfig: NextConfig = {

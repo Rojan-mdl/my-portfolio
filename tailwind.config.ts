@@ -1,5 +1,5 @@
-import type { Config } from "tailwindcss"; // Import the Config type for Tailwind configuration
-import typography from "@tailwindcss/typography"; // Import the official Tailwind CSS typography plugin
+import type { Config } from "tailwindcss";
+import typography from "@tailwindcss/typography";
 
 // Define the Tailwind CSS configuration object
 const config: Config = {
@@ -8,19 +8,15 @@ const config: Config = {
   darkMode: "class",
 
   // Configure the paths where Tailwind should look for class names to include in the final CSS build.
-  // This ensures that only used classes are generated, optimizing the file size.
   content: [
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}", // Include all JS/TS/JSX/TSX/MDX files in the app directory
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}", // Include all JS/TS/JSX/TSX/MDX files in the components directory
-    // TODO: Add paths to any other directories containing Tailwind classes if necessary.
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
 
   // Customize or extend the default Tailwind theme.
   theme: {
     // The 'extend' key allows adding new values or extending existing ones without overwriting defaults.
     extend: {
-      // Define custom color palettes or individual colors using CSS Variables
-      // These variables should be defined in your global CSS file (e.g., src/app/globals.css)
       colors: {
         background: "rgb(var(--color-background) / <alpha-value>)",
         foreground: "rgb(var(--color-foreground) / <alpha-value>)",
@@ -37,31 +33,16 @@ const config: Config = {
           DEFAULT: "rgb(var(--color-accent) / <alpha-value>)",
           foreground: "rgb(var(--color-accent-foreground) / <alpha-value>)",
         },
-        // Keep other specific colors if needed, or map them to semantic ones
-        // 'dark-bg': '#0a0a0a', // Example: Keep or remove old ones
-        // 'dark-surface': '#171717',
-        // 'dark-text-primary': '#ededed',
-        // 'dark-text-secondary': '#a1a1aa',
-        // 'dark-accent': '#3b82f6',
       },
-      // Example of extending other theme properties (currently commented out):
-      // fontFamily: {
-      //   sans: ['Inter', 'sans-serif'], // Example: Add 'Inter' font
-      // },
-      // spacing: {
-      //   '128': '32rem', // Example: Add custom spacing value
-      // },
     },
   },
 
-  // Register Tailwind CSS plugins.
+  // Tailwind CSS plugins
   plugins: [
     // Enable the typography plugin for styling markdown/prose content.
     // Provides default styles for elements like headings, paragraphs, lists within elements having the 'prose' class.
     typography,
-    // TODO: Add other Tailwind plugins if needed (e.g., @tailwindcss/forms, @tailwindcss/aspect-ratio).
   ],
 };
 
-// Export the configuration object
 export default config;
