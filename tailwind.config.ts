@@ -20,7 +20,7 @@ const config: Config = {
       colors: {
         background: "rgb(var(--color-background) / <alpha-value>)",
         foreground: "rgb(var(--color-foreground) / <alpha-value>)",
-        surface: "rgb(var(--color-surface) / <alpha-value>)", // For cards, panels, etc.
+        surface: "rgb(var(--color-surface) / <alpha-value>)",
         primary: {
           DEFAULT: "rgb(var(--color-primary) / <alpha-value>)",
           foreground: "rgb(var(--color-primary-foreground) / <alpha-value>)",
@@ -39,8 +39,6 @@ const config: Config = {
 
   // Tailwind CSS plugins
   plugins: [
-    // Enable the typography plugin for styling markdown/prose content.
-    // Provides default styles for elements like headings, paragraphs, lists within elements having the 'prose' class.
     typography,
   ],
 };

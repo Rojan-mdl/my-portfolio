@@ -41,8 +41,8 @@ const left = `0%`;
 const right = `100%`;
 const leftInset = `15%`;
 const rightInset = `85%`;
-const transparent = `#0000`;
-const opaque = `#000f`;
+const transparent = `transparent`;
+const opaque = `rgb(var(--color-background))`;
 
 // Hook to generate the dynamic mask gradient based on scroll progress
 function useScrollOverflowMask(scrollXProgress: MotionValue<number>) {
@@ -165,7 +165,7 @@ export default function ArtSection() {
     });
 
   // Focus style
-  const focusVisibleShadow = "focus-visible:shadow-[0_0_10px_2px_#ffffff]";
+  const focusVisibleShadow = "focus-visible:shadow-[0_0_10px_2px_rgb(var(--color-foreground))]";
 
   return (
     <>

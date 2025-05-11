@@ -47,7 +47,7 @@ export default function ProjectGallery({
   }));
 
   // Consistent focus style for the trigger button
-  const focusVisibleShadow = "focus-visible:shadow-[0_0_10px_2px_#ffffff]";
+  const focusVisibleShadow = "focus-visible:shadow-[0_0_10px_2px_rgb(var(--color-foreground))]";
 
   // Determine the source for the main trigger thumbnail (the first valid image)
   const triggerImage = validImages.length > 0 ? validImages[0] : null;
@@ -85,7 +85,7 @@ export default function ProjectGallery({
           {/* Overlay shown on hover/focus to indicate clickability and gallery size */}
           {/* Transition */}
           <div
-            className={`absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 group-focus:opacity-100 flex flex-col items-center justify-center text-white p-4 ${prefersReducedMotion ? "" : "transition-opacity"}`}
+            className={`absolute inset-0 bg-[rgb(var(--color-background))/0.4] opacity-0 group-hover:opacity-100 group-focus:opacity-100 flex flex-col items-center justify-center text-[rgb(var(--color-foreground))] p-4 ${prefersReducedMotion ? "" : "transition-opacity"}`}
           >
             {/* Icon added to overlay */}
             <BsArrowsFullscreen className="w-6 h-6 mb-1" aria-hidden="true" />

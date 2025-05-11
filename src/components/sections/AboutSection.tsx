@@ -5,19 +5,8 @@ import React, { useState, useEffect, useRef } from "react"; // React hooks
 // Motion components for internal animations
 import { motion, AnimatePresence } from "motion/react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import {
-  SiFigma,
-  SiTypescript,
-  SiJavascript,
-  SiNextdotjs,
-  SiReact,
-  SiBlender,
-  SiUnrealengine,
-  SiPython,
-} from "react-icons/si";
-import { TbBrandCSharp } from "react-icons/tb";
 import { IoChevronDown } from "react-icons/io5";
-import SkillIcon from "@/components/ui/SkillIcon";
+import ToolIcon from "@/components/ui/ToolIcon";
 
 // AboutSection component definition
 export default function AboutSection() {
@@ -29,7 +18,7 @@ export default function AboutSection() {
   const cvOptionsRef = useRef<HTMLDivElement>(null);
 
   // Focus style for interactive elements
-  const focusVisibleShadow = "focus-visible:shadow-[0_0_10px_2px_#ffffff]";
+  const focusVisibleShadow = "focus-visible:shadow-[0_0_10px_2px_rgb(var(--color-foreground))]";
 
   // Check for reduced motion preference specifically for the internal animations within this component
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -111,19 +100,18 @@ export default function AboutSection() {
               <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">
                 Skills & tools
               </h3>
-              {/* Container for skill icons and labels */}
-              <div className="flex flex-wrap gap-3 sm:gap-4 mb-6">
-                {/* Individual skill item */}
-                {/* Note: Icons use aria-label for accessibility as labels are hidden on small screens */}
-                <SkillIcon icon={SiFigma} label="Figma" />
-                <SkillIcon icon={SiTypescript} label="Typescript" />
-                <SkillIcon icon={SiJavascript} label="Javascript" />
-                <SkillIcon icon={SiPython} label="Python" />
-                <SkillIcon icon={TbBrandCSharp} label="C#" />
-                <SkillIcon icon={SiNextdotjs} label="Next.js" />
-                <SkillIcon icon={SiReact} label="React" />
-                <SkillIcon icon={SiBlender} label="Blender" />
-                <SkillIcon icon={SiUnrealengine} label="Unreal Engine" />
+              {/* Container for skill icons and labels - adjusted gap and items-center for inline display */}
+              <div className="flex flex-wrap gap-x-6 gap-y-4 mb-6 items-center">
+                {/* ToolIcon now uses labelVisibility="inline" */}
+                <ToolIcon iconName="Figma" alt="Figma" label="Figma" size={32} labelVisibility="inline" />
+                <ToolIcon iconName="TypeScript" alt="TypeScript" label="TypeScript" size={32} labelVisibility="inline" />
+                <ToolIcon iconName="JavaScript" alt="JavaScript" label="JavaScript" size={32} labelVisibility="inline" />
+                <ToolIcon iconName="Python" alt="Python" label="Python" size={32} labelVisibility="inline" />
+                <ToolIcon iconName="C#" alt="C#" label="C#" size={32} labelVisibility="inline" />
+                <ToolIcon iconName="Next.js" alt="Next.js" label="Next.js" size={32} labelVisibility="inline" />
+                <ToolIcon iconName="React" alt="React" label="React" size={32} labelVisibility="inline" />
+                <ToolIcon iconName="Blender" alt="Blender" label="Blender" size={32} labelVisibility="inline" />
+                <ToolIcon iconName="Unreal Engine" alt="Unreal Engine" label="Unreal Engine" size={32} labelVisibility="inline" />
               </div>
             </motion.div>
           )}
@@ -142,7 +130,7 @@ export default function AboutSection() {
               }
             }}
             aria-expanded={aboutExpanded} // Indicate state to assistive technologies
-            className={`inline-flex items-center bg-[#450086] px-4 py-2 text-xs sm:text-sm text-white font-semibold rounded transition hover:bg-[#360066] focus:outline-none ${focusVisibleShadow}`}
+            className={`inline-flex items-center bg-[rgb(var(--color-accent))] px-4 py-2 text-xs sm:text-sm text-[rgb(var(--color-foreground))] font-semibold rounded transition hover:bg-[rgb(var(--color-accent))] focus:outline-none ${focusVisibleShadow}`}
           >
             {/* Button text changes based on state */}
             {aboutExpanded ? "Show less" : "Show more"}
@@ -191,7 +179,7 @@ export default function AboutSection() {
                   // Initial "Download CV" button
                   <button
                     onClick={() => setShowCvOptions(true)} // Show options on click
-                    className={`inline-block bg-[#450086] px-4 py-2 text-xs sm:text-sm text-white font-semibold rounded transition hover:bg-[#360066] focus:outline-none ${focusVisibleShadow}`}
+                    className={`inline-block bg-[rgb(var(--color-accent))] px-4 py-2 text-xs sm:text-sm text-[rgb(var(--color-foreground))] font-semibold rounded transition hover:bg-[rgb(var(--color-accent))] focus:outline-none ${focusVisibleShadow}`}
                   >
                     Download CV
                   </button>
@@ -202,7 +190,7 @@ export default function AboutSection() {
                       href="/resume_en.pdf" // English CV
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`inline-block bg-[#450086] px-3 py-2 text-xs sm:text-sm text-white font-semibold rounded transition hover:bg-[#360066] focus:outline-none ${focusVisibleShadow}`}
+                      className={`inline-block bg-[rgb(var(--color-accent))] px-3 py-2 text-xs sm:text-sm text-[rgb(var(--color-foreground))] font-semibold rounded transition hover:bg-[rgb(var(--color-accent))] focus:outline-none ${focusVisibleShadow}`}
                     >
                       <span className="hidden sm:inline">English CV</span>
                       <span className="inline sm:hidden">English CV</span>
@@ -212,7 +200,7 @@ export default function AboutSection() {
                       href="/resume_no.pdf" // Norwegian CV
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`inline-block bg-[#450086] px-3 py-2 text-xs sm:text-sm text-white font-semibold rounded transition hover:bg-[#360066] focus:outline-none ${focusVisibleShadow}`}
+                      className={`inline-block bg-[rgb(var(--color-accent))] px-3 py-2 text-xs sm:text-sm text-[rgb(var(--color-foreground))] font-semibold rounded transition hover:bg-[rgb(var(--color-accent))] focus:outline-none ${focusVisibleShadow}`}
                     >
                       <span className="hidden sm:inline">Norwegian CV</span>
                       <span className="inline sm:hidden">Norwegian CV</span>

@@ -250,8 +250,29 @@ export default async function ProjectPage({ params: paramsPromise }: Props) { //
                              {subProjectMarkdownContent}
                            </ReactMarkdown>
                          </div>
-                     ) : (
-                       <p className="text-md text-gray-300 mb-4 italic">{subProject.brief}</p>
+                     ) : subProject.brief && (
+                       <p className="text-base text-gray-300 mb-4">{subProject.brief}</p>
+                     )}
+
+                     {/* Embed YouTube video if videoId is valid */}
+                     {subVideoId && (
+                       <div className="mb-4 aspect-video bg-[rgb(var(--color-background))] rounded overflow-hidden shadow-md">
+                         <iframe
+                           width="100%"
+                           height="100%"
+                           src={`https://www.youtube.com/embed/${subVideoId}`}
+                           title={subProject.title || "YouTube video player"}
+                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                           allowFullScreen
+                           className="border-0"
+                         ></iframe>
+                       </div>
+                     )}
+                     {/* Fallback for image or video placeholder if neither is available and it's not the image gallery */}
+                     {!subProject.image && !subVideoId && (!subProject.lightboxSlides || subProject.lightboxSlides.length === 0) && (
+                       <div className="aspect-video w-full bg-[rgb(var(--color-background))] rounded overflow-hidden shadow-lg">
+                         {/* Placeholder content or leave empty for a black box */}
+                       </div>
                      )}
 
                      {/* Sub-Project Gallery using lightboxSlides */} 
@@ -272,7 +293,7 @@ export default async function ProjectPage({ params: paramsPromise }: Props) { //
                          {subProject.extendedVideos.map((videoSrc, videoIndex) => (
                            <div
                              key={videoIndex}
-                             className="mb-4 aspect-video bg-black rounded overflow-hidden shadow-md"
+                             className="mb-4 aspect-video bg-[rgb(var(--color-background))] rounded overflow-hidden shadow-md"
                            >
                              <video controls className="w-full h-full" preload="metadata">
                                <source src={videoSrc} type="video/mp4" />
@@ -282,23 +303,6 @@ export default async function ProjectPage({ params: paramsPromise }: Props) { //
                          ))}
                        </div>
                      )}
-
-                     {/* Sub-Project YouTube Video */}
-                      {subVideoId && (
-                        <div className="mb-6">
-                           <h4 className="text-xl font-semibold mb-3 text-gray-300">Video</h4>
-                           <div className="aspect-video w-full bg-black rounded overflow-hidden shadow-lg">
-                             <iframe
-                               className="w-full h-full"
-                               src={`https://www.youtube.com/embed/${subVideoId}`}
-                               title={`${subProject.title} Video`}
-                               frameBorder="0"
-                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                               allowFullScreen
-                             ></iframe>
-                           </div>
-                        </div>
-                      )}
                   </div>
                )
             }))}
@@ -341,7 +345,7 @@ export default async function ProjectPage({ params: paramsPromise }: Props) { //
                   // Container for each video player
                   <div
                     key={index}
-                    className="mb-4 aspect-video bg-black rounded overflow-hidden"
+                    className="mb-4 aspect-video bg-[rgb(var(--color-background))] rounded overflow-hidden"
                   >
                     <video controls className="w-full h-full" preload="metadata">
                       <source src={videoSrc} type="video/mp4" />
@@ -370,7 +374,7 @@ export default async function ProjectPage({ params: paramsPromise }: Props) { //
                   >
                     Video
                   </h2>
-                  <div className="aspect-video w-full bg-black rounded overflow-hidden shadow-lg">
+                  <div className="aspect-video w-full bg-[rgb(var(--color-background))] rounded overflow-hidden shadow-lg">
                     <iframe
                       className="w-full h-full"
                       src={`https://www.youtube.com/embed/${videoId}`}

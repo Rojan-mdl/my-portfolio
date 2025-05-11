@@ -65,6 +65,8 @@ export type ToolIconProps = {
   alt: string;
   label: string;
   size: number;
+  labelVisibility?: "tooltip" | "inline"; // New prop for label display mode
+  className?: string; // Added to allow passing Tailwind classes for the main div
 };
 
 // ToolIcon component definition
@@ -74,6 +76,8 @@ export default function ToolIcon({
   alt,
   label,
   size,
+  labelVisibility = "tooltip", // Default to tooltip behavior
+  className = "", // Default to empty string
 }: ToolIconProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const tooltipId = useId(); // Generate a unique ID for the tooltip
@@ -81,37 +85,55 @@ export default function ToolIcon({
   // Look up the icon component or image source from the map
   const IconComponentOrSrc = iconMap[iconName];
 
+  // Base classes for the icon itself (React Icon or Image)
+  const iconBaseClasses = "rounded"; // Add any common styling for the icon img/svg here
+
+  // Inline label specific styling
+  const inlineLabelClasses = "ml-2 text-sm sm:text-base"; // Adjust as needed
+
+  // The main container div styling will depend on the labelVisibility
+  // For inline, it needs to be `flex items-center`
+  // For tooltip, it remains `relative group inline-block`
+  const containerClasses = `
+    ${labelVisibility === "inline" ? "flex items-center" : "relative group inline-block"}
+    ${className} // Allow external classes to be appended
+  `;
+
+  const iconElement = IconComponentOrSrc ? (
+    typeof IconComponentOrSrc === "function" ? (
+      <IconComponentOrSrc size={size} aria-label={alt} className={iconBaseClasses} />
+    ) : (
+      <Image
+        src={IconComponentOrSrc}
+        alt={alt}
+        width={size}
+        height={size}
+        className={iconBaseClasses}
+        loading="lazy"
+      />
+    )
+  ) : (
+    <span title={`Icon not found: ${iconName}`} aria-label={`Icon not found: ${iconName}`}>❓</span>
+  );
+
   return (
-    // Container div for the icon and its tooltip
-    // Uses 'group' class to enable group-hover/group-focus-within states for the tooltip
-    <div className="relative group inline-block" aria-describedby={tooltipId}>
-      {/* Render Icon component or Image based on map lookup result */}
-      {typeof IconComponentOrSrc === "function" ? (
-        // Render react-icon component
-        <IconComponentOrSrc size={size} aria-label={alt} className="rounded" />
-      ) : typeof IconComponentOrSrc === "string" ? (
-        // Render Image component using the src string
-        <Image
-          src={IconComponentOrSrc}
-          alt={alt}
-          width={size}
-          height={size}
-          className="rounded"
-          loading="lazy"
-        />
-      ) : (
-        // Fallback/Error case: Render nothing or a placeholder if iconName not found
-        <span title={`Icon not found: ${iconName}`}>❓</span>
+    <div 
+      className={containerClasses.trim()} 
+      aria-describedby={labelVisibility === "tooltip" ? tooltipId : undefined}
+    >
+      {iconElement}
+      {labelVisibility === "inline" && (
+        <span className={inlineLabelClasses}>{label}</span>
       )}
-      {/* Tooltip Label */}
-      {/* Visibility: Becomes visible (opacity-100) on hover or focus within the parent 'group' */}
-      {/* Note: Using aria-describedby for explicit accessibility linking */}
-      <span
-        id={tooltipId} // Added unique ID to the tooltip span
-        className={`absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-full opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 bg-black text-white text-xs px-2 py-1 rounded mt-1 whitespace-nowrap z-10 ${prefersReducedMotion ? "" : "transition"}`}
-      >
-        {label} {/* Tooltip text content */}
-      </span>
+      {labelVisibility === "tooltip" && (
+        <span
+          id={tooltipId}
+          role="tooltip" // Added role for accessibility
+          className={`absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-full opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 bg-[rgb(var(--color-background))] text-[rgb(var(--color-foreground))] text-xs px-2 py-1 rounded mt-1 whitespace-nowrap z-10 ${prefersReducedMotion ? "" : "transition"}`}
+        >
+          {label}
+        </span>
+      )}
     </div>
   );
 }

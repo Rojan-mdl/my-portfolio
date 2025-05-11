@@ -46,7 +46,7 @@ const MenuToggle = ({ toggle, isOpen }: MenuToggleProps) => (
     aria-label="Toggle menu"
     aria-expanded={isOpen}
     aria-controls="mobile-menu-animation"
-    className="p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white z-50"
+    className="p-2 rounded-md text-gray-300 hover:text-[rgb(var(--color-foreground))] hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[rgb(var(--color-foreground))] z-50"
   >
     <motion.div animate={isOpen ? "open" : "closed"}>
       <svg width="23" height="23" viewBox="0 0 23 23">
@@ -201,13 +201,13 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) {
   // Base classes for desktop navigation links
   const desktopLinkClasses = `
     relative uppercase text-sm text-gray-300 transition duration-150 ease-in-out
-    hover:text-white focus:outline-none focus:text-white
+    hover:text-[rgb(var(--color-foreground))] focus:outline-none focus:text-[rgb(var(--color-foreground))]
   `;
 
   return (
     <>
       {/* Header Element */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-black h-16 flex items-center border-b border-gray-800/50">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[rgb(var(--color-background))] h-16 flex items-center border-b border-gray-800/50">
         <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-full">
           {/* Mobile View: Logo (Aligned Left) - Hidden on sm screens and up */}
           <div className="flex-shrink-0 sm:hidden">
@@ -362,19 +362,22 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) {
               </Link>
             </nav>
 
-            {/* Animated Underline Element: Rendered only on the homepage */}
+            {/* Animated Underline for Desktop Navigation Links */}
             {isHomePage && (
               <motion.div
-                ref={underlineRef} // Assign ref
-                className="absolute h-0.5 bg-white"
+                ref={underlineRef}
+                aria-hidden="true"
+                className="absolute h-0.5"
+                aria-label="Underline for active navigation link"
                 style={{
-                  x: underlineXSpring, // Apply animated X position from spring
-                  width: underlineWidthSpring, // Apply animated width from spring
-                  opacity: underlineOpacitySpring, // Apply animated opacity from spring
-                  top: "47px", // Position below the links
-                  originX: 0, // Ensure width animation originates from the left
+                  position: "absolute",
+                  backgroundColor: "rgb(var(--color-foreground))",
+                  x: underlineXSpring,
+                  width: underlineWidthSpring,
+                  opacity: underlineOpacitySpring,
+                  top: "47px",
+                  originX: 0,
                 }}
-                aria-hidden="true" // Hide decorative element from screen readers
               />
             )}
           </div>

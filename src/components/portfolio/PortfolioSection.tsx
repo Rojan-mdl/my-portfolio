@@ -66,7 +66,7 @@ export default function PortfolioSection({ projects }: PortfolioSectionProps) {
             <Link
               key={project.id} // Unique key for React list rendering
               href={`/portfolio/${project.id}`} // Dynamic route based on project ID
-              className="group relative block overflow-hidden rounded-lg focus:outline-none focus-visible:shadow-[0_0_10px_2px_#ffffff] transition"
+              className="group relative block overflow-hidden rounded-lg focus:outline-none focus-visible:shadow-[0_0_10px_2px_rgb(var(--color-foreground))] transition"
               aria-label={`View details for ${project.title}`} // Accessibility label for the link
             >
               {/* Image container */}
@@ -87,10 +87,10 @@ export default function PortfolioSection({ projects }: PortfolioSectionProps) {
               {/* Hover effect (md screens+): Fades in on hover */}
               {/* Default (mobile): Always visible */}
               <div
-                className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent flex flex-col justify-end p-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 ${prefersReducedMotion ? "" : "transition-opacity duration-300"}`}
+                className={`absolute inset-0 bg-gradient-to-t from-[rgb(var(--color-background))/0.8] via-[rgb(var(--color-background))/0.5] to-transparent flex flex-col justify-end p-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 ${prefersReducedMotion ? "" : "transition-opacity duration-300"}`}
               >
                 {/* Project Title */}
-                <h3 className="text-xl font-semibold text-white">
+                <h3 className="text-xl font-semibold text-[rgb(var(--color-foreground))]">
                   {project.title}
                 </h3>
                 {/* Brief Project Description */}

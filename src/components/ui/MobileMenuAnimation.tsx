@@ -102,7 +102,7 @@ const Navigation = ({
   activeSection,
 }: NavigationProps) => {
   const mobileLinkClasses =
-    "block py-2 text-lg text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white focus:outline-none focus-visible:text-black dark:focus-visible:text-white focus-visible:underline";
+    "block py-2 text-lg text-gray-700 dark:text-gray-300 hover:text-[rgb(var(--color-background))] dark:hover:text-[rgb(var(--color-foreground))] focus:outline-none focus-visible:text-[rgb(var(--color-background))] dark:focus-visible:text-[rgb(var(--color-foreground))] focus-visible:underline";
 
   return (
     <motion.ul
@@ -165,7 +165,7 @@ export default function MobileMenuAnimation({
     >
       {/* Background with clip-path animation */}
       <motion.div
-        className="absolute top-0 right-0 bottom-0 w-full bg-black dark:bg-black"
+        className="absolute top-0 right-0 bottom-0 w-full bg-[rgb(var(--color-background))]"
         variants={sidebarVariants}
       />
       {/* Navigation Links */}

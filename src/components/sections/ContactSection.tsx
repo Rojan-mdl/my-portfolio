@@ -18,7 +18,7 @@ export default function ContactSection() {
 
   // Define the size for the icons used in the links
   const iconSize = 20;
-  const iconColor = "white";
+  const iconColor = "rgb(var(--color-foreground))";
 
 
   return (

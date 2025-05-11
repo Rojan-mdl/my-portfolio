@@ -43,8 +43,8 @@ export default function ExperienceEducationSection() {
 
   // Focus style variables for accessibility
   const focusVisibleRing =
-    "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:ring-[#450086]";
-  const focusVisibleShadow = "focus-visible:shadow-[0_0_3px_1px_#ffffff]";
+    "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgb(var(--color-background))] focus-visible:ring-[rgb(var(--color-accent))]";
+  const focusVisibleShadow = "focus-visible:shadow-[0_0_3px_1px_rgb(var(--color-foreground))]";
 
   return (
     // Section container for Experience & Education
@@ -76,7 +76,7 @@ export default function ExperienceEducationSection() {
             onClick={() => handleTabChange(0, "experience")}
             className={`px-4 py-2 rounded font-semibold transition focus:outline-none ${focusVisibleRing} ${
               activeTabName === "experience"
-                ? "bg-[#450086] text-white" // Active tab
+                ? "bg-[rgb(var(--color-accent))] text-[rgb(var(--color-foreground))]" // Active tab
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600" // Inactive tab
             }`}
           >
@@ -91,7 +91,7 @@ export default function ExperienceEducationSection() {
             onClick={() => handleTabChange(1, "education")}
             className={`px-4 py-2 rounded font-semibold transition focus:outline-none ${focusVisibleRing} ${
               activeTabName === "education"
-                ? "bg-[#450086] text-white" // Active tab
+                ? "bg-[rgb(var(--color-accent))] text-[rgb(var(--color-foreground))]" // Active tab
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600" // Inactive tab
             }`}
           >

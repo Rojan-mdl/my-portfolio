@@ -35,11 +35,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${montserrat.className} scroll-smooth`}>
-      <body className="bg-black text-white bg-gradient-to-b from-black to-[#21002a]">
+      <body className="bg-[rgb(var(--color-background))] text-[rgb(var(--color-foreground))] bg-gradient-to-b from-[rgb(var(--color-background))] to-[rgb(var(--color-surface))]">
         {/* Accessibility feature: Skip link for keyboard navigation */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:px-4 focus:py-2 focus:m-2 focus:bg-white focus:text-black"
+          className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:px-4 focus:py-2 focus:m-2 focus:bg-[rgb(var(--color-foreground))] focus:text-[rgb(var(--color-background))]"
         >
           Skip to main content
         </a>
