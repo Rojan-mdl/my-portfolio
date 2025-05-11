@@ -19,6 +19,8 @@ export default function HeroSection() {
         poster="/image/BlackHole.png" // Fallback image
         className="absolute inset-0 h-full w-full object-cover"
         preload="metadata"
+        // @ts-expect-error fetchPriority is a new attribute and may not be in TS lib.dom.d.ts yet
+        fetchPriority="high"
       >
         {/* Video Source */}
         <source src="/video/Black-hole.mp4" type="video/mp4" />

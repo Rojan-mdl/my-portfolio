@@ -42,7 +42,7 @@ export default function PageClientLogic(props: PageClientLogicProps) {
     const observerOptions = {
       root: null, 
       rootMargin: "0px",
-      threshold: 0.4, 
+      threshold: 0.8, 
     };
 
     const observerCallback: IntersectionObserverCallback = (entries) => {
@@ -67,7 +67,7 @@ export default function PageClientLogic(props: PageClientLogicProps) {
       });
       observer.disconnect();
     };
-  }, [props]); // Re-run if props change
+  }, []); // Empty dependency array means this effect runs once on mount and cleans up on unmount
 
   return (
     <>

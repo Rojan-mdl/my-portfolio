@@ -22,6 +22,8 @@ import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 
+import styles from "./ArtSection.module.css";
+
 // Lightbox component
 const Lightbox = dynamic(() => import("yet-another-react-lightbox"));
 
@@ -171,23 +173,19 @@ export default function ArtSection() {
     <>
       {/* Art Section Container */}
       <section
-        className="py-16 my-26 text-gray-100 overflow-hidden"
+        className="py-12 sm:py-16 bg-transparent text-gray-100"
         aria-labelledby="art-heading"
       >
-        <div className="max-w-6xl mx-auto px-0 sm:px-4">
-          {" "}
-          <h2
-            id="art-heading"
-            className="text-3xl font-bold mb-8 text-center px-4 sm:px-0"
-          >
-            {" "}
-            Art
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 id="art-heading" className="text-2xl sm:text-3xl font-bold mb-8">
+            Art & Visualizations
           </h2>
-          {/* Horizontal Scrolling Container */}
+          {/* Horizontal scrolling container for art pieces */}
           <motion.ul
             ref={scrollRef}
-            style={{ maskImage }} // Apply the dynamic mask
-            className="horizontal-scrollbar flex list-none h-[400px] overflow-x-scroll py-5 px-4 sm:px-0 gap-5"
+            style={{ maskImage, WebkitMaskImage: maskImage }}
+            className={`${styles.horizontalScrollbar} flex list-none h-[400px] overflow-x-scroll py-5 px-4 sm:px-0 gap-5`}
+            role="list"
           >
             {/* Map through artPieces to create clickable list items */}
             {artPieces.map((piece, idx) => {

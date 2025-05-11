@@ -222,7 +222,6 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) {
                 width={60}
                 height={60}
                 className="h-auto"
-                priority
               />
             </Link>
           </div>
@@ -308,7 +307,6 @@ export default function SiteHeader({ activeSection }: SiteHeaderProps) {
                   width={80}
                   height={80}
                   className="h-auto"
-                  priority
                 />
               </Link>
             </div>

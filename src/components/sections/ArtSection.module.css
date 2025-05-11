@@ -1,0 +1,18 @@
+.horizontalScrollbar::-webkit-scrollbar {
+  height: 8px;
+}
+
+.horizontalScrollbar::-webkit-scrollbar-track {
+  background: rgb(var(--color-surface));
+  border-radius: 10px;
+}
+
+.horizontalScrollbar::-webkit-scrollbar-thumb {
+  background-color: rgb(var(--color-primary));
+  border-radius: 10px;
+  border: 1px solid rgb(var(--color-surface));
+}
+
+.horizontalScrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(var(--color-secondary));
+} 

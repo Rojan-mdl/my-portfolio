@@ -49,19 +49,19 @@ export default function ServicesSection() {
   return (
     // Section container for Services
     <section
-      className="py-16 my-26 text-gray-100 flex flex-col items-center justify-center"
+      className="py-8 md:py-16 my-16 md:my-26 text-gray-100 flex flex-col items-center justify-center"
       aria-labelledby="services-heading"
     >
       {/* Section Heading */}
       <h2
         id="services-heading"
-        className="text-3xl font-bold mb-12 text-center"
+        className="text-2xl md:text-3xl font-bold mb-8 md:mb-12 text-center"
       >
         Services
       </h2>
 
       {/* Carousel Container */}
-      <div style={carouselContainerStyle} className="relative w-full max-w-4xl">
+      <div style={carouselContainerStyle} className="relative w-full max-w-4xl px-4 md:px-0">
         {/* Left Arrow Button */}
         <motion.button
           initial={false}
@@ -69,13 +69,13 @@ export default function ServicesSection() {
           style={arrowButtonStyle}
           onClick={() => setSlide(-1)}
           whileTap={{ scale: 0.9 }}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-gray-700 hover:bg-gray-600 hover:scale-110 transition-all p-2 rounded-full"
+          className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 z-10 bg-gray-700 hover:bg-gray-600 hover:scale-110 transition-all p-1 md:p-2 rounded-full"
         >
-          <FaArrowLeft size={24} className="text-[rgb(var(--color-foreground))]" />
+          <FaArrowLeft size={20} className="text-[rgb(var(--color-foreground))] md:text-[rgb(var(--color-foreground))]" />
         </motion.button>
 
         {/* Slides Area */}
-        <div className="relative w-full h-[450px] flex items-center justify-center overflow-hidden">
+        <div className="relative w-full h-[480px] md:h-[450px] flex items-center justify-center overflow-hidden">
           <AnimatePresence custom={direction} initial={false} mode="popLayout">
             <ServiceSlide
               key={currentIndex}
@@ -93,9 +93,9 @@ export default function ServicesSection() {
           style={arrowButtonStyle}
           onClick={() => setSlide(1)}
           whileTap={{ scale: 0.9 }}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-gray-700 hover:bg-gray-600 hover:scale-110 transition-all p-2 rounded-full"
+          className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 z-10 bg-gray-700 hover:bg-gray-600 hover:scale-110 transition-all p-1 md:p-2 rounded-full"
         >
-          <FaArrowRight size={24} className="text-[rgb(var(--color-foreground))]" />
+          <FaArrowRight size={20} className="text-[rgb(var(--color-foreground))] md:text-[rgb(var(--color-foreground))]" />
         </motion.button>
       </div>
     </section>
@@ -128,19 +128,19 @@ const ServiceSlide = forwardRef(function ServiceSlide(
         opacity: { duration: 0.2 },
       }}
       style={{ ...slideStyle }}
-      className={`absolute w-5/6 h-full p-8 rounded-xl shadow-xl flex flex-col justify-between ${cardColor}`}
+      className={`absolute w-11/12 md:w-5/6 h-full p-6 md:p-8 rounded-xl shadow-xl flex flex-col justify-between ${cardColor}`}
     >
       <div>
-        <h3 className="text-2xl font-semibold mb-4 text-[rgb(var(--color-foreground))]">{service.title}</h3>
-        <p className="text-gray-300 mb-6 text-lg">{service.description}</p>
+        <h3 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4 text-[rgb(var(--color-foreground))]">{service.title}</h3>
+        <p className="text-gray-300 mb-4 md:mb-6 text-base md:text-lg">{service.description}</p>
       </div>
       <div>
-        <h4 className="text-lg font-bold mb-3 text-gray-200">Tools:</h4>
-        <ul className="flex flex-wrap gap-2">
+        <h4 className="text-md md:text-lg font-bold mb-2 md:mb-3 text-gray-200">Tools:</h4>
+        <ul className="flex flex-wrap gap-1 md:gap-2">
           {service.tools.map((tool, index) => (
             <li
               key={index}
-              className=" text-gray-200 px-3 py-1.5 rounded-full text-xs flex items-center"
+              className=" text-gray-200 px-2 py-1 md:px-3 md:py-1.5 rounded-full text-xs flex items-center"
             >
               <ToolIcon
                 iconName={tool}
@@ -181,7 +181,6 @@ const carouselContainerStyle: CSSProperties = {
   position: "relative",
   justifyContent: "center",
   alignItems: "center",
-  gap: 20,
 };
 
 const slideStyle: CSSProperties = {
@@ -194,8 +193,6 @@ const slideStyle: CSSProperties = {
 };
 
 const arrowButtonStyle: CSSProperties = {
-  width: 50,
-  height: 50,
   borderRadius: "50%",
   display: "flex",
   justifyContent: "center",

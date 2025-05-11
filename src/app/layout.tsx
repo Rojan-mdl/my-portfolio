@@ -25,6 +25,9 @@ export const metadata: Metadata = {
   },
   // Site description for SEO
   description: "Showcasing design, 3D, and development work",
+  icons: {
+    icon: "/icons/MØ-icon.png",
+  },
 };
 
 // RootLayout component
